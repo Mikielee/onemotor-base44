@@ -83,7 +83,33 @@ export default function QuoteJourney() {
 
   if (blocked) return <BlockerScreen />;
 
-  const showPriceBar = step > 10 && step < 18;
+  const AdminPanel = () => (
+    <div className="fixed top-16 right-2 z-[999] bg-carbon/90 text-white rounded-lg p-2 flex flex-col items-center gap-1 shadow-xl">
+      <span className="text-[9px] font-montserrat font-bold text-white/60 uppercase tracking-wide">Admin</span>
+      <div className="flex gap-1">
+        <button
+          onClick={() => { setDirection(-1); setStep(s => Math.max(1, s - 1)); }}
+          className="w-7 h-7 bg-white/20 hover:bg-white/30 rounded text-xs font-bold transition-colors"
+        >←</button>
+        <div className="w-7 h-7 bg-bdred rounded flex items-center justify-center text-xs font-montserrat font-bold">{step}</div>
+        <button
+          onClick={() => { setDirection(1); setStep(s => Math.min(TOTAL_STEPS, s + 1)); }}
+          className="w-7 h-7 bg-white/20 hover:bg-white/30 rounded text-xs font-bold transition-colors"
+        >→</button>
+      </div>
+      <div className="grid grid-cols-3 gap-0.5 mt-0.5">
+        {Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1).map(n => (
+          <button
+            key={n}
+            onClick={() => { setDirection(n > step ? 1 : -1); setStep(n); }}
+            className={`w-6 h-5 rounded text-[9px] font-bold transition-colors ${
+              n === step ? 'bg-bdred text-white' : 'bg-white/20 hover:bg-white/40 text-white'
+            }`}
+          >{n}</button>
+        ))}
+      </div>
+    </div>
+  );
 
   const slideVariants = {
     enter: (dir) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
@@ -117,27 +143,30 @@ export default function QuoteJourney() {
   };
 
   return (
-    <QuoteLayout
-      step={step}
-      totalSteps={TOTAL_STEPS}
-      onBack={goBack}
-      showPriceBar={showPriceBar}
-      price={price}
-      formData={formData}
-    >
-      <AnimatePresence mode="wait" custom={direction}>
-        <motion.div
-          key={step}
-          custom={direction}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{ type: 'tween', duration: 0.25, ease: 'easeInOut' }}
-        >
-          {renderStep()}
-        </motion.div>
-      </AnimatePresence>
-    </QuoteLayout>
+    <>
+      <AdminPanel />
+      <QuoteLayout
+        step={step}
+        totalSteps={TOTAL_STEPS}
+        onBack={goBack}
+        showPriceBar={showPriceBar}
+        price={price}
+        formData={formData}
+      >
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={step}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ type: 'tween', duration: 0.25, ease: 'easeInOut' }}
+          >
+            {renderStep()}
+          </motion.div>
+        </AnimatePresence>
+      </QuoteLayout>
+    </>
   );
 }
