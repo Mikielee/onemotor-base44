@@ -151,7 +151,7 @@ export default function QuoteJourney() {
         step={step}
         totalSteps={TOTAL_STEPS}
         onBack={goBack}
-        showPriceBar={showPriceBar}
+        showPriceBar={step > 10 && step < 18}
         price={price}
         formData={formData}
       >
