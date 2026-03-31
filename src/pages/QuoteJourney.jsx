@@ -21,6 +21,7 @@ import StepAdditionalDetails from '../components/quote/StepAdditionalDetails';
 import StepSummary from '../components/quote/StepSummary';
 import StepPayment from '../components/quote/StepPayment';
 import StepConfirmation from '../components/quote/StepConfirmation';
+import StoryTag from '../components/quote/StoryTag';
 
 const TOTAL_STEPS = 18;
 
@@ -145,6 +146,7 @@ export default function QuoteJourney() {
   return (
     <>
       <AdminPanel />
+      <StoryTag step={step} />
       <QuoteLayout
         step={step}
         totalSteps={TOTAL_STEPS}
