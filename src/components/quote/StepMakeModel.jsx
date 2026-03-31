@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { ChevronDown, Search, AlertTriangle } from 'lucide-react';
+import StepFooter from './StepFooter';
 import { CAR_MAKES, CAR_MODELS, SUB_MODELS, COVER_TYPES } from '../../lib/quoteData';
 import PillButton from './PillButton';
 
@@ -68,7 +69,7 @@ const YEARS = (() => {
   return result;
 })();
 
-export default function StepMakeModel({ formData, onChange, onNext, goToStep }) {
+export default function StepMakeModel({ formData, onChange, onNext, onBack, goToStep }) {
   const vehicleAge = formData.yearOfReg ? new Date().getFullYear() - parseInt(formData.yearOfReg) : null;
 
   const coverConflict = useMemo(() => {
@@ -167,11 +168,7 @@ export default function StepMakeModel({ formData, onChange, onNext, goToStep }) 
         )}
       </div>
 
-      <div className="pt-2">
-        <PillButton onClick={onNext} disabled={!canProceed}>
-          Continue
-        </PillButton>
-      </div>
+      <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />
     </div>
   );
 }

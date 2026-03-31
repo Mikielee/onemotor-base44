@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-// Step 4 (StepYearReg) was merged into Step 3, so steps 4+ shifted down by 1
 const STORY_MAP = {
   1:  { id: 'OM-006', owner: 'MS' },
   2:  { id: 'OM-007', owner: 'AL' },
@@ -16,9 +15,11 @@ const STORY_MAP = {
   12: { id: 'OM-020', owner: 'AL' },
   13: { id: 'OM-021', owner: 'AL' },
   14: { id: 'OM-022', owner: 'MS' },
-  15: { id: 'OM-023', owner: 'AL' },
-  16: { id: 'OM-024', owner: 'MS' },
-  17: { id: 'OM-025', owner: 'AL' },
+  15: { id: 'OM-026', owner: 'MS' },
+  16: { id: 'OM-027', owner: 'MS' },
+  17: { id: 'OM-023', owner: 'AL' },
+  18: { id: 'OM-024', owner: 'MS' },
+  19: { id: 'OM-025', owner: 'AL' },
 };
 
 export default function StoryTag({ step }) {
@@ -31,24 +32,14 @@ export default function StoryTag({ step }) {
       type="button"
       onClick={() => setExpanded(e => !e)}
       style={{
-        position: 'fixed',
-        bottom: '10px',
-        right: '10px',
-        background: '#DDDBDD',
-        color: '#333F48',
-        fontSize: '10px',
-        borderRadius: '4px',
-        border: 'none',
-        cursor: 'pointer',
-        opacity: expanded ? 1 : 0.75,
+        position: 'fixed', bottom: '10px', right: '10px',
+        background: '#DDDBDD', color: '#333F48',
+        fontSize: '10px', borderRadius: '4px', border: 'none',
+        cursor: 'pointer', opacity: expanded ? 1 : 0.75,
         padding: expanded ? '3px 7px' : '3px 6px',
-        fontFamily: 'Montserrat, sans-serif',
-        fontWeight: 600,
-        lineHeight: 1.4,
-        zIndex: 9999,
-        whiteSpace: 'nowrap',
-        transition: 'opacity 0.15s, padding 0.15s',
-        userSelect: 'none',
+        fontFamily: 'Montserrat, sans-serif', fontWeight: 600,
+        lineHeight: 1.4, zIndex: 9999, whiteSpace: 'nowrap',
+        transition: 'opacity 0.15s, padding 0.15s', userSelect: 'none',
       }}
     >
       {expanded ? `${story.id} · Owner: ${story.owner}` : 'ℹ'}

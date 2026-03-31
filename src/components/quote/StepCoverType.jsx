@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { COVER_TYPES, HELP_TEXTS } from '../../lib/quoteData';
 import HelpIcon from './HelpIcon';
+import StepFooter from './StepFooter';
 import HelpDrawer from './HelpDrawer';
 import PillButton from './PillButton';
 
-export default function StepCoverType({ formData, onChange, onNext }) {
+export default function StepCoverType({ formData, onChange, onNext, onBack }) {
   const [helpOpen, setHelpOpen] = useState(null);
 
   const currentYear = new Date().getFullYear();
@@ -57,11 +58,7 @@ export default function StepCoverType({ formData, onChange, onNext }) {
         })}
       </div>
 
-      <div className="pt-4">
-        <PillButton onClick={onNext} disabled={!formData.coverType}>
-          Continue
-        </PillButton>
-      </div>
+      <StepFooter onNext={onNext} disabled={!formData.coverType} />
 
       <HelpDrawer
         open={!!helpOpen}

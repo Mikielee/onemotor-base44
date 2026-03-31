@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pencil } from 'lucide-react';
+import StepFooter from './StepFooter';
 import PillButton from './PillButton';
 import { format } from 'date-fns';
 
@@ -28,7 +29,7 @@ function Row({ label, value }) {
   );
 }
 
-export default function StepSummary({ formData, price, onNext, goToStep }) {
+export default function StepSummary({ formData, price, onNext, onBack, goToStep }) {
   const [agreed, setAgreed] = useState(false);
   const coverLabels = { COMP: 'Comprehensive', TPFT: 'Third Party, Fire & Theft', TPO: 'Third Party Only' };
   const startDate = formData.coverStartDate ? format(new Date(formData.coverStartDate), 'dd MMM yyyy') : '—';
@@ -67,12 +68,12 @@ export default function StepSummary({ formData, price, onNext, goToStep }) {
       </Section>
 
       {formData.hasAdditionalDrivers === 'yes' && (
-        <Section title="Additional Drivers" editStep={11} onEdit={goToStep}>
+        <Section title="Named Drivers" editStep={10} onEdit={goToStep}>
           {formData.additionalDriverPlan === 'any' ? (
             <Row label="Plan" value="Any Driver (+$200/yr)" />
           ) : (
             (formData.namedDrivers || []).map((d, i) => (
-              <Row key={i} label={`Driver ${i + 1}`} value={d.name} />
+              <Row key={i} label={d.preferredName || `Driver ${i + 1}`} value="+$80/yr" />
             ))
           )}
         </Section>
@@ -132,9 +133,7 @@ export default function StepSummary({ formData, price, onNext, goToStep }) {
         </label>
       </div>
 
-      <PillButton onClick={onNext} disabled={!agreed}>
-        Proceed to Payment
-      </PillButton>
+      <StepFooter onBack={onBack} onNext={onNext} disabled={!agreed} label="Proceed to Payment" />
     </div>
   );
 }

@@ -1,7 +1,7 @@
-import { ArrowLeft, Phone } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import PriceBar from './PriceBar';
 
-export default function QuoteLayout({ step, totalSteps, onBack, showPriceBar, price, formData, children }) {
+export default function QuoteLayout({ step, totalSteps, showPriceBar, price, formData, children }) {
   const progress = (step / totalSteps) * 100;
 
   return (
@@ -18,21 +18,11 @@ export default function QuoteLayout({ step, totalSteps, onBack, showPriceBar, pr
         {/* Sticky header */}
         <div className="sticky top-0 bg-white z-30 border-b border-gray-100">
           <div className="flex items-center justify-between px-4 py-3">
-            <div className="flex items-center gap-3">
-              {step > 1 && (
-                <button
-                  onClick={onBack}
-                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-grey100 transition-colors"
-                >
-                  <ArrowLeft className="w-5 h-5 text-carbon" />
-                </button>
-              )}
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-bdred rounded-lg flex items-center justify-center">
-                  <span className="text-white font-montserrat font-bold text-xs">BD</span>
-                </div>
-                <span className="font-montserrat font-bold text-carbon text-sm hidden sm:block">Budget Direct</span>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-bdred rounded-lg flex items-center justify-center">
+                <span className="text-white font-montserrat font-bold text-xs">BD</span>
               </div>
+              <span className="font-montserrat font-bold text-carbon text-sm hidden sm:block">Budget Direct</span>
             </div>
             <a href="tel:+6562210011" className="flex items-center gap-1.5 text-cyan text-xs font-montserrat font-medium">
               <Phone className="w-3.5 h-3.5" />

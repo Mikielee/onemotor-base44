@@ -1,9 +1,9 @@
 import ChoiceButton from './ChoiceButton';
 import YesNoButtons from './YesNoButtons';
-import PillButton from './PillButton';
+import StepFooter from './StepFooter';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function StepCarUsage({ formData, onChange, onNext }) {
+export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
   const canProceed = formData.carUsage && (formData.carUsage === 'business' || formData.commuteToWork);
 
   return (
@@ -51,11 +51,7 @@ export default function StepCarUsage({ formData, onChange, onNext }) {
         )}
       </AnimatePresence>
 
-      <div className="pt-4">
-        <PillButton onClick={onNext} disabled={!canProceed}>
-          Continue
-        </PillButton>
-      </div>
+      <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />
     </div>
   );
 }

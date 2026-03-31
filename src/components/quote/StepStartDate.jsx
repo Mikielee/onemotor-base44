@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import StepFooter from './StepFooter';
 import { format, addDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isSameDay, isBefore, isAfter, addMonths, subMonths } from 'date-fns';
 import PillButton from './PillButton';
 
-export default function StepStartDate({ formData, onChange, onNext }) {
+export default function StepStartDate({ formData, onChange, onNext, onBack }) {
   const tomorrow = addDays(new Date(), 1);
   const maxDate = addDays(new Date(), 120);
   const selected = formData.coverStartDate ? new Date(formData.coverStartDate) : null;
@@ -98,11 +99,7 @@ export default function StepStartDate({ formData, onChange, onNext }) {
         </p>
       )}
 
-      <div className="pt-2">
-        <PillButton onClick={onNext} disabled={!formData.coverStartDate}>
-          Continue
-        </PillButton>
-      </div>
+      <StepFooter onBack={onBack} onNext={onNext} disabled={!formData.coverStartDate} />
     </div>
   );
 }

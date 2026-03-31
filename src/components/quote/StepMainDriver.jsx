@@ -1,6 +1,6 @@
-import PillButton from './PillButton';
+import StepFooter from './StepFooter';
 
-export default function StepMainDriver({ formData, onChange, onNext }) {
+export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
   const canProceed = formData.dobDay && formData.dobMonth && formData.dobYear && formData.gender;
 
   return (
@@ -65,11 +65,7 @@ export default function StepMainDriver({ formData, onChange, onNext }) {
         </div>
       </div>
 
-      <div className="pt-4">
-        <PillButton onClick={onNext} disabled={!canProceed}>
-          Continue
-        </PillButton>
-      </div>
+      <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />
     </div>
   );
 }

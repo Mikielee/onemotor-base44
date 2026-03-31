@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ChoiceButton from './ChoiceButton';
+import StepFooter from './StepFooter';
 import YesNoButtons from './YesNoButtons';
 import HelpIcon from './HelpIcon';
 import HelpDrawer from './HelpDrawer';
@@ -13,7 +14,7 @@ const DISTANCE_OPTIONS = [
   { id: 'gt18000', label: 'Over 18,000 km' },
 ];
 
-export default function StepDistance({ formData, onChange, onNext }) {
+export default function StepDistance({ formData, onChange, onNext, onBack }) {
   const [helpOpen, setHelpOpen] = useState(false);
   const canProceed = formData.annualDistance && formData.offPeak;
 
@@ -50,11 +51,7 @@ export default function StepDistance({ formData, onChange, onNext }) {
         </div>
       )}
 
-      <div className="pt-4">
-        <PillButton onClick={onNext} disabled={!canProceed}>
-          Continue
-        </PillButton>
-      </div>
+      <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />
 
       <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} title="Off-Peak Car">
         {HELP_TEXTS.offPeak}

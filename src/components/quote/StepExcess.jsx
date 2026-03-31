@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { EXCESS_OPTIONS, EXCESS_DELTA } from '../../lib/quoteData';
+import StepFooter from './StepFooter';
 import HelpIcon from './HelpIcon';
 import HelpDrawer from './HelpDrawer';
 import PillButton from './PillButton';
 import { HELP_TEXTS } from '../../lib/quoteData';
 
-export default function StepExcess({ formData, onChange, onNext }) {
+export default function StepExcess({ formData, onChange, onNext, onBack }) {
   const [helpOpen, setHelpOpen] = useState(false);
   const selected = formData.excess || 1000;
 
@@ -49,9 +50,7 @@ export default function StepExcess({ formData, onChange, onNext }) {
         Higher excess = lower premium
       </p>
 
-      <div className="pt-2">
-        <PillButton onClick={onNext}>Continue</PillButton>
-      </div>
+      <StepFooter onBack={onBack} onNext={onNext} />
 
       <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} title="Excess">
         {HELP_TEXTS.excess}

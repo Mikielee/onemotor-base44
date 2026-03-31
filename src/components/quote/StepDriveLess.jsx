@@ -2,10 +2,9 @@ import { AlertTriangle } from 'lucide-react';
 import { useState } from 'react';
 import HelpIcon from './HelpIcon';
 import HelpDrawer from './HelpDrawer';
-import PillButton from './PillButton';
 import { HELP_TEXTS } from '../../lib/quoteData';
 
-export default function StepDriveLess({ formData, onChange, onNext }) {
+export default function StepDriveLess({ formData, onChange, onNext, onBack }) {
   const [helpOpen, setHelpOpen] = useState(false);
 
   return (
@@ -35,19 +34,21 @@ export default function StepDriveLess({ formData, onChange, onNext }) {
       </div>
 
       <div className="space-y-3">
-        <PillButton
-          variant="green"
+        <button
+          type="button"
           onClick={() => { onChange('driveLessOptIn', true); onChange('driveLessUpgrade', false); onNext(); }}
+          className="w-full py-4 rounded-pill font-montserrat font-bold text-sm text-white bg-bdred hover:bg-[#c2200d] transition-all"
         >
           Opt in — Save $150/year
-        </PillButton>
+        </button>
 
-        <PillButton
-          variant="outline"
+        <button
+          type="button"
           onClick={() => { onChange('driveLessOptIn', false); onChange('driveLessUpgrade', false); onNext(); }}
+          className="w-full py-4 rounded-pill font-montserrat font-bold text-sm text-carbon bg-white border-2 border-[#CBD5E0] hover:bg-grey100 transition-all"
         >
           No thanks, keep standard plan
-        </PillButton>
+        </button>
 
         <button
           type="button"

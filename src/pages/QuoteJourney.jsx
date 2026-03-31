@@ -6,7 +6,6 @@ import BlockerScreen from '../components/quote/BlockerScreen';
 import StepCoverType from '../components/quote/StepCoverType';
 import StepStartDate from '../components/quote/StepStartDate';
 import StepMakeModel from '../components/quote/StepMakeModel';
-
 import StepCarUsage from '../components/quote/StepCarUsage';
 import StepDistance from '../components/quote/StepDistance';
 import StepMainDriver from '../components/quote/StepMainDriver';
@@ -18,12 +17,35 @@ import StepDriveLess from '../components/quote/StepDriveLess';
 import StepExcess from '../components/quote/StepExcess';
 import StepBenefits from '../components/quote/StepBenefits';
 import StepAdditionalDetails from '../components/quote/StepAdditionalDetails';
+import StepVehicleDetails from '../components/quote/StepVehicleDetails';
+import StepDutyOfDisclosure from '../components/quote/StepDutyOfDisclosure';
 import StepSummary from '../components/quote/StepSummary';
 import StepPayment from '../components/quote/StepPayment';
 import StepConfirmation from '../components/quote/StepConfirmation';
 import StoryTag from '../components/quote/StoryTag';
 
-const TOTAL_STEPS = 17;
+// Steps:
+// 1  CoverType
+// 2  StartDate
+// 3  MakeModel
+// 4  CarUsage
+// 5  Distance
+// 6  MainDriver
+// 7  DrivingHistory
+// 8  Contact
+// 9  PrePrice
+// 10 AdditionalDrivers  ← price bar starts here
+// 11 DriveLess (conditional)
+// 12 Excess
+// 13 Benefits
+// 14 AdditionalDetails
+// 15 VehicleDetails
+// 16 DutyOfDisclosure
+// 17 Summary
+// 18 Payment
+// 19 Confirmation
+
+const TOTAL_STEPS = 19;
 
 export default function QuoteJourney() {
   const [step, setStep] = useState(1);
@@ -39,20 +61,17 @@ export default function QuoteJourney() {
   }, []);
 
   const getEffectiveStep = (rawStep) => {
-    // Step 11 (Drive Less) is conditional — skip if distance >= 8000km
-    if (rawStep === 11 && formData.annualDistance !== 'lt8000') {
-      return null; // skip
-    }
+    if (rawStep === 11 && formData.annualDistance !== 'lt8000') return null;
     return rawStep;
   };
 
   const goNext = () => {
-    // Check blocker after step 7
-    if (step === 7 && formData.atFault === 'yes') {
-      setBlocked(true);
-      return;
+    if (step === 7 && formData.atFaultTimes && formData.atFaultTimes !== '0' && parseInt(formData.atFaultTimes) > 0) {
+      if (formData.atFaultTimes === 'More than 5' || parseInt(formData.atFaultTimes) > 2) {
+        setBlocked(true);
+        return;
+      }
     }
-
     let next = step + 1;
     while (next <= TOTAL_STEPS) {
       if (getEffectiveStep(next) !== null) break;
@@ -104,26 +123,29 @@ export default function QuoteJourney() {
     exit: (dir) => ({ x: dir < 0 ? '100%' : '-100%', opacity: 0 }),
   };
 
+  const sharedProps = { formData, onChange, onNext: goNext, onBack: step > 1 ? goBack : undefined, price, goToStep };
+
   const renderStep = () => {
-    const props = { formData, onChange, onNext: goNext, price, goToStep };
     switch (step) {
-      case 1: return <StepCoverType {...props} />;
-      case 2: return <StepStartDate {...props} />;
-      case 3: return <StepMakeModel {...props} />;
-      case 4: return <StepCarUsage {...props} />;
-      case 5: return <StepDistance {...props} />;
-      case 6: return <StepMainDriver {...props} />;
-      case 7: return <StepDrivingHistory {...props} onBlock={() => setBlocked(true)} />;
-      case 8: return <StepContact {...props} />;
-      case 9: return <StepPrePrice {...props} />;
-      case 10: return <StepAdditionalDrivers {...props} />;
-      case 11: return <StepDriveLess {...props} />;
-      case 12: return <StepExcess {...props} />;
-      case 13: return <StepBenefits {...props} />;
-      case 14: return <StepAdditionalDetails {...props} />;
-      case 15: return <StepSummary {...props} goToStep={goToStep} />;
-      case 16: return <StepPayment {...props} onNext={handlePaymentNext} />;
-      case 17: return <StepConfirmation {...props} paymentType={paymentType} />;
+      case 1:  return <StepCoverType {...sharedProps} />;
+      case 2:  return <StepStartDate {...sharedProps} />;
+      case 3:  return <StepMakeModel {...sharedProps} />;
+      case 4:  return <StepCarUsage {...sharedProps} />;
+      case 5:  return <StepDistance {...sharedProps} />;
+      case 6:  return <StepMainDriver {...sharedProps} />;
+      case 7:  return <StepDrivingHistory {...sharedProps} onBlock={() => setBlocked(true)} />;
+      case 8:  return <StepContact {...sharedProps} />;
+      case 9:  return <StepPrePrice {...sharedProps} />;
+      case 10: return <StepAdditionalDrivers {...sharedProps} />;
+      case 11: return <StepDriveLess {...sharedProps} />;
+      case 12: return <StepExcess {...sharedProps} />;
+      case 13: return <StepBenefits {...sharedProps} />;
+      case 14: return <StepAdditionalDetails {...sharedProps} />;
+      case 15: return <StepVehicleDetails {...sharedProps} />;
+      case 16: return <StepDutyOfDisclosure onNext={goNext} onBack={goBack} goToStep={goToStep} />;
+      case 17: return <StepSummary {...sharedProps} />;
+      case 18: return <StepPayment {...sharedProps} onNext={handlePaymentNext} />;
+      case 19: return <StepConfirmation {...sharedProps} paymentType={paymentType} />;
       default: return null;
     }
   };
@@ -136,7 +158,7 @@ export default function QuoteJourney() {
         step={step}
         totalSteps={TOTAL_STEPS}
         onBack={goBack}
-        showPriceBar={step > 10 && step < 18}
+        showPriceBar={step >= 10 && step < 19}
         price={price}
         formData={formData}
       >

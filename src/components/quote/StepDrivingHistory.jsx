@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import YesNoButtons from './YesNoButtons';
+import StepFooter from './StepFooter';
 import ChoiceButton from './ChoiceButton';
 import HelpIcon from './HelpIcon';
 import HelpDrawer from './HelpDrawer';
@@ -9,6 +10,7 @@ import { HELP_TEXTS } from '../../lib/quoteData';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LICENCE_OPTIONS = ['Less than 1 yr', '1–2 yrs', '3–5 yrs', '6–10 yrs', 'More than 10 yrs'];
+const AT_FAULT_VALUES = ['0', '1', '2', '3', '4', '5', 'More than 5'];
 const NCD_OPTIONS = ['0', '10', '20', '30', '40', '50'];
 const ZERO_NCD_REASONS = ['New driver', 'No previous insurance', 'I have NCD on another car', 'Claims in past year'];
 const OTHER_NCD_OPTIONS = ['10', '20', '30', '40', '50'];
@@ -26,22 +28,21 @@ function FadeIn({ show, children }) {
   );
 }
 
-export default function StepDrivingHistory({ formData, onChange, onNext, onBlock }) {
+export default function StepDrivingHistory({ formData, onChange, onNext, onBack, onBlock }) {
   const [helpOpen, setHelpOpen] = useState(null);
-
-  // Check blocker: at-fault claims > 2
-  const atFaultCount = formData.atFault === 'yes' ? (parseInt(formData.atFaultCount) || 1) : 0;
 
   const canProceed = () => {
     if (!formData.licenceYears) return false;
     if (!formData.claimsInPast3Years) return false;
-    if (formData.claimsInPast3Years === 'yes' && !formData.atFault) return false;
+    if (formData.claimsInPast3Years === 'yes' && !formData.atFaultTimes) return false;
     if (!formData.certificateOfMerit) return false;
     if (!formData.ncdEntitlement) return false;
     if (formData.ncdEntitlement === '0' && !formData.zeroNcdReason) return false;
     if (formData.zeroNcdReason === 'I have NCD on another car' && !formData.otherCarNcd) return false;
     if (formData.ncdEntitlement === '50' && !formData.fiftyNcdYears) return false;
-    if (!formData.ncdTransferFrom) return false;
+    // ncdTransferFrom only required for 10-50% NCD or I have NCD on another car
+    const needsTransfer = (formData.ncdEntitlement !== '0') || formData.zeroNcdReason === 'I have NCD on another car';
+    if (needsTransfer && !formData.ncdTransferFrom) return false;
     return true;
   };
 
@@ -79,11 +80,26 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBlock
         </div>
       </FadeIn>
 
-      {/* At fault */}
+      {/* How many times at fault */}
       <FadeIn show={formData.claimsInPast3Years === 'yes'}>
         <div className="bg-grey100 rounded-lg p-4 mt-3">
-          <p className="font-montserrat font-bold text-sm text-carbon mb-3">Were you at fault?</p>
-          <YesNoButtons value={formData.atFault} onChange={(v) => onChange('atFault', v)} />
+          <p className="font-montserrat font-bold text-sm text-carbon mb-3">How many times were you at fault?</p>
+          <div className="grid grid-cols-4 gap-2">
+            {AT_FAULT_VALUES.map(v => (
+              <button
+                key={v}
+                type="button"
+                onClick={() => onChange('atFaultTimes', v)}
+                className={`py-2.5 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
+                  formData.atFaultTimes === v
+                    ? 'bg-bdred text-white border-bdred'
+                    : 'bg-white text-carbon border-gray-200 hover:border-carbon/40'
+                }`}
+              >
+                {v === 'More than 5' ? '5+' : v}
+              </button>
+            ))}
+          </div>
         </div>
       </FadeIn>
 
@@ -171,8 +187,8 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBlock
         </div>
       </FadeIn>
 
-      {/* NCD transfer from */}
-      <FadeIn show={!!formData.ncdEntitlement && (formData.ncdEntitlement !== '0' || !!formData.zeroNcdReason)}>
+      {/* NCD transfer from — only for 10-50% NCD or 'I have NCD on another car' reason */}
+      <FadeIn show={formData.ncdEntitlement > '0' || formData.zeroNcdReason === 'I have NCD on another car'}>
         <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3">
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
             NCD transferred from
@@ -192,11 +208,7 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBlock
         </div>
       </FadeIn>
 
-      <div className="pt-4">
-        <PillButton onClick={onNext} disabled={!canProceed()}>
-          Continue
-        </PillButton>
-      </div>
+      <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed()} />
 
       <HelpDrawer open={!!helpOpen} onClose={() => setHelpOpen(null)} title={helpOpen === 'com' ? 'Certificate of Merit' : 'No Claim Discount'}>
         {helpOpen && HELP_TEXTS[helpOpen]}

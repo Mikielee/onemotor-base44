@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { CreditCard, Lock, QrCode } from 'lucide-react';
+import StepFooter from './StepFooter';
 import PillButton from './PillButton';
 
-export default function StepPayment({ formData, price, onNext }) {
+export default function StepPayment({ formData, price, onNext, onBack }) {
   const [paymentType, setPaymentType] = useState(formData.paymentType || 'annual');
   const [method, setMethod] = useState('card');
   const [loading, setLoading] = useState(false);
@@ -38,18 +39,11 @@ export default function StepPayment({ formData, price, onNext }) {
 
       {/* Payment frequency toggle */}
       <div className="flex gap-0 bg-grey100 rounded-pill p-1">
-        {['annual', 'monthly'].map(t => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => setPaymentType(t)}
-            className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-sm transition-all ${
-              paymentType === t ? 'bg-bdred text-white shadow-sm' : 'text-carbon'
-            }`}
-          >
-            {t === 'annual' ? 'Annual' : 'Monthly'}
-          </button>
-        ))}
+      {paymentType === 'monthly' && (
+        <p className="text-xs font-montserrat text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+          <span className="font-bold">Monthly instalment is only available for UOB and DBS credit card holders.</span>
+        </p>
+      )}
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
@@ -91,6 +85,13 @@ export default function StepPayment({ formData, price, onNext }) {
 
         {method === 'card' ? (
           <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
+            {paymentType === 'monthly' && (
+              <div className="flex gap-2 mb-2">
+                {['UOB', 'DBS'].map(bank => (
+                  <div key={bank} className="flex-1 py-2 rounded-lg border-2 border-gray-200 bg-grey100 text-center font-montserrat font-bold text-sm text-carbon">{bank}</div>
+                ))}
+              </div>
+            )}
             <div>
               <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Card number</label>
               <input type="text" maxLength={19} value={card.number} onChange={(e) => setCard({ ...card, number: e.target.value })} className={inputClass} placeholder="1234 5678 9012 3456" />
@@ -126,9 +127,7 @@ export default function StepPayment({ formData, price, onNext }) {
         </div>
       </div>
 
-      <PillButton onClick={handlePay}>
-        Pay Now — SGD ${displayPrice.toLocaleString()}
-      </PillButton>
+      <StepFooter onBack={onBack} onNext={handlePay} label={`Pay Now — SGD $${displayPrice.toLocaleString()}`} />
     </div>
   );
 }

@@ -1,7 +1,14 @@
 import { useState } from 'react';
-import PillButton from './PillButton';
+import { Mail, MessageCircle, Phone } from 'lucide-react';
+import StepFooter from './StepFooter';
 
-export default function StepContact({ formData, onChange, onNext }) {
+const MARKETING_PREFS = [
+  { key: 'Email', icon: Mail },
+  { key: 'SMS', icon: MessageCircle },
+  { key: 'Phone', icon: Phone },
+];
+
+export default function StepContact({ formData, onChange, onNext, onBack }) {
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -38,7 +45,7 @@ export default function StepContact({ formData, onChange, onNext }) {
             value={formData.preferredName || ''}
             onChange={(e) => onChange('preferredName', e.target.value)}
             className={inputClass('name')}
-            placeholder="e.g. John"
+            placeholder="John Doe"
           />
           {errors.name && <p className="text-[11px] text-bdred mt-1 font-montserrat">{errors.name}</p>}
         </div>
@@ -90,24 +97,7 @@ export default function StepContact({ formData, onChange, onNext }) {
         <div>
           <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">Marketing preferences</p>
           <div className="space-y-2">
-            {['Email', 'SMS', 'Phone'].map(pref => (
-              <label key={pref} className="flex items-center justify-between py-2 cursor-pointer">
-                <span className="text-sm font-montserrat text-carbon">{pref}</span>
-                <button
-                  type="button"
-                  onClick={() => onChange(`marketing${pref}`, !formData[`marketing${pref}`])}
-                  className={`relative w-10 h-6 rounded-full transition-colors ${
-                    formData[`marketing${pref}`] ? 'bg-bdred' : 'bg-gray-300'
-                  }`}
-                >
-                  <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
-                    formData[`marketing${pref}`] ? 'translate-x-[18px]' : 'translate-x-0.5'
-                  }`} />
-                </button>
-              </label>
-            ))}
-          </div>
-        </div>
+            {MARKETING_PREFS.map(({ key: pref, icon: Icon }) => (
 
         {/* Privacy */}
         <div className="border-t border-gray-100 pt-3">
@@ -133,11 +123,7 @@ export default function StepContact({ formData, onChange, onNext }) {
         </div>
       </div>
 
-      <div className="pt-2">
-        <PillButton onClick={handleNext}>
-          Continue
-        </PillButton>
-      </div>
+      <StepFooter onBack={onBack} onNext={handleNext} />
     </div>
   );
 }

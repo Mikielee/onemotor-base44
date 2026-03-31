@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Shield, Car, ShieldCheck, Wind } from 'lucide-react';
+import StepFooter from './StepFooter';
 import HelpIcon from './HelpIcon';
 import HelpDrawer from './HelpDrawer';
 import PillButton from './PillButton';
@@ -14,7 +15,7 @@ const BENEFITS = [
 
 const PA_LEVELS = [50000, 100000, 200000];
 
-export default function StepBenefits({ formData, onChange, onNext }) {
+export default function StepBenefits({ formData, onChange, onNext, onBack }) {
   const [helpOpen, setHelpOpen] = useState(null);
 
   return (
@@ -79,9 +80,7 @@ export default function StepBenefits({ formData, onChange, onNext }) {
         })}
       </div>
 
-      <div className="pt-2">
-        <PillButton onClick={onNext}>Continue</PillButton>
-      </div>
+      <StepFooter onBack={onBack} onNext={onNext} />
 
       <HelpDrawer open={!!helpOpen} onClose={() => setHelpOpen(null)} title={BENEFITS.find(b => b.helpKey === helpOpen)?.name || ''}>
         {helpOpen && HELP_TEXTS[helpOpen]}
