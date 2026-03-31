@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { ChevronDown, Search } from 'lucide-react';
-import { CAR_MAKES, CAR_MODELS, SUB_MODELS } from '../../lib/quoteData';
+import { ChevronDown, Search, AlertTriangle } from 'lucide-react';
+import { CAR_MAKES, CAR_MODELS, SUB_MODELS, COVER_TYPES } from '../../lib/quoteData';
 import PillButton from './PillButton';
 
 function SearchDropdown({ label, value, options, onChange, placeholder }) {
@@ -62,9 +62,26 @@ function SearchDropdown({ label, value, options, onChange, placeholder }) {
   );
 }
 
-export default function StepMakeModel({ formData, onChange, onNext }) {
+const YEARS = (() => {
+  const result = [];
+  for (let y = 2025; y >= 2000; y--) result.push(y);
+  return result;
+})();
+
+export default function StepMakeModel({ formData, onChange, onNext, goToStep }) {
+  const vehicleAge = formData.yearOfReg ? new Date().getFullYear() - parseInt(formData.yearOfReg) : null;
+
+  const coverConflict = useMemo(() => {
+    if (!formData.coverType || vehicleAge === null) return null;
+    const cover = COVER_TYPES.find(c => c.id === formData.coverType);
+    if (cover?.maxAge && vehicleAge > cover.maxAge) return cover.name;
+    return null;
+  }, [formData.coverType, vehicleAge]);
+
   const models = formData.carMake ? (CAR_MODELS[formData.carMake] || ['Sedan', 'SUV', 'Hatchback']) : [];
   const subModels = formData.carModel ? (SUB_MODELS[formData.carModel] || ['1.6 Auto', '2.0 Auto']) : [];
+
+  const canProceed = formData.yearOfReg && formData.carMake && formData.carModel && !coverConflict;
 
   return (
     <div className="space-y-4">
@@ -73,13 +90,61 @@ export default function StepMakeModel({ formData, onChange, onNext }) {
       </h1>
 
       <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-        <SearchDropdown
-          label="Car Make"
-          value={formData.carMake}
-          options={CAR_MAKES}
-          onChange={(v) => { onChange('carMake', v); onChange('carModel', ''); onChange('subModel', ''); }}
-          placeholder="Select make"
-        />
+        {/* Year first */}
+        <div>
+          <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Year of Registration</label>
+          <div className="relative">
+            <select
+              value={formData.yearOfReg || ''}
+              onChange={(e) => {
+                onChange('yearOfReg', e.target.value);
+                onChange('carMake', '');
+                onChange('carModel', '');
+                onChange('subModel', '');
+              }}
+              className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none cursor-pointer"
+            >
+              <option value="" disabled>Select year</option>
+              {YEARS.map(y => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+          </div>
+          {vehicleAge !== null && !coverConflict && (
+            <p className="text-xs text-muted-foreground font-montserrat mt-1.5">Vehicle age: {vehicleAge} years</p>
+          )}
+        </div>
+
+        {/* Cover conflict warning */}
+        {coverConflict && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex gap-3">
+            <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-xs font-montserrat text-amber-800 leading-relaxed">
+                Based on your vehicle age, <span className="font-bold">{coverConflict}</span> is not available. Please go back to Step 1 to update your cover selection.
+              </p>
+              <button
+                type="button"
+                onClick={() => goToStep(1)}
+                className="mt-2 text-xs font-montserrat font-bold text-amber-700 underline"
+              >
+                Go back
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Car Make — only after year selected */}
+        {formData.yearOfReg && !coverConflict && (
+          <SearchDropdown
+            label="Car Make"
+            value={formData.carMake}
+            options={CAR_MAKES}
+            onChange={(v) => { onChange('carMake', v); onChange('carModel', ''); onChange('subModel', ''); }}
+            placeholder="Select make"
+          />
+        )}
 
         {formData.carMake && (
           <SearchDropdown
@@ -103,7 +168,7 @@ export default function StepMakeModel({ formData, onChange, onNext }) {
       </div>
 
       <div className="pt-2">
-        <PillButton onClick={onNext} disabled={!formData.carMake || !formData.carModel}>
+        <PillButton onClick={onNext} disabled={!canProceed}>
           Continue
         </PillButton>
       </div>

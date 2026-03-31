@@ -1,24 +1,24 @@
 import { useState } from 'react';
 
+// Step 4 (StepYearReg) was merged into Step 3, so steps 4+ shifted down by 1
 const STORY_MAP = {
   1:  { id: 'OM-006', owner: 'MS' },
   2:  { id: 'OM-007', owner: 'AL' },
-  3:  { id: 'OM-009', owner: 'AL' },
-  4:  { id: 'OM-010', owner: 'MS' },
-  5:  { id: 'OM-011', owner: 'MS' },
-  6:  { id: 'OM-012', owner: 'AL' },
-  7:  { id: 'OM-014', owner: 'Unassigned' },
-  8:  { id: 'OM-015', owner: 'MS' },
-  9:  { id: 'OM-016', owner: 'AL' },
-  10: { id: 'OM-017', owner: 'MS' },
-  11: { id: 'OM-018', owner: 'AL' },
-  12: { id: 'OM-019', owner: 'TBC' },
-  13: { id: 'OM-020', owner: 'AL' },
-  14: { id: 'OM-021', owner: 'AL' },
-  15: { id: 'OM-022', owner: 'MS' },
-  16: { id: 'OM-023', owner: 'AL' },
-  17: { id: 'OM-024', owner: 'MS' },
-  18: { id: 'OM-025', owner: 'AL' },
+  3:  { id: 'OM-009 / OM-010', owner: 'AL / MS' },
+  4:  { id: 'OM-011', owner: 'MS' },
+  5:  { id: 'OM-012', owner: 'AL' },
+  6:  { id: 'OM-014', owner: 'Unassigned' },
+  7:  { id: 'OM-015', owner: 'MS' },
+  8:  { id: 'OM-016', owner: 'AL' },
+  9:  { id: 'OM-017', owner: 'MS' },
+  10: { id: 'OM-018', owner: 'AL' },
+  11: { id: 'OM-019', owner: 'TBC' },
+  12: { id: 'OM-020', owner: 'AL' },
+  13: { id: 'OM-021', owner: 'AL' },
+  14: { id: 'OM-022', owner: 'MS' },
+  15: { id: 'OM-023', owner: 'AL' },
+  16: { id: 'OM-024', owner: 'MS' },
+  17: { id: 'OM-025', owner: 'AL' },
 };
 
 export default function StoryTag({ step }) {

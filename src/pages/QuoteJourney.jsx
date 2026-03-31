@@ -6,7 +6,7 @@ import BlockerScreen from '../components/quote/BlockerScreen';
 import StepCoverType from '../components/quote/StepCoverType';
 import StepStartDate from '../components/quote/StepStartDate';
 import StepMakeModel from '../components/quote/StepMakeModel';
-import StepYearReg from '../components/quote/StepYearReg';
+
 import StepCarUsage from '../components/quote/StepCarUsage';
 import StepDistance from '../components/quote/StepDistance';
 import StepMainDriver from '../components/quote/StepMainDriver';
@@ -23,7 +23,7 @@ import StepPayment from '../components/quote/StepPayment';
 import StepConfirmation from '../components/quote/StepConfirmation';
 import StoryTag from '../components/quote/StoryTag';
 
-const TOTAL_STEPS = 18;
+const TOTAL_STEPS = 17;
 
 export default function QuoteJourney() {
   const [step, setStep] = useState(1);
@@ -39,16 +39,16 @@ export default function QuoteJourney() {
   }, []);
 
   const getEffectiveStep = (rawStep) => {
-    // Step 12 (Drive Less) is conditional — skip if distance >= 8000km
-    if (rawStep === 12 && formData.annualDistance !== 'lt8000') {
+    // Step 11 (Drive Less) is conditional — skip if distance >= 8000km
+    if (rawStep === 11 && formData.annualDistance !== 'lt8000') {
       return null; // skip
     }
     return rawStep;
   };
 
   const goNext = () => {
-    // Check blocker after step 8
-    if (step === 8 && formData.atFault === 'yes') {
+    // Check blocker after step 7
+    if (step === 7 && formData.atFault === 'yes') {
       setBlocked(true);
       return;
     }
@@ -105,26 +105,25 @@ export default function QuoteJourney() {
   };
 
   const renderStep = () => {
-    const props = { formData, onChange, onNext: goNext, price };
+    const props = { formData, onChange, onNext: goNext, price, goToStep };
     switch (step) {
       case 1: return <StepCoverType {...props} />;
       case 2: return <StepStartDate {...props} />;
       case 3: return <StepMakeModel {...props} />;
-      case 4: return <StepYearReg {...props} />;
-      case 5: return <StepCarUsage {...props} />;
-      case 6: return <StepDistance {...props} />;
-      case 7: return <StepMainDriver {...props} />;
-      case 8: return <StepDrivingHistory {...props} onBlock={() => setBlocked(true)} />;
-      case 9: return <StepContact {...props} />;
-      case 10: return <StepPrePrice {...props} />;
-      case 11: return <StepAdditionalDrivers {...props} />;
-      case 12: return <StepDriveLess {...props} />;
-      case 13: return <StepExcess {...props} />;
-      case 14: return <StepBenefits {...props} />;
-      case 15: return <StepAdditionalDetails {...props} />;
-      case 16: return <StepSummary {...props} goToStep={goToStep} />;
-      case 17: return <StepPayment {...props} onNext={handlePaymentNext} />;
-      case 18: return <StepConfirmation {...props} paymentType={paymentType} />;
+      case 4: return <StepCarUsage {...props} />;
+      case 5: return <StepDistance {...props} />;
+      case 6: return <StepMainDriver {...props} />;
+      case 7: return <StepDrivingHistory {...props} onBlock={() => setBlocked(true)} />;
+      case 8: return <StepContact {...props} />;
+      case 9: return <StepPrePrice {...props} />;
+      case 10: return <StepAdditionalDrivers {...props} />;
+      case 11: return <StepDriveLess {...props} />;
+      case 12: return <StepExcess {...props} />;
+      case 13: return <StepBenefits {...props} />;
+      case 14: return <StepAdditionalDetails {...props} />;
+      case 15: return <StepSummary {...props} goToStep={goToStep} />;
+      case 16: return <StepPayment {...props} onNext={handlePaymentNext} />;
+      case 17: return <StepConfirmation {...props} paymentType={paymentType} />;
       default: return null;
     }
   };
