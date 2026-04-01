@@ -1,11 +1,19 @@
 import ChoiceButton from './ChoiceButton';
 import YesNoButtons from './YesNoButtons';
 import StepFooter from './StepFooter';
+import BlockerScreen from './BlockerScreen';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Briefcase } from 'lucide-react';
 
-export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
-  const canProceed = formData.carUsage && (formData.carUsage === 'business' || formData.commuteToWork);
+export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlock }) {
+  const isDeliveryDriver = formData.carUsage === 'business' && formData.isDeliveryDriver === 'yes';
+  const canProceed = formData.carUsage && (formData.carUsage === 'business' || (formData.commuteToWork && formData.isOffPeakCar));
+
+  // Trigger blocker if delivery driver selected business use
+  if (isDeliveryDriver && onBlock) {
+    onBlock();
+    return null;
+  }
 
   return (
     <div className="space-y-1.5">
@@ -40,7 +48,7 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
 
         <button
           type="button"
-          onClick={() => { onChange('carUsage', 'business'); onChange('commuteToWork', ''); }}
+          onClick={() => { onChange('carUsage', 'business'); onChange('commuteToWork', ''); onChange('isDeliveryDriver', ''); onChange('isOffPeakCar', ''); }}
           className={`w-full text-left p-4 rounded-lg border-2 min-h-20 flex items-center gap-3 transition-all duration-200 ${
             formData.carUsage === 'business'
               ? 'bg-red-50 border-bdred'
@@ -69,7 +77,7 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden"
+            className="overflow-hidden space-y-3"
           >
             <div className="bg-grey100 rounded-lg p-4 mt-2">
               <p className="font-montserrat font-bold text-sm text-carbon mb-3">
@@ -77,14 +85,54 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
               </p>
               <YesNoButtons
                 value={formData.commuteToWork}
-                onChange={(v) => onChange('commuteToWork', v)}
+                onChange={(v) => { onChange('commuteToWork', v); onChange('isOffPeakCar', ''); }}
+              />
+            </div>
+
+            {formData.commuteToWork && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="bg-grey100 rounded-lg p-4">
+                  <p className="font-montserrat font-bold text-sm text-carbon mb-3">
+                    Is this an off-peak car?
+                  </p>
+                  <YesNoButtons
+                    value={formData.isOffPeakCar}
+                    onChange={(v) => onChange('isOffPeakCar', v)}
+                  />
+                </div>
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {formData.carUsage === 'business' && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="bg-grey100 rounded-lg p-4 mt-2">
+              <p className="font-montserrat font-bold text-sm text-carbon mb-3">
+                Do you use this car for delivery services (Grab, Gojek, etc.)?
+              </p>
+              <YesNoButtons
+                value={formData.isDeliveryDriver}
+                onChange={(v) => onChange('isDeliveryDriver', v)}
               />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />
+      {!isDeliveryDriver && <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />}
     </div>
   );
 }
