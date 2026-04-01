@@ -121,6 +121,7 @@ export default function StepStartDate({ formData, onChange, onNext, onBack }) {
                 }`}
               >
                 {format(day, 'd')}
+                {isToday && !isSelected && <span className="text-[7px] leading-tight text-gray-400">today</span>}
               </button>
             );
           })}
