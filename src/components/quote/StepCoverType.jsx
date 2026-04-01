@@ -33,7 +33,7 @@ export default function StepCoverType({ formData, onChange, onNext, onBack }) {
               key={ct.id}
               type="button"
               onClick={disabled ? undefined : () => onChange('coverType', ct.id)}
-              className={`w-full text-left p-4 rounded-lg border-2 h-24 flex items-center gap-3 transition-all duration-200 ${
+              className={`w-full text-left p-4 rounded-lg border-2 min-h-24 flex items-center gap-3 transition-all duration-200 ${
                 disabled
                   ? 'opacity-40 cursor-not-allowed bg-gray-50 border-gray-200'
                   : selected

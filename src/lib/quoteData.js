@@ -39,19 +39,19 @@ export const COVER_TYPES = [
   {
     id: 'COMP',
     name: 'Comprehensive',
-    desc: 'Full protection for your car and third parties. Covers accidental damage, theft, fire, and third-party liability.',
+    desc: 'Full protection — covers damage to your car, other vehicles, fire, theft, and more.',
     maxAge: 15,
   },
   {
     id: 'TPFT',
     name: 'Third Party, Fire & Theft',
-    desc: 'Covers third-party liability plus fire and theft damage to your car. Does not cover accidental damage.',
+    desc: 'Covers damage to other vehicles plus fire and theft of your car.',
     maxAge: 20,
   },
   {
     id: 'TPO',
     name: 'Third Party Only',
-    desc: 'Basic cover for damage to other people and their property. Does not cover your own car.',
+    desc: 'Basic cover — protects against damage you cause to other vehicles and property.',
     maxAge: null,
   },
 ];
