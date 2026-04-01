@@ -14,7 +14,7 @@ const CLAIMS_OPTIONS = ['0', '1', '2', '3', '4', '5', 'More than 5+'];
 const AT_FAULT_VALUES = ['0', '1', '2', '3', '4', '5', 'More than 5+'];
 const NCD_OPTIONS = ['0', '10', '20', '30', '40', '50'];
 const ZERO_NCD_REASONS = ['New driver', 'No previous insurance', 'I have NCD on another car', 'Claims in past year'];
-const OTHER_NCD_OPTIONS = ['10', '20', '30', '40', '50'];
+const OTHER_NCD_OPTIONS = ['0', '10', '20', '30', '40', '50'];
 const FIFTY_NCD_YEARS = ['1 year', '2 years', '3 years or more'];
 
 function getAtFaultOptions(claimsValue) {
@@ -170,24 +170,24 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
       <FadeIn show={formData.zeroNcdReason === 'I have NCD on another car'}>
        <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3">
          <p className="text-xs font-montserrat font-medium text-muted-foreground mb-3">NCD% on your other car?</p>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {OTHER_NCD_OPTIONS.map(n => (
               <button
                 key={n}
                 type="button"
                 onClick={() => onChange('otherCarNcd', n)}
-                className={`px-4 py-2 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
-                  formData.otherCarNcd === n
-                    ? 'bg-bdred text-white border-bdred'
-                    : 'bg-white text-carbon border-gray-200 hover:border-carbon/40'
-                }`}
-              >
-                {n}%
-              </button>
-            ))}
-          </div>
-        </div>
-      </FadeIn>
+                 className={`py-2.5 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
+                    formData.otherCarNcd === n
+                      ? 'bg-bdred text-white border-bdred'
+                      : 'bg-white text-carbon border-gray-200 hover:border-carbon/40'
+                  }`}
+                >
+                  {n}%
+                </button>
+                ))}
+                </div>
+                </div>
+                </FadeIn>
 
       {/* 50% NCD years */}
       <FadeIn show={formData.ncdEntitlement === '50'}>
