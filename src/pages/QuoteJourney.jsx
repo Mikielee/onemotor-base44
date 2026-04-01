@@ -23,6 +23,7 @@ import StepSummary from '../components/quote/StepSummary';
 import StepPayment from '../components/quote/StepPayment';
 import StepConfirmation from '../components/quote/StepConfirmation';
 import StoryTag from '../components/quote/StoryTag';
+import PriceWidget from '../components/quote/PriceWidget';
 
 const TOTAL_STEPS = 19;
 
@@ -132,6 +133,7 @@ export default function QuoteJourney() {
   return (
     <>
       <AdminPanel />
+      <PriceWidget formData={formData} price={price} />
       <StoryTag step={step} />
       <QuoteLayout step={step} totalSteps={TOTAL_STEPS}>
         <AnimatePresence mode="wait" custom={direction}>

@@ -82,7 +82,7 @@ function SectionHeader({ title, subtitle }) {
   );
 }
 
-export default function StepPrePrice({ formData, price, onNext, onBack }) {
+export default function StepPrePrice({ formData, onChange, price, onNext, onBack }) {
   const [period, setPeriod] = useState('monthly');
   const [showOptional, setShowOptional] = useState(false);
   const [showPromoInput, setShowPromoInput] = useState(false);
@@ -97,7 +97,10 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const p = params.get('promo');
-    if (p && p.toUpperCase() === 'TEST') setUtmPromo(p.toUpperCase());
+    if (p && p.toUpperCase() === 'TEST') {
+      setUtmPromo(p.toUpperCase());
+      onChange('utmPromo', p.toUpperCase());
+    }
   }, []);
 
   const basePrice = BASE_PRICES[coverType] || price;
@@ -115,10 +118,12 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
     const code = promoCode.trim().toUpperCase();
     if (code === 'TEST') {
       setPromoApplied(code);
+      onChange('promoApplied', code);
       setPromoError('');
     } else {
       setPromoError('Invalid promo code. Please try again.');
       setPromoApplied('');
+      onChange('promoApplied', '');
     }
   };
 
@@ -233,7 +238,7 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
                 <p className="text-xs font-montserrat font-bold text-emerald-700">Promo applied: {promoApplied}</p>
                 <p className="text-xs font-montserrat text-emerald-600 mt-0.5">CapitaVoucher S$20 will be sent within 30 days after your policy starts.</p>
               </div>
-              <button type="button" onClick={() => { setPromoApplied(''); setPromoCode(''); setPromoError(''); }} className="text-xs font-montserrat text-muted-foreground underline flex-shrink-0">Remove</button>
+              <button type="button" onClick={() => { setPromoApplied(''); setPromoCode(''); setPromoError(''); onChange('promoApplied', ''); }} className="text-xs font-montserrat text-muted-foreground underline flex-shrink-0">Remove</button>
             </div>
           )
         )}
