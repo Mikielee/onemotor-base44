@@ -249,7 +249,7 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
       {/* Confirmation mini-card */}
       <div className="rounded-lg border border-gray-200 bg-white px-4 py-3 space-y-3">
         <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-100">
-          <p className="text-[10px] font-montserrat text-muted-foreground tracking-widest uppercase">Reference ID: P11361049R00</p>
+          <p className="text-[10px] font-montserrat text-muted-foreground tracking-widest uppercase">Quote ID: P11361049R00</p>
           <button
             type="button"
             onClick={() => setShowEmailModal(true)}
