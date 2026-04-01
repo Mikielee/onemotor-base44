@@ -25,7 +25,7 @@ export default function QuoteLayout({ children, step, totalSteps }) {
 
       {/* Content */}
       <div className="flex-1 overflow-x-hidden">
-        <div className="max-w-lg mx-auto px-4 py-6 pb-40">
+        <div className="max-w-lg mx-auto px-4 py-6 pb-6">
           {children}
         </div>
       </div>
