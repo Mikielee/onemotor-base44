@@ -86,7 +86,7 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
                 <select
                   value={formData.atFaultTimes || ''}
                   onChange={(e) => onChange('atFaultTimes', e.target.value)}
-                  className="w-full appearance-none px-3 py-3 bg-grey100 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+                  className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
                 >
                   <option value="" disabled>Select</option>
                   {AT_FAULT_VALUES.map(v => <option key={v} value={v}>{v}</option>)}
