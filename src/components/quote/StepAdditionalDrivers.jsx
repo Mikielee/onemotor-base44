@@ -230,7 +230,7 @@ export default function StepAdditionalDrivers({ formData, onChange, onNext, onBa
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="font-montserrat font-bold text-sm text-carbon truncate">{d.preferredName || `Driver ${i + 1}`}</span>
+                          <span className="font-montserrat font-bold text-sm text-carbon truncate">{d.nameDisplayedOnCard || `Driver ${i + 1}`}</span>
                           <span className="font-montserrat font-bold text-sm text-bdred flex-shrink-0">+${DRIVER_COST}</span>
                         </div>
                         <p className="text-xs text-muted-foreground font-montserrat mt-0.5">
