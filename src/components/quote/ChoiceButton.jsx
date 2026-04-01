@@ -1,5 +1,5 @@
 export default function ChoiceButton({ selected, onClick, children, disabled, subtitle }) {
-  const base = 'w-full text-left px-4 py-3.5 rounded-lg font-montserrat transition-all duration-200 border-2';
+  const base = 'w-full text-left px-4 py-3.5 rounded-lg font-montserrat transition-all duration-200 border-2 mb-2';
   const selectedClass = 'bg-bdred text-white border-bdred';
   const unselectedClass = 'bg-white text-carbon border-gray-200 hover:border-carbon/40';
   const disabledClass = 'opacity-40 cursor-not-allowed bg-gray-50 border-gray-200 text-gray-400';
