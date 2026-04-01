@@ -1,4 +1,4 @@
-import { Info, CheckCircle, Gauge } from 'lucide-react';
+import { Info, CheckCircle, Gauge, TrendingDown, Zap } from 'lucide-react';
 import { useState } from 'react';
 import StepFooter from './StepFooter';
 import { HELP_TEXTS } from '../../lib/quoteData';
@@ -75,10 +75,8 @@ export default function StepDriveLess({ formData, onChange, onNext, onBack }) {
             }`}
           >
             <div className="flex items-start gap-3">
-              <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center ${
-                selectedOption === 'save' ? 'border-bdred bg-bdred' : 'border-gray-300'
-              }`}>
-                {selectedOption === 'save' && <div className="w-2 h-2 bg-white rounded-full" />}
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${selectedOption === 'save' ? 'bg-emerald-100' : 'bg-grey100'}`}>
+                <TrendingDown className={`w-5 h-5 ${selectedOption === 'save' ? 'text-emerald-600' : 'text-muted-foreground'}`} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1">
@@ -103,10 +101,8 @@ export default function StepDriveLess({ formData, onChange, onNext, onBack }) {
             }`}
           >
             <div className="flex items-start gap-3">
-              <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center ${
-                selectedOption === 'upgrade' ? 'border-bdred bg-bdred' : 'border-gray-300'
-              }`}>
-                {selectedOption === 'upgrade' && <div className="w-2 h-2 bg-white rounded-full" />}
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${selectedOption === 'upgrade' ? 'bg-blue-100' : 'bg-grey100'}`}>
+                <Zap className={`w-5 h-5 ${selectedOption === 'upgrade' ? 'text-blue-600' : 'text-muted-foreground'}`} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1">
