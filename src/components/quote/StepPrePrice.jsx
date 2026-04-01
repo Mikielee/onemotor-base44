@@ -259,7 +259,7 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
             Save & Email
           </button>
         </div>
-        <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase">Your Policy:</p>
+        <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase">Your Quote:</p>
         <div className="flex items-center gap-2 min-w-0">
           <Shield className="w-4 h-4 text-bdred flex-shrink-0" />
           <span className="text-sm font-montserrat font-bold text-carbon leading-snug">{coverLabels[coverType] || '—'}</span>
