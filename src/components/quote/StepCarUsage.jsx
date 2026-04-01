@@ -19,7 +19,7 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
           onClick={() => { onChange('carUsage', 'private'); onChange('commuteToWork', ''); }}
           className={`w-full text-left p-4 rounded-lg border-2 min-h-20 flex items-center gap-3 transition-all duration-200 ${
             formData.carUsage === 'private'
-              ? 'bg-purple-50 border-purple-600'
+              ? 'bg-purple-50 border-purple-500'
               : 'bg-white border-gray-200 hover:border-gray-300'
           }`}
         >
@@ -32,7 +32,7 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
           </div>
           <div className="flex-1 min-w-0">
             <p className={`font-montserrat font-bold text-sm ${
-              formData.carUsage === 'private' ? 'text-purple-600' : 'text-carbon'
+              formData.carUsage === 'private' ? 'text-purple-700' : 'text-carbon'
             }`}>Private and Leisure only</p>
             <p className="font-montserrat text-xs text-muted-foreground mt-1">Social, domestic and pleasure purposes only</p>
           </div>
@@ -43,12 +43,12 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
           onClick={() => { onChange('carUsage', 'business'); onChange('commuteToWork', ''); }}
           className={`w-full text-left p-4 rounded-lg border-2 min-h-20 flex items-center gap-3 transition-all duration-200 ${
             formData.carUsage === 'business'
-              ? 'bg-blue-50 border-blue-600'
+              ? 'bg-cyan-50 border-cyan'
               : 'bg-white border-gray-200 hover:border-gray-300'
           }`}
         >
           <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
-            formData.carUsage === 'business' ? 'bg-blue-600' : 'bg-grey100'
+            formData.carUsage === 'business' ? 'bg-cyan' : 'bg-grey100'
           }`}>
             <Briefcase className={`w-6 h-6 ${
               formData.carUsage === 'business' ? 'text-white' : 'text-muted-foreground'
@@ -56,7 +56,7 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
           </div>
           <div className="flex-1 min-w-0">
             <p className={`font-montserrat font-bold text-sm ${
-              formData.carUsage === 'business' ? 'text-blue-600' : 'text-carbon'
+              formData.carUsage === 'business' ? 'text-cyan' : 'text-carbon'
             }`}>Private and Business Use</p>
             <p className="font-montserrat text-xs text-muted-foreground mt-1">Commuting plus business use by Main Driver or Named Driver</p>
           </div>
