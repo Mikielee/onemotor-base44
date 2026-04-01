@@ -12,7 +12,7 @@ const MAX_DRIVERS = 5;
 
 function DriverForm({ driver, onSave, onCancel }) {
   const [form, setForm] = useState(driver || {
-    preferredName: '', dobDay: '', dobMonth: '', dobYear: '',
+    preferredName: '', nameDisplayedOnCard: '', nricFin: '', dobDay: '', dobMonth: '', dobYear: '',
     gender: '', licenceYears: '', claims: '', atFaultTimes: '', com: '',
   });
 
@@ -43,21 +43,33 @@ function DriverForm({ driver, onSave, onCancel }) {
   };
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
-  const canSave = form.dobDay && form.dobMonth && form.dobYear && form.gender && form.licenceYears && form.claims
+  const canSave = form.nameDisplayedOnCard && form.nricFin && form.dobDay && form.dobMonth && form.dobYear && form.gender && form.licenceYears && form.claims
     && (form.claims === '0' || (form.atFaultTimes && form.com));
 
   const inputBase = 'border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none';
 
   return (
     <div className="bg-grey100 rounded-lg p-4 space-y-3">
-      <input
-        type="text" placeholder="Preferred name (optional)" value={form.preferredName}
-        onChange={(e) => set('preferredName', e.target.value)}
-        className={`w-full px-3 py-2.5 ${inputBase}`}
-      />
+      <div>
+        <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Name Displayed on ID Card</p>
+        <input
+          type="text" placeholder="" value={form.nameDisplayedOnCard}
+          onChange={(e) => set('nameDisplayedOnCard', e.target.value)}
+          className={`w-full px-3 py-2.5 ${inputBase}`}
+        />
+      </div>
 
       <div>
-        <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Date of birth</p>
+        <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">NRIC/FIN</p>
+        <input
+          type="text" placeholder="" value={form.nricFin}
+          onChange={(e) => set('nricFin', e.target.value)}
+          className={`w-full px-3 py-2.5 ${inputBase}`}
+        />
+      </div>
+
+      <div>
+        <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Date of Birth</p>
         <input
           type="text"
           inputMode="numeric"
@@ -70,32 +82,36 @@ function DriverForm({ driver, onSave, onCancel }) {
         />
       </div>
 
-      <div className="flex gap-3">
-        {['Male', 'Female'].map(g => (
-          <button key={g} type="button" onClick={() => set('gender', g.toLowerCase())}
-            className={`flex-1 py-3 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
-              form.gender === g.toLowerCase()
-                ? 'bg-bdred text-white border-bdred'
-                : 'bg-white text-carbon border-carbon/30 hover:border-carbon/60'
-            }`}>
-            {g}
-          </button>
-        ))}
+      <div>
+        <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Gender</p>
+        <div className="flex gap-3">
+          {['Male', 'Female'].map(g => (
+            <button key={g} type="button" onClick={() => set('gender', g.toLowerCase())}
+              className={`flex-1 py-3 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
+                form.gender === g.toLowerCase()
+                  ? 'bg-bdred text-white border-bdred'
+                  : 'bg-white text-carbon border-carbon/30 hover:border-carbon/60'
+              }`}>
+              {g}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="relative">
+        <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Years Holding Licence</p>
         <select value={form.licenceYears} onChange={(e) => set('licenceYears', e.target.value)}
           className={`w-full appearance-none px-3 py-2.5 ${inputBase} cursor-pointer`}>
-          <option value="" disabled>Years holding licence</option>
+          <option value="" disabled>Select</option>
           {LICENCE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
         </select>
         <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
       </div>
 
       <div>
-        <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
+        <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">
           How many accidents and/or claims in the past 3 years?
-        </label>
+        </p>
         <div className="relative">
           <select value={form.claims} onChange={(e) => { set('claims', e.target.value); set('atFaultTimes', ''); }}
             className={`w-full appearance-none px-3 py-2.5 ${inputBase} cursor-pointer`}>
@@ -108,7 +124,7 @@ function DriverForm({ driver, onSave, onCancel }) {
 
       {form.claims && form.claims !== '0' && (
         <div>
-          <p className="text-xs font-montserrat font-medium text-carbon mb-2 mt-2">
+          <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">
             How many of those accidents or claims were you or any driver at-fault?
           </p>
           <div className="relative">
@@ -122,16 +138,11 @@ function DriverForm({ driver, onSave, onCancel }) {
         </div>
       )}
 
-      {form.claims === 'yes' && (
-        <>
-
-          {form.claims && form.claims !== '0' && (
-            <div>
-              <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">Certificate of Merit (COM)?</p>
-              <YesNoButtons value={form.com} onChange={(v) => set('com', v)} />
-            </div>
-          )}
-        </>
+      {form.claims && form.claims !== '0' && (
+        <div>
+          <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Certificate of Merit (COM)?</p>
+          <YesNoButtons value={form.com} onChange={(v) => set('com', v)} />
+        </div>
       )}
 
       <div className="flex gap-2 pt-1">
