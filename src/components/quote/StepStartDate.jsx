@@ -5,10 +5,9 @@ import { format, addDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSa
 
 export default function StepStartDate({ formData, onChange, onNext, onBack }) {
   const today = new Date();
-  const tomorrow = addDays(today, 1);
-  const maxDate = addDays(today, 120);
+  const maxDate = addDays(today, 60);
   const selected = formData.coverStartDate ? new Date(formData.coverStartDate) : null;
-  const [currentMonth, setCurrentMonth] = useState(selected || tomorrow);
+  const [currentMonth, setCurrentMonth] = useState(selected || today);
   const [inputValue, setInputValue] = useState(selected ? format(selected, 'dd/MM/yyyy') : '');
 
   const handleInputChange = (e) => {
@@ -31,7 +30,7 @@ export default function StepStartDate({ formData, onChange, onNext, onBack }) {
   };
 
   const isDisabled = (day) => {
-    return isBefore(day, tomorrow) || isAfter(day, maxDate);
+    return isBefore(day, today) || isAfter(day, maxDate);
   };
 
   const days = useMemo(() => {
@@ -109,7 +108,7 @@ export default function StepStartDate({ formData, onChange, onNext, onBack }) {
                 type="button"
                 disabled={disabled}
                 onClick={() => handleCalendarSelect(day)}
-                className={`aspect-square flex items-center justify-center rounded-full text-xs font-montserrat transition-all ${
+                className={`aspect-square flex flex-col items-center justify-center rounded-full text-xs font-montserrat transition-all ${
                   !isCurrentMonth
                     ? 'invisible'
                     : isSelected
@@ -122,6 +121,7 @@ export default function StepStartDate({ formData, onChange, onNext, onBack }) {
                 }`}
               >
                 {format(day, 'd')}
+                {isToday && !isSelected && <span className="text-[7px] leading-tight text-gray-400">today</span>}
               </button>
             );
           })}
