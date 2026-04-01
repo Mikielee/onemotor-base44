@@ -119,9 +119,9 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
 
       {/* COM */}
       <FadeIn show={!!formData.claimsInPast3Years}>
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3">
-          <div className="flex items-center gap-2 mb-3">
-            <p className="font-montserrat font-bold text-sm text-carbon">Certificate of Merit (COM)?</p>
+       <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3">
+         <div className="flex items-center gap-2 mb-3">
+           <p className="text-xs font-montserrat font-medium text-muted-foreground">Certificate of Merit (COM)?</p>
             <HelpIcon onClick={() => setHelpOpen('com')} />
           </div>
           <YesNoButtons value={formData.certificateOfMerit} onChange={(v) => onChange('certificateOfMerit', v)} />
@@ -130,9 +130,9 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
 
       {/* NCD */}
       <FadeIn show={!!formData.certificateOfMerit}>
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3">
-          <div className="flex items-center gap-2 mb-3">
-            <p className="font-montserrat font-bold text-sm text-carbon">What is your NCD entitlement?</p>
+       <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3">
+         <div className="flex items-center gap-2 mb-3">
+           <p className="text-xs font-montserrat font-medium text-muted-foreground">What is your NCD entitlement?</p>
             <HelpIcon onClick={() => setHelpOpen('ncd')} />
           </div>
           <div className="grid grid-cols-3 gap-2">
@@ -156,8 +156,8 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
 
       {/* 0% NCD reason */}
       <FadeIn show={formData.ncdEntitlement === '0'}>
-        <div className="bg-grey100 rounded-lg p-4 mt-3 space-y-2">
-          <p className="font-montserrat font-bold text-sm text-carbon mb-2">Reason for 0% NCD</p>
+       <div className="bg-grey100 rounded-lg p-4 mt-3 space-y-2">
+         <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">Reason for 0% NCD</p>
           {ZERO_NCD_REASONS.map(r => (
             <ChoiceButton key={r} selected={formData.zeroNcdReason === r} onClick={() => onChange('zeroNcdReason', r)}>
               {r}
@@ -168,8 +168,8 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
 
       {/* NCD on another car */}
       <FadeIn show={formData.zeroNcdReason === 'I have NCD on another car'}>
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3">
-          <p className="font-montserrat font-bold text-sm text-carbon mb-3">NCD% on your other car?</p>
+       <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3">
+         <p className="text-xs font-montserrat font-medium text-muted-foreground mb-3">NCD% on your other car?</p>
           <div className="flex flex-wrap gap-2">
             {OTHER_NCD_OPTIONS.map(n => (
               <button
@@ -191,8 +191,8 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
 
       {/* 50% NCD years */}
       <FadeIn show={formData.ncdEntitlement === '50'}>
-        <div className="bg-grey100 rounded-lg p-4 mt-3 space-y-2">
-          <p className="font-montserrat font-bold text-sm text-carbon mb-2">How many years at 50% NCD?</p>
+       <div className="bg-grey100 rounded-lg p-4 mt-3 space-y-2">
+         <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">How many years at 50% NCD?</p>
           {FIFTY_NCD_YEARS.map(y => (
             <ChoiceButton key={y} selected={formData.fiftyNcdYears === y} onClick={() => onChange('fiftyNcdYears', y)}>
               {y}

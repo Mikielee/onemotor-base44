@@ -43,7 +43,7 @@ export default function StepVehicleDetails({ formData, onChange, onNext, onBack 
         </div>
 
         <div>
-          <p className="font-montserrat font-bold text-sm text-carbon mb-2">Is your car under financing?</p>
+          <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">Is your car under financing?</p>
           <YesNoButtons value={formData.carFinanced} onChange={(v) => onChange('carFinanced', v)} />
         </div>
 
@@ -65,7 +65,7 @@ export default function StepVehicleDetails({ formData, onChange, onNext, onBack 
         )}
 
         <div>
-          <p className="font-montserrat font-bold text-sm text-carbon mb-2">Is your car privately or company owned?</p>
+          <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">Is your car privately or company owned?</p>
           <div className="flex gap-3">
             {['Private', 'Company'].map(o => (
               <button

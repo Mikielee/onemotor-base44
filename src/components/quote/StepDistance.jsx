@@ -37,11 +37,11 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
       </div>
 
       {formData.annualDistance && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mt-4">
-          <div className="flex items-center gap-2 mb-3">
-            <p className="font-montserrat font-bold text-sm text-carbon">
-              Is your vehicle an off-peak car?
-            </p>
+       <div className="bg-white rounded-lg border border-gray-200 p-4 mt-4">
+         <div className="flex items-center gap-2 mb-3">
+           <p className="text-xs font-montserrat font-medium text-muted-foreground">
+             Is your vehicle an off-peak car?
+           </p>
             <HelpIcon onClick={() => setHelpOpen(true)} />
           </div>
           <YesNoButtons
