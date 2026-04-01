@@ -130,7 +130,7 @@ export default function StepContact({ formData, onChange, onNext, onBack }) {
               )}
             </button>
             <span className="text-xs font-montserrat text-muted-foreground leading-relaxed">
-              I acknowledge Budget Direct's <span className="text-cyan">Privacy Policy</span> and consent to the collection and use of my personal data.
+              I agree to your collection, use and disclosure of my personal data for the purpose of processing my request for a quote in accordance with your <span className="text-cyan">Privacy Policy</span>.
             </span>
           </label>
           {errors.privacy && <p className="text-[11px] text-bdred mt-1 font-montserrat ml-8">Please accept to continue</p>}
