@@ -36,7 +36,7 @@ export default function QuoteLayout({ step, totalSteps, showPriceBar, price, for
 
         {/* Content area */}
         <div className="flex-1 overflow-y-auto">
-          <div className="px-5 py-6">
+          <div className="px-5 py-6 pb-28">
             {children}
           </div>
         </div>
