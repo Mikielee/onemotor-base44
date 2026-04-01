@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CreditCard, Lock, QrCode } from 'lucide-react';
+import { CreditCard, Lock, QrCode, Shield, Car } from 'lucide-react';
 import StepFooter from './StepFooter';
 import PillButton from './PillButton';
 
@@ -78,28 +78,56 @@ export default function StepPayment({ formData, price, onNext, onBack, goToStep 
             including prevailing GST
           </p>
         </div>
+
+        {/* Monthly restriction warning inside price card */}
+        {paymentType === 'monthly' && (
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <p className="text-xs font-montserrat font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+              <span className="font-bold">Monthly plan is only available for DBS, POST, and UOB cardholders</span>
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* Monthly restriction warning */}
-      {paymentType === 'monthly' && (
-        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
-          <div className="text-amber-700 font-montserrat text-xs leading-relaxed">
-            <p className="font-bold">Monthly plan is only available for DBS, POST, and UOB cardholders</p>
-            <p className="mt-1">If paying with another card, please select Annual payment.</p>
-          </div>
-        </div>
-      )}
-
-      {/* Quote summary card */}
+      {/* Policy summary card */}
       <div className="rounded-lg border border-gray-200 bg-white px-4 py-3 space-y-3">
-        <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase">Your Quote:</p>
+        <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase">Your Policy:</p>
         <div className="flex items-center gap-2 min-w-0">
-          <svg className="w-4 h-4 text-bdred flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
+          <Shield className="w-4 h-4 text-bdred flex-shrink-0" />
           <span className="text-sm font-montserrat font-bold text-carbon leading-snug">{coverLabels[coverType] || '—'}</span>
         </div>
         <div className="flex items-center gap-2 min-w-0">
-          <svg className="w-4 h-4 text-bdred flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm11 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+          <Car className="w-4 h-4 text-bdred flex-shrink-0" />
           <span className="text-sm font-montserrat text-carbon leading-snug">{vehicleStr || '—'}</span>
+        </div>
+      </div>
+
+      {/* Premium breakdown summary */}
+      <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
+        <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase">Your Premium Breakdown:</p>
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-montserrat text-muted-foreground">Base Premium</span>
+            <span className="text-xs font-montserrat font-semibold text-carbon">S${Math.round(price * 1.1).toLocaleString()}</span>
+          </div>
+          {formData.ncdEntitlement && parseInt(formData.ncdEntitlement) > 0 && (
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-montserrat text-muted-foreground">NCD Discount ({formData.ncdEntitlement}%)</span>
+              <span className="text-xs font-montserrat font-semibold text-emerald-600">−S${Math.round((price * 1.1) * parseInt(formData.ncdEntitlement) / 100).toLocaleString()}</span>
+            </div>
+          )}
+          {formData.driveLessOptIn && (
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-montserrat text-muted-foreground">Drive Less Pay Less</span>
+              <span className="text-xs font-montserrat font-semibold text-emerald-600">−S$150</span>
+            </div>
+          )}
+          {(formData.utmPromo || formData.promoApplied) && (
+            <div className="flex justify-between items-center bg-cyan/5 border border-cyan/20 rounded-lg p-2">
+              <span className="text-xs font-montserrat text-carbon font-semibold">CapitaVoucher</span>
+              <span className="text-xs font-montserrat font-semibold text-cyan">S$20 🎁</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -127,32 +155,9 @@ export default function StepPayment({ formData, price, onNext, onBack, goToStep 
         </div>
 
         {method === 'card' ? (
-          <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
-            {paymentType === 'monthly' && (
-              <div className="flex gap-2 mb-2">
-                {['DBS', 'POST', 'UOB'].map(bank => (
-                  <div key={bank} className="flex-1 py-2 rounded-lg border-2 border-gray-200 bg-grey100 text-center font-montserrat font-bold text-sm text-carbon">{bank}</div>
-                ))}
-              </div>
-            )}
-            <div>
-              <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Card number</label>
-              <input type="text" maxLength={19} value={card.number} onChange={(e) => setCard({ ...card, number: e.target.value })} className={inputClass} placeholder="1234 5678 9012 3456" />
-            </div>
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Expiry</label>
-                <input type="text" maxLength={5} value={card.expiry} onChange={(e) => setCard({ ...card, expiry: e.target.value })} className={inputClass} placeholder="MM/YY" />
-              </div>
-              <div className="w-24">
-                <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">CVV</label>
-                <input type="password" maxLength={4} value={card.cvv} onChange={(e) => setCard({ ...card, cvv: e.target.value })} className={inputClass} placeholder="•••" />
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Name on card</label>
-              <input type="text" value={card.name} onChange={(e) => setCard({ ...card, name: e.target.value })} className={inputClass} placeholder="JOHN TAN" />
-            </div>
+          <div className="bg-white rounded-lg border border-gray-200 p-4 flex flex-col items-center text-center">
+            <CreditCard className="w-12 h-12 text-muted-foreground/30 mb-3" />
+            <p className="text-xs font-montserrat text-muted-foreground">You'll be directed to our secure payment gateway to enter your card details</p>
           </div>
         ) : (
           <div className="bg-white rounded-lg border border-gray-200 p-6 flex flex-col items-center">
