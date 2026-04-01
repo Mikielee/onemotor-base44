@@ -76,7 +76,7 @@ function CoverageRow({ row, i }) {
 
 function SectionHeader({ title, subtitle }) {
   return (
-    <div className="px-4 py-3 bg-grey100 border-b border-gray-200">
+    <div className="px-4 py-3 bg-white border-b border-gray-200">
       <p className="font-montserrat font-bold text-sm text-carbon">{title}</p>
       {subtitle && <p className="font-montserrat text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
     </div>
