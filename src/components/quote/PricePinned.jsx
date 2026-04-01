@@ -62,7 +62,7 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
   const periodLabel = syncedPeriod === 'monthly' ? 'month' : 'year';
 
   return (
-    <div className="fixed bottom-18 left-0 right-0 z-10 bg-white border-t border-gray-200">
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-white">
       <AnimatePresence>
         {expanded && (
           <motion.div
@@ -70,7 +70,7 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/20 z-9"
+            className="fixed inset-0 bg-black/20 z-39"
             onClick={() => setExpanded(false)}
           />
         )}
@@ -84,7 +84,7 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'tween', duration: 0.25 }}
-            className="fixed bottom-20 left-0 right-0 z-10 max-h-[70vh] overflow-y-auto bg-white rounded-t-3xl border-t border-gray-200"
+            className="fixed bottom-0 left-0 right-0 z-40 max-h-[70vh] overflow-y-auto bg-white rounded-t-3xl"
           >
             <div className="max-w-lg mx-auto w-full px-4 py-6">
               {/* Collapse button */}
@@ -182,21 +182,38 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
       </AnimatePresence>
 
       {/* Collapsed bar */}
-      <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 gap-3 bg-white">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <span className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase whitespace-nowrap">
-            Your Premium:
+      <button
+        type="button"
+        onClick={() => setExpanded(true)}
+        className="w-full flex items-center justify-between px-4 py-3 border-t border-gray-100 hover:bg-gray-50/50 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase">
+            Your Indicative Premium:
           </span>
-          <span className="font-montserrat font-bold text-bdred text-base whitespace-nowrap">
-            S${displayPrice.toLocaleString()} / {periodLabel}
+          <span className="font-montserrat font-bold text-bdred text-base">
+            S${displayPrice.toLocaleString()}
           </span>
+          <span className="text-xs font-montserrat text-muted-foreground">/ {periodLabel}</span>
         </div>
+        <ChevronUp className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+      </button>
+
+      {/* Sticky footer buttons */}
+      <div className="border-t border-gray-100 flex gap-3 px-4 py-3 bg-white shadow-lg">
         <button
           type="button"
-          onClick={() => setExpanded(true)}
-          className="hover:text-carbon text-muted-foreground flex-shrink-0"
+          onClick={onBack}
+          className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 font-montserrat font-bold text-sm text-carbon hover:border-carbon/40 transition-colors"
         >
-          <ChevronUp className="w-4 h-4" />
+          ← Back
+        </button>
+        <button
+          type="button"
+          onClick={onNext}
+          className="flex-1 px-4 py-3 rounded-lg bg-bdred text-white font-montserrat font-bold text-sm hover:bg-bdred/90 transition-colors"
+        >
+          Continue
         </button>
       </div>
     </div>
