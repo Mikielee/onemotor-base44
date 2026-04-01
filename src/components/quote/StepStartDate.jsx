@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import StepFooter from './StepFooter';
 import { format, addDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isSameDay, isBefore, isAfter, addMonths, subMonths } from 'date-fns';
@@ -9,13 +9,6 @@ export default function StepStartDate({ formData, onChange, onNext, onBack }) {
   const selected = formData.coverStartDate ? new Date(formData.coverStartDate) : null;
   const [currentMonth, setCurrentMonth] = useState(selected || today);
   const [inputValue, setInputValue] = useState(selected ? format(selected, 'dd/MM/yyyy') : '');
-
-  useEffect(() => {
-    if (!formData.coverStartDate) {
-      onChange('coverStartDate', today.toISOString());
-      setInputValue(format(today, 'dd/MM/yyyy'));
-    }
-  }, []);
 
   const handleInputChange = (e) => {
     const val = e.target.value;
@@ -67,7 +60,7 @@ export default function StepStartDate({ formData, onChange, onNext, onBack }) {
             placeholder="dd/mm/yyyy"
             value={inputValue}
             onChange={handleInputChange}
-            className="w-full px-3 py-3 border-2 border-gray-200 rounded-lg font-montserrat text-sm text-carbon focus:border-bdred focus:outline-none"
+            className="w-full px-3 py-3 border-2 border-bdred rounded-lg font-montserrat text-sm text-carbon focus:border-bdred focus:outline-none"
           />
         </div>
 
