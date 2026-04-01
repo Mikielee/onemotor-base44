@@ -8,7 +8,7 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
   const canProceed = formData.carUsage && (formData.carUsage === 'business' || formData.commuteToWork);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-1.5">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         How do you use your car?
       </h1>

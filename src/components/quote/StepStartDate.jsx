@@ -44,7 +44,7 @@ export default function StepStartDate({ formData, onChange, onNext, onBack }) {
   }, [currentMonth]);
 
   return (
-    <div className="space-y-4 pb-24">
+    <div className="space-y-1.5 pb-24">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         When would you like your cover to start?
       </h1>

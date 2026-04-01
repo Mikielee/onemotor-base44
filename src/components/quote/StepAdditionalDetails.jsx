@@ -48,7 +48,7 @@ export default function StepAdditionalDetails({ formData, onChange, onNext, onBa
   const canProceed = !!(formData.fullName && formData.nric && formData.postalCode && formData.blockNo && formData.streetName);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-1.5">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         A few more details to issue your policy
       </h1>

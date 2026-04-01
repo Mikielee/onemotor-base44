@@ -33,7 +33,7 @@ export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
   const canProceed = formData.dobDay && formData.dobMonth && formData.dobYear && formData.gender;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-1.5">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         About the main driver
       </h1>

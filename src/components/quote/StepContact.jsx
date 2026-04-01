@@ -32,7 +32,7 @@ export default function StepContact({ formData, onChange, onNext, onBack }) {
     }`;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-1.5">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         How can we reach you?
       </h1>

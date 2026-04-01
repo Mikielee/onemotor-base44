@@ -122,7 +122,7 @@ export default function StepMakeModel({ formData, onChange, onNext, onBack, goTo
   const canProceed = formData.yearOfReg && formData.carMake && formData.carModel && !coverConflict;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-1.5">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         Tell us about your car
       </h1>

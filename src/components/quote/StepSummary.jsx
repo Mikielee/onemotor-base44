@@ -44,7 +44,7 @@ export default function StepSummary({ formData, price, onNext, onBack, goToStep 
   const basePremium = price - addOnsTotal;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-1.5">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         Review your policy
       </h1>
