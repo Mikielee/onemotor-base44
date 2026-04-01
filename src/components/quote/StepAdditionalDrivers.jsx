@@ -43,8 +43,8 @@ function DriverForm({ driver, onSave, onCancel }) {
   };
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
-  const canSave = form.nameDisplayedOnCard && form.nricFin && form.dobDay && form.dobMonth && form.dobYear && form.gender && form.licenceYears && form.claims
-    && (form.claims === '0' || (form.atFaultTimes && form.com));
+  const canSave = form.nameDisplayedOnCard && form.nricFin && form.dobDay && form.dobMonth && form.dobYear && form.gender && form.licenceYears && form.claims && form.com
+    && (form.claims === '0' || form.atFaultTimes);
 
   const inputBase = 'border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none';
 
