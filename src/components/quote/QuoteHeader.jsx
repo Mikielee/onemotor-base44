@@ -39,73 +39,28 @@ export default function QuoteHeader({ step, totalSteps = 19 }) {
 
       {/* Row 2: Progress Bar & Dots */}
       <div className="px-4 pb-5">
-        <div className="space-y-3">
-          {/* Overall Progress Bar with Milestones */}
-          <div className="relative h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
-            <div
-              className="h-full bg-gradient-to-r from-bdred via-red-500 to-red-600 rounded-full shadow-lg transition-all duration-700 ease-out"
-              style={{ width: `${overallProgress}%` }}
-            />
-            {/* Milestone markers */}
-            {MILESTONES.map((milestone) => (
-              <button
-                key={`marker-${milestone.step}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveTooltip(activeTooltip === milestone.step ? null : milestone.step);
-                }}
-                className={`absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 transition-all cursor-pointer hover:scale-125 ${
-                  isMilestoneReached(milestone.step)
-                    ? 'bg-bdred border-white shadow-md'
-                    : 'bg-white border-gray-300'
-                }`}
-                style={{ left: `${milestone.percent}%`, transform: 'translate(-50%, -50%)' }}
-              />
-            ))}
-          </div>
-
-          {/* Milestone Tooltips */}
-          {MILESTONES.map((milestone) => (
-            activeTooltip === milestone.step && (
-              <div
-                key={`tooltip-${milestone.step}`}
-                className="bg-red-50 border-2 border-bdred rounded-lg px-3 py-2 shadow-lg animate-fade-in"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <p className="text-xs font-montserrat font-bold text-bdred">{milestone.label}</p>
-                <p className="text-[10px] font-montserrat text-carbon mt-0.5">
-                  {milestone.step === 10 ? 'Review your personalized quote' : 'Complete your purchase'}
-                </p>
-              </div>
-            )
-          ))}
+        <div className="space-y-2">
 
           {/* Step dots for all pages */}
-          <div className="flex gap-1 pt-2 flex-wrap">
+          <div className="flex gap-0.5 w-full">
             {Array.from({ length: totalSteps }).map((_, i) => {
               const stepNum = i + 1;
-              const isStepCompleted = step > stepNum;
               const isStepCurrent = step === stepNum;
+              const dotWidth = isStepCurrent ? 'flex-grow' : 'flex-1';
 
               return (
                 <div
                   key={stepNum}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    isStepCurrent
-                      ? 'bg-bdred scale-150 shadow-md'
-                      : isStepCompleted
-                      ? 'bg-emerald-500'
-                      : 'bg-gray-300'
-                  }`}
+                  className={`h-2 bg-bdred rounded-full transition-all ${dotWidth} ${isStepCurrent ? 'shadow-md' : ''}`}
                 />
               );
             })}
           </div>
 
           {/* Current Step Info */}
-          <div className="border-t border-gray-200 pt-2 mt-2">
+          <div className="pt-2">
             <p className="text-[11px] font-montserrat text-muted-foreground">
-              Step <span className="font-bold text-carbon">{step}</span> of {totalSteps}
+              Step <span className="font-bold text-carbon">{step}</span> of {totalSteps} · <span className="font-bold text-carbon">{overallProgress}%</span>
             </p>
           </div>
         </div>
