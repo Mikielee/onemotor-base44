@@ -1,14 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Phone } from 'lucide-react';
 
-const MILESTONES = [
-  { step: 10, label: 'Your Quote', percent: 52.6 },
-  { step: 17, label: 'Payment', percent: 89.5 },
-];
-
 export default function QuoteHeader({ step, totalSteps = 19 }) {
   const [activeTooltip, setActiveTooltip] = useState(null);
   const headerRef = useRef(null);
+  const overallProgress = Math.round((step / totalSteps) * 100);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -19,10 +15,6 @@ export default function QuoteHeader({ step, totalSteps = 19 }) {
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
-
-  const overallProgress = Math.round((step / totalSteps) * 100);
-
-  const isMilestoneReached = (milestoneStep) => step >= milestoneStep;
 
   return (
     <div ref={headerRef} className="bg-gradient-to-br from-white via-white to-gray-50 border-b-2 border-gray-100 sticky top-0 z-40 shadow-md">
@@ -37,28 +29,30 @@ export default function QuoteHeader({ step, totalSteps = 19 }) {
         </div>
       </div>
 
-      {/* Row 2: Progress Bar & Dots */}
-      <div className="px-4 pb-5">
+      {/* Row 2: Progress Dots and Step Info */}
+      <div className="px-4 pb-4">
         <div className="space-y-2">
-
           {/* Step dots for all pages */}
           <div className="flex gap-0.5 w-full">
             {Array.from({ length: totalSteps }).map((_, i) => {
               const stepNum = i + 1;
+              const isStepCompleted = step > stepNum;
               const isStepCurrent = step === stepNum;
-              const dotWidth = isStepCurrent ? 'flex-grow' : 'flex-1';
+              const dotSize = isStepCurrent ? 'h-3' : 'h-2';
+              const dotColor = isStepCompleted || isStepCurrent ? 'bg-bdred' : 'bg-gray-300';
+              const dotFlex = isStepCurrent ? 'flex-grow' : 'flex-1';
 
               return (
                 <div
                   key={stepNum}
-                  className={`h-2 bg-bdred rounded-full transition-all ${dotWidth} ${isStepCurrent ? 'shadow-md' : ''}`}
+                  className={`${dotSize} ${dotColor} rounded-full transition-all ${dotFlex} ${isStepCurrent ? 'shadow-md' : ''}`}
                 />
               );
             })}
           </div>
 
           {/* Current Step Info */}
-          <div className="pt-2">
+          <div className="pt-1">
             <p className="text-[11px] font-montserrat text-muted-foreground">
               Step <span className="font-bold text-carbon">{step}</span> of {totalSteps} · <span className="font-bold text-carbon">{overallProgress}%</span>
             </p>
