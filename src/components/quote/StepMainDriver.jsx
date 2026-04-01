@@ -9,14 +9,10 @@ export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
   );
 
   const handleDobChange = (e) => {
-    let val = e.target.value.replace(/[^\d/]/g, '');
-    // Auto-insert slashes
-    if (e.nativeEvent.inputType !== 'deleteContentBackward') {
-      const digits = val.replace(/\//g, '');
-      if (digits.length <= 2) val = digits;
-      else if (digits.length <= 4) val = digits.slice(0, 2) + '/' + digits.slice(2);
-      else val = digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4, 8);
-    }
+    const digits = e.target.value.replace(/\D/g, '').slice(0, 8);
+    let val = digits;
+    if (digits.length > 4) val = digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4);
+    else if (digits.length > 2) val = digits.slice(0, 2) + '/' + digits.slice(2);
     setDobRaw(val);
     const parts = val.split('/');
     onChange('dobDay', parts[0] || '');
