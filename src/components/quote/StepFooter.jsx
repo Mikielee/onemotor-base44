@@ -2,7 +2,7 @@ import { ChevronLeft } from 'lucide-react';
 
 export default function StepFooter({ onBack, onNext, disabled = false, label = 'Continue', children }) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-gray-200 px-4 py-3">
+    <div className="fixed bottom-[68px] left-0 right-0 z-40 bg-background border-t border-gray-200 px-4 py-3">
       <div className="max-w-lg mx-auto flex items-center gap-3">
         {onBack && (
           <button
