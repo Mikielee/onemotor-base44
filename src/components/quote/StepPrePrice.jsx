@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Tag, ChevronDown, ChevronUp, X, Plus, Shield, Car } from 'lucide-react';
+import { Tag, ChevronDown, ChevronUp, X, Plus, Shield, Car, Mail } from 'lucide-react';
 import { BASE_PRICES } from '../../lib/quoteData';
 import StepFooter from './StepFooter';
+import SaveEmailQuoteModal from './SaveEmailQuoteModal';
 
 const COVERAGE_DATA = {
   COMP: [
@@ -90,6 +91,7 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
   const [promoApplied, setPromoApplied] = useState('');
   const [promoError, setPromoError] = useState('');
   const [utmPromo, setUtmPromo] = useState('');
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   const coverLabels = { COMP: 'Comprehensive', TPFT: 'Third Party, Fire & Theft', TPO: 'Third Party Only' };
   const coverType = formData.coverType || 'COMP';
@@ -150,6 +152,19 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
 
       {/* Price card */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
+        {/* Quote ID - subtle support info */}
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+          <p className="text-[10px] font-montserrat text-muted-foreground tracking-widest uppercase">Reference ID: P11361049R00</p>
+          <button
+            type="button"
+            onClick={() => setShowEmailModal(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-montserrat font-bold text-cyan hover:bg-cyan/5 transition-all"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            Save & Email
+          </button>
+        </div>
+
         {/* Compact toggle inside card */}
         <div className="flex bg-grey100 rounded-pill p-0.5 mb-4 w-fit mx-auto">
           <button
@@ -305,6 +320,9 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
       </p>
 
       <StepFooter onBack={onBack} onNext={onNext} label="Continue to personalise your quote" />
+
+      {/* Email Quote Modal */}
+      <SaveEmailQuoteModal isOpen={showEmailModal} onClose={() => setShowEmailModal(false)} formData={formData} price={price} />
     </div>
   );
 }
