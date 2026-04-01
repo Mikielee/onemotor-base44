@@ -5,7 +5,7 @@ import ChoiceButton from './ChoiceButton';
 import StepFooter from './StepFooter';
 
 const LICENCE_OPTIONS = ['Less than 1 yr', '1–2 yrs', '3–5 yrs', '6–10 yrs', 'More than 10 yrs'];
-const AT_FAULT_VALUES = ['0', '1', '2', '3', '4', '5', 'moreThan5'];
+const AT_FAULT_VALUES = ['0', '1', '2', '3', '4', '5', 'More than 5+'];
 const DRIVER_COST = 80;
 const MAX_DRIVERS = 5;
 
@@ -14,6 +14,15 @@ function DriverForm({ driver, onSave, onCancel }) {
     preferredName: '', dobDay: '', dobMonth: '', dobYear: '',
     gender: '', licenceYears: '', claims: '', atFaultTimes: '', com: '',
   });
+
+  const getAtFaultOptions = (claimsValue) => {
+    if (!claimsValue || claimsValue === '0') return [];
+    if (claimsValue === 'More than 5+') return AT_FAULT_VALUES;
+    const max = parseInt(claimsValue);
+    const opts = [];
+    for (let i = 0; i <= max; i++) opts.push(String(i));
+    return opts;
+  };
   const [dobRaw, setDobRaw] = useState(
     form.dobDay && form.dobMonth && form.dobYear
       ? `${form.dobDay}/${form.dobMonth}/${form.dobYear}`
@@ -83,31 +92,38 @@ function DriverForm({ driver, onSave, onCancel }) {
       </div>
 
       <div>
-        <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Any accidents or claims in past 3 years?</p>
-        <div className="flex gap-3">
-          {[['yes', 'Yes'], ['no', 'No']].map(([v, l]) => (
-            <button key={v} type="button" onClick={() => set('claims', v)}
-              className={`flex-1 py-3 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
-                form.claims === v
-                  ? 'bg-bdred text-white border-bdred'
-                  : 'bg-white text-carbon border-carbon/30 hover:border-carbon/60'
-              }`}>
-              {l}
-            </button>
-          ))}
+        <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
+          How many accidents and/or claims in the past 3 years?
+        </label>
+        <div className="relative">
+          <select value={form.claims} onChange={(e) => { set('claims', e.target.value); set('atFaultTimes', ''); }}
+            className={`w-full appearance-none px-3 py-2.5 ${inputBase} cursor-pointer`}>
+            <option value="" disabled>Select</option>
+            {['0', '1', '2', '3', '4', '5', 'More than 5+'].map(o => <option key={o} value={o}>{o}</option>)}
+          </select>
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
         </div>
       </div>
 
-      {form.claims === 'yes' && (
-        <>
+      {form.claims && form.claims !== '0' && (
+        <div>
+          <p className="text-xs font-montserrat font-medium text-carbon mb-2 mt-2">
+            How many of those accidents or claims were you or any driver at-fault?
+          </p>
           <div className="relative">
             <select value={form.atFaultTimes} onChange={(e) => set('atFaultTimes', e.target.value)}
               className={`w-full appearance-none px-3 py-2.5 ${inputBase} cursor-pointer`}>
-              <option value="" disabled>How many times at fault?</option>
-              {AT_FAULT_VALUES.map(v => <option key={v} value={v}>{v === 'moreThan5' ? '5+' : v}</option>)}
+              <option value="" disabled>Select</option>
+              {getAtFaultOptions(form.claims).map(v => <option key={v} value={v}>{v}</option>)}
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           </div>
+        </div>
+      )}
+
+      {form.claims === 'yes' && (
+        <>
+
           <div>
             <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Certificate of Merit (COM)?</p>
             <div className="flex gap-3">
