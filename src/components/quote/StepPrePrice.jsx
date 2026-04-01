@@ -249,7 +249,7 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
         <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase mb-1">Your Policy:</p>
         <div className="flex items-center gap-2 min-w-0">
           <Shield className="w-4 h-4 text-bdred flex-shrink-0" />
-          <span className="text-[10px] font-montserrat text-muted-foreground tracking-widest uppercase">QuoID: P11361049R00</span>
+          <span className="text-[10px] font-montserrat text-muted-foreground tracking-widest uppercase">Quote ID: P11361049R00</span>
         </div>
         <div className="flex items-center gap-2 min-w-0">
           <Car className="w-4 h-4 text-bdred flex-shrink-0" />
