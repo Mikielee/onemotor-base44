@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Plus, Pencil, Trash2, ChevronDown, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChoiceButton from './ChoiceButton';
+import YesNoButtons from './YesNoButtons';
 import StepFooter from './StepFooter';
 
 const LICENCE_OPTIONS = ['Less than 1 yr', '1–2 yrs', '3–5 yrs', '6–10 yrs', 'More than 10 yrs'];
@@ -43,7 +44,7 @@ function DriverForm({ driver, onSave, onCancel }) {
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
   const canSave = form.dobDay && form.dobMonth && form.dobYear && form.gender && form.licenceYears && form.claims
-    && (form.claims !== 'yes' || (form.atFaultTimes && form.com));
+    && (form.claims === '0' || (form.atFaultTimes && form.com));
 
   const inputBase = 'border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none';
 
@@ -124,21 +125,12 @@ function DriverForm({ driver, onSave, onCancel }) {
       {form.claims === 'yes' && (
         <>
 
-          <div>
-            <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Certificate of Merit (COM)?</p>
-            <div className="flex gap-3">
-              {[['yes', 'Yes'], ['no', 'No']].map(([v, l]) => (
-                <button key={v} type="button" onClick={() => set('com', v)}
-                  className={`flex-1 py-3 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
-                    form.com === v
-                      ? 'bg-bdred text-white border-bdred'
-                      : 'bg-white text-carbon border-carbon/30 hover:border-carbon/60'
-                  }`}>
-                  {l}
-                </button>
-              ))}
+          {form.claims && form.claims !== '0' && (
+            <div>
+              <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">Certificate of Merit (COM)?</p>
+              <YesNoButtons value={form.com} onChange={(v) => set('com', v)} />
             </div>
-          </div>
+          )}
         </>
       )}
 
