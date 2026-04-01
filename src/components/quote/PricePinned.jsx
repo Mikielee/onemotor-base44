@@ -34,7 +34,7 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
   const ncdDiscount = Math.round(basePrice * ncd / 100);
   const excessDelta = EXCESS_DELTA[formData.excess || 1000] || 0;
 
-  const vehicleStr = [formData.make, formData.model, formData.registrationYear].filter(Boolean).join(' · ');
+  const vehicleStr = [formData.carMake, formData.carModel, formData.yearOfReg].filter(Boolean).join(' · ');
 
   // Build adds section
   const adds = [];
