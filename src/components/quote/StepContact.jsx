@@ -96,8 +96,22 @@ export default function StepContact({ formData, onChange, onNext, onBack }) {
         {/* Marketing preferences */}
         <div>
           <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">Marketing preferences</p>
-          <div className="space-y-2">
+          <div className="flex gap-2">
             {MARKETING_PREFS.map(({ key: pref, icon: Icon }) => (
+              <button
+                key={pref}
+                type="button"
+                onClick={() => onChange(`marketingPref_${pref}`, !formData[`marketingPref_${pref}`])}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border-2 text-xs font-montserrat font-medium transition-all ${
+                  formData[`marketingPref_${pref}`] ? 'border-bdred bg-bdred/5 text-bdred' : 'border-gray-200 text-carbon'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {pref}
+              </button>
+            ))}
+          </div>
+        </div>
 
         {/* Privacy */}
         <div className="border-t border-gray-100 pt-3">
