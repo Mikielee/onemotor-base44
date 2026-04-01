@@ -1,6 +1,39 @@
+import { useState } from 'react';
 import StepFooter from './StepFooter';
 
 export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
+  const [dobRaw, setDobRaw] = useState(
+    formData.dobDay && formData.dobMonth && formData.dobYear
+      ? `${formData.dobDay}/${formData.dobMonth}/${formData.dobYear}`
+      : ''
+  );
+
+  const handleDobChange = (e) => {
+    let val = e.target.value.replace(/[^\d/]/g, '');
+    // Auto-insert slashes
+    if (e.nativeEvent.inputType !== 'deleteContentBackward') {
+      const digits = val.replace(/\//g, '');
+      if (digits.length <= 2) val = digits;
+      else if (digits.length <= 4) val = digits.slice(0, 2) + '/' + digits.slice(2);
+      else val = digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4, 8);
+    }
+    setDobRaw(val);
+    const parts = val.split('/');
+    onChange('dobDay', parts[0] || '');
+    onChange('dobMonth', parts[1] || '');
+    onChange('dobYear', parts[2] || '');
+  };
+
+  const handleDobNative = (e) => {
+    const val = e.target.value; // yyyy-mm-dd from date input
+    if (!val) return;
+    const [y, m, d] = val.split('-');
+    setDobRaw(`${d}/${m}/${y}`);
+    onChange('dobDay', d);
+    onChange('dobMonth', m);
+    onChange('dobYear', y);
+  };
+
   const canProceed = formData.dobDay && formData.dobMonth && formData.dobYear && formData.gender;
 
   return (
@@ -14,30 +47,24 @@ export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
             Date of birth
           </label>
-          <div className="flex gap-2">
+          <div className="relative">
+            {/* Hidden native date input for device autofill (iOS/Android) */}
             <input
-              type="text"
-              placeholder="DD"
-              maxLength={2}
-              value={formData.dobDay || ''}
-              onChange={(e) => onChange('dobDay', e.target.value.replace(/\D/g, ''))}
-              className="w-16 text-center px-2 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+              type="date"
+              onChange={handleDobNative}
+              className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+              tabIndex={-1}
+              aria-hidden
             />
             <input
               type="text"
-              placeholder="MM"
-              maxLength={2}
-              value={formData.dobMonth || ''}
-              onChange={(e) => onChange('dobMonth', e.target.value.replace(/\D/g, ''))}
-              className="w-16 text-center px-2 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
-            />
-            <input
-              type="text"
-              placeholder="YYYY"
-              maxLength={4}
-              value={formData.dobYear || ''}
-              onChange={(e) => onChange('dobYear', e.target.value.replace(/\D/g, ''))}
-              className="flex-1 text-center px-2 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+              inputMode="numeric"
+              placeholder="DD/MM/YYYY"
+              maxLength={10}
+              value={dobRaw}
+              onChange={handleDobChange}
+              autoComplete="bday"
+              className="relative w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
             />
           </div>
         </div>
