@@ -14,51 +14,53 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
       </h1>
 
       <div className="space-y-3">
-        <div className="bg-white rounded-lg border-2 border-gray-200 p-4 hover:border-gray-300 transition-colors cursor-pointer"
+        <button
+          type="button"
           onClick={() => { onChange('carUsage', 'private'); onChange('commuteToWork', ''); }}
+          className={`w-full text-left p-4 rounded-lg border-2 min-h-20 flex items-center gap-3 transition-all duration-200 ${
+            formData.carUsage === 'private'
+              ? 'bg-purple-50 border-purple-600'
+              : 'bg-white border-gray-200 hover:border-gray-300'
+          }`}
         >
-          <div className="flex items-start gap-3">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-              formData.carUsage === 'private' ? 'bg-purple-100' : 'bg-grey100'
-            }`}>
-              <Heart className={`w-5 h-5 ${
-                formData.carUsage === 'private' ? 'text-purple-600' : 'text-muted-foreground'
-              }`} />
-            </div>
-            <div className="flex-1">
-              <p className="font-montserrat font-bold text-sm text-carbon">Private and Leisure only</p>
-              <p className="font-montserrat text-xs text-muted-foreground mt-1">Social, domestic and pleasure purposes only</p>
-            </div>
-            <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-              formData.carUsage === 'private' ? 'border-bdred bg-bdred' : 'border-gray-300'
-            }`}>
-              {formData.carUsage === 'private' && <div className="w-2 h-2 bg-white rounded-full" />}
-            </div>
+          <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
+            formData.carUsage === 'private' ? 'bg-purple-600' : 'bg-grey100'
+          }`}>
+            <Heart className={`w-6 h-6 ${
+              formData.carUsage === 'private' ? 'text-white' : 'text-muted-foreground'
+            }`} />
           </div>
-        </div>
+          <div className="flex-1 min-w-0">
+            <p className={`font-montserrat font-bold text-sm ${
+              formData.carUsage === 'private' ? 'text-purple-600' : 'text-carbon'
+            }`}>Private and Leisure only</p>
+            <p className="font-montserrat text-xs text-muted-foreground mt-1">Social, domestic and pleasure purposes only</p>
+          </div>
+        </button>
 
-        <div className="bg-white rounded-lg border-2 border-gray-200 p-4 hover:border-gray-300 transition-colors cursor-pointer"
+        <button
+          type="button"
           onClick={() => { onChange('carUsage', 'business'); onChange('commuteToWork', ''); }}
+          className={`w-full text-left p-4 rounded-lg border-2 min-h-20 flex items-center gap-3 transition-all duration-200 ${
+            formData.carUsage === 'business'
+              ? 'bg-blue-50 border-blue-600'
+              : 'bg-white border-gray-200 hover:border-gray-300'
+          }`}
         >
-          <div className="flex items-start gap-3">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-              formData.carUsage === 'business' ? 'bg-blue-100' : 'bg-grey100'
-            }`}>
-              <Briefcase className={`w-5 h-5 ${
-                formData.carUsage === 'business' ? 'text-blue-600' : 'text-muted-foreground'
-              }`} />
-            </div>
-            <div className="flex-1">
-              <p className="font-montserrat font-bold text-sm text-carbon">Private and Business Use</p>
-              <p className="font-montserrat text-xs text-muted-foreground mt-1">Commuting plus business use by Main Driver or Named Driver</p>
-            </div>
-            <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-              formData.carUsage === 'business' ? 'border-bdred bg-bdred' : 'border-gray-300'
-            }`}>
-              {formData.carUsage === 'business' && <div className="w-2 h-2 bg-white rounded-full" />}
-            </div>
+          <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
+            formData.carUsage === 'business' ? 'bg-blue-600' : 'bg-grey100'
+          }`}>
+            <Briefcase className={`w-6 h-6 ${
+              formData.carUsage === 'business' ? 'text-white' : 'text-muted-foreground'
+            }`} />
           </div>
-        </div>
+          <div className="flex-1 min-w-0">
+            <p className={`font-montserrat font-bold text-sm ${
+              formData.carUsage === 'business' ? 'text-blue-600' : 'text-carbon'
+            }`}>Private and Business Use</p>
+            <p className="font-montserrat text-xs text-muted-foreground mt-1">Commuting plus business use by Main Driver or Named Driver</p>
+          </div>
+        </button>
       </div>
 
       <AnimatePresence>
