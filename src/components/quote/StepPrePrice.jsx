@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Tag, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { Tag, ChevronDown, ChevronUp, X, Plus } from 'lucide-react';
 import { BASE_PRICES } from '../../lib/quoteData';
 import StepFooter from './StepFooter';
 
@@ -8,7 +8,7 @@ const COVERAGE_DATA = {
     { label: 'Injury or death to someone else', value: 'Unlimited cover' },
     { label: "Damage to other people's property", value: 'up to S$5,000,000' },
     { label: 'Legal costs against criminal charges', value: 'up to S$3,000' },
-    { label: 'Towing after an accident', value: 'S$500 overseas / S$200 local tow' },
+    { label: 'Towing after an accident', value: 'S$500 for overseas tow and S$200 for local tow' },
     { label: 'Damage by fire', included: true },
     { label: 'Damage or loss to your car due to theft', included: true },
     { label: 'Damage to your car if someone else crashes into you', included: true },
@@ -21,7 +21,7 @@ const COVERAGE_DATA = {
     { label: 'Injury or death to someone else', value: 'Unlimited cover' },
     { label: "Damage to other people's property", value: 'up to S$5,000,000' },
     { label: 'Legal costs against criminal charges', value: 'up to S$3,000' },
-    { label: 'Towing after an accident', value: 'S$500 overseas / S$200 local (fire or theft only)' },
+    { label: 'Towing after an accident', value: 'S$500 for overseas tow and S$200 for local tow (only for fire to or theft of your car)' },
     { label: 'Damage by fire', included: true },
     { label: 'Damage or loss to your car due to theft', included: true },
     { label: 'Damage to your car if someone else crashes into you', included: false },
@@ -45,13 +45,24 @@ const COVERAGE_DATA = {
   ],
 };
 
+const OPTIONAL_COVERS = [
+  'Personal Accident',
+  'Medical Expenses',
+  'No Claim Discount (NCD) Protection',
+  '24 Hours Roadside Assistance',
+  'Transport Allowance',
+  'Any Workshop',
+];
+
 function CoverageRow({ row, i }) {
   return (
-    <div className={`flex items-start gap-3 px-3 py-3 ${i % 2 === 0 ? 'bg-white' : 'bg-grey100'}`}>
-      <span className="text-xs font-montserrat text-carbon leading-snug" style={{ flex: '0 1 65%' }}>{row.label}</span>
-      <span className="text-right font-montserrat text-xs font-medium leading-snug" style={{ flex: '0 0 35%' }}>
+    <div className={`flex items-start gap-2 px-3 py-3 ${i % 2 === 0 ? 'bg-white' : 'bg-grey100'}`}>
+      <span className="text-xs font-montserrat text-carbon leading-snug" style={{ flex: '0 1 62%', minWidth: 0 }}>
+        {row.label}
+      </span>
+      <span className="text-right font-montserrat text-xs font-medium leading-snug" style={{ flex: '0 0 38%', minWidth: 0 }}>
         {row.value !== undefined ? (
-          <span className="text-carbon">{row.value}</span>
+          <span className="text-carbon break-words">{row.value}</span>
         ) : row.included ? (
           <span className="text-emerald-600 font-bold text-base leading-none">✓</span>
         ) : (
@@ -62,9 +73,18 @@ function CoverageRow({ row, i }) {
   );
 }
 
+function SectionHeader({ title, subtitle }) {
+  return (
+    <div className="px-4 py-3 bg-grey100 border-b border-gray-200">
+      <p className="font-montserrat font-bold text-sm text-carbon">{title}</p>
+      {subtitle && <p className="font-montserrat text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
+    </div>
+  );
+}
+
 export default function StepPrePrice({ formData, price, onNext, onBack }) {
   const [period, setPeriod] = useState('monthly');
-  const [showCoverage, setShowCoverage] = useState(false);
+  const [showOptional, setShowOptional] = useState(false);
   const [showPromoInput, setShowPromoInput] = useState(false);
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState('');
@@ -74,21 +94,25 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
   const coverLabels = { COMP: 'Comprehensive', TPFT: 'Third Party, Fire & Theft', TPO: 'Third Party Only' };
   const coverType = formData.coverType || 'COMP';
 
-  // Check for UTM promo on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const p = params.get('promo');
-    if (p && p.toUpperCase() === 'TEST') {
-      setUtmPromo(p.toUpperCase());
-    }
+    if (p && p.toUpperCase() === 'TEST') setUtmPromo(p.toUpperCase());
   }, []);
 
   const basePrice = BASE_PRICES[coverType] || price;
   const ncd = parseInt(formData.ncdEntitlement || '0');
   const ncdDiscount = Math.round(basePrice * ncd / 100);
-  const monthlyPrice = price;
-  const annualPrice = Math.round(price * 0.97);
+
+  // Annual = base after NCD (lump sum, no loading)
+  const annualPrice = price;
+  // Monthly = annual × 1.03 ÷ 12 (3% instalment loading)
+  const monthlyPrice = Math.round((annualPrice * 1.03) / 12);
+  const monthlyTotal = Math.round(annualPrice * 1.03);
+
   const displayPrice = period === 'annual' ? annualPrice : monthlyPrice;
+
+  const promoActive = promoApplied || utmPromo;
 
   const handleApplyPromo = () => {
     const code = promoCode.trim().toUpperCase();
@@ -100,14 +124,6 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
       setPromoApplied('');
     }
   };
-
-  const removePromo = () => {
-    setPromoApplied('');
-    setPromoCode('');
-    setPromoError('');
-  };
-
-  const removeUtmPromo = () => setUtmPromo('');
 
   const coverageRows = COVERAGE_DATA[coverType] || COVERAGE_DATA.COMP;
 
@@ -124,13 +140,13 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
             <p className="text-xs font-montserrat font-bold text-emerald-700">Promo applied: {utmPromo}</p>
             <p className="text-xs font-montserrat text-emerald-600 mt-0.5">CapitaVoucher S$20 will be sent within 30 days after your policy starts.</p>
           </div>
-          <button type="button" onClick={removeUtmPromo} className="flex-shrink-0 text-emerald-500 hover:text-emerald-700">
+          <button type="button" onClick={() => setUtmPromo('')} className="flex-shrink-0 text-emerald-500 hover:text-emerald-700">
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
-      {/* Price card with toggle inside */}
+      {/* Price card */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
         {/* Compact toggle inside card */}
         <div className="flex bg-grey100 rounded-pill p-0.5 mb-4 w-fit mx-auto">
@@ -143,8 +159,9 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
           <button
             type="button"
             onClick={() => setPeriod('annual')}
-            className={`px-4 py-1.5 rounded-pill font-montserrat font-semibold text-xs transition-all ${period === 'annual' ? 'bg-white text-carbon shadow-sm' : 'text-muted-foreground'}`}>
-            Annual {period === 'annual' && <span className="text-emerald-600 text-[10px] ml-1">Save 3%</span>}
+            className={`px-4 py-1.5 rounded-pill font-montserrat font-semibold text-xs transition-all flex items-center gap-1 ${period === 'annual' ? 'bg-white text-carbon shadow-sm' : 'text-muted-foreground'}`}>
+            Annual
+            {period === 'annual' && <span className="text-emerald-600 text-[10px]">Save 3%</span>}
           </button>
         </div>
 
@@ -153,48 +170,50 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
             Estimated {period === 'monthly' ? 'monthly' : 'annual'} premium
           </p>
           <p className="font-montserrat font-bold text-4xl text-bdred">
-            SGD ${displayPrice.toLocaleString()}
+            S${displayPrice.toLocaleString()}
           </p>
           <p className="font-montserrat text-sm text-carbon mt-1">per {period === 'monthly' ? 'month' : 'year'}</p>
+          {period === 'monthly' && (
+            <p className="font-montserrat text-xs text-muted-foreground mt-1">
+              Total over 12 months: S${monthlyTotal.toLocaleString()}
+            </p>
+          )}
         </div>
 
         {/* Nested breakdown */}
-        {(ncd > 0 || period === 'annual') && (
-          <div className="mt-4 border-l-2 border-gray-100 pl-3 space-y-1.5">
-            <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
-              <span>{coverLabels[coverType]} base</span>
-              <span className="font-medium text-carbon">${basePrice.toLocaleString()}</span>
-            </div>
-            {ncd > 0 && (
-              <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
-                <span>NCD discount ({ncd}%)</span>
-                <span className="text-emerald-600 font-medium">−${ncdDiscount.toLocaleString()}</span>
-              </div>
-            )}
-            {period === 'annual' && (
-              <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
-                <span>Annual pay discount (3%)</span>
-                <span className="text-emerald-600 font-medium">−${(monthlyPrice - annualPrice).toLocaleString()}</span>
-              </div>
-            )}
-            {(promoApplied || utmPromo) && (
-              <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
-                <span>CapitaVoucher S$20</span>
-                <span className="text-emerald-600 font-medium">sent after policy start</span>
-              </div>
-            )}
+        <div className="mt-4 border-l-2 border-gray-100 pl-3 space-y-1.5">
+          <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
+            <span>{coverLabels[coverType]} base</span>
+            <span className="font-medium text-carbon">S${basePrice.toLocaleString()}</span>
           </div>
-        )}
-
-        {/* Switch to annual hint */}
-        {period === 'monthly' && (
-          <p className="text-[11px] text-muted-foreground font-montserrat text-center mt-3">
-            Switch to annual and save SGD ${(monthlyPrice - annualPrice).toLocaleString()}/yr
-          </p>
-        )}
+          {ncd > 0 && (
+            <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
+              <span>NCD discount ({ncd}%)</span>
+              <span className="text-emerald-600 font-medium">−S${ncdDiscount.toLocaleString()}</span>
+            </div>
+          )}
+          {period === 'monthly' && (
+            <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
+              <span>Monthly instalment loading (3%)</span>
+              <span className="text-carbon font-medium">+S${(monthlyTotal - annualPrice).toLocaleString()}</span>
+            </div>
+          )}
+          {period === 'annual' && (
+            <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
+              <span>Annual pay saving (vs monthly)</span>
+              <span className="text-emerald-600 font-medium">−S${(monthlyTotal - annualPrice).toLocaleString()}</span>
+            </div>
+          )}
+          {promoActive && (
+            <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
+              <span>CapitaVoucher S$20</span>
+              <span className="text-emerald-600 font-medium">sent after policy start</span>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Promo code — collapsed secondary link */}
+      {/* Promo code */}
       <div>
         {!promoApplied && !utmPromo ? (
           !showPromoInput ? (
@@ -212,7 +231,7 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
                   value={promoCode}
                   onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoError(''); }}
                   placeholder="Enter promo code"
-                  className={`flex-1 px-3 py-2.5 border-2 rounded-lg text-sm font-montserrat text-carbon focus:outline-none ${promoError ? 'border-bdred' : 'border-gray-200 focus:border-bdred'}`}
+                  className={`flex-1 px-3 py-2.5 border-2 rounded-lg text-sm font-montserrat text-carbon focus:outline-none ${promoError ? 'border-bdred' : promoApplied ? 'border-emerald-400' : 'border-gray-200 focus:border-bdred'}`}
                 />
                 <button
                   type="button"
@@ -232,44 +251,53 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
                 <p className="text-xs font-montserrat font-bold text-emerald-700">Promo applied: {promoApplied}</p>
                 <p className="text-xs font-montserrat text-emerald-600 mt-0.5">CapitaVoucher S$20 will be sent within 30 days after your policy starts.</p>
               </div>
-              <button type="button" onClick={removePromo} className="text-xs font-montserrat text-muted-foreground underline flex-shrink-0">Remove</button>
+              <button type="button" onClick={() => { setPromoApplied(''); setPromoCode(''); setPromoError(''); }} className="text-xs font-montserrat text-muted-foreground underline flex-shrink-0">Remove</button>
             </div>
           )
         )}
       </div>
 
-      {/* Core Cover(s) — collapsible */}
+      {/* SECTION A — Core Cover(s): always visible */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div className="p-4">
-          <p className="font-montserrat font-bold text-sm text-carbon mb-3">Core Cover(s)</p>
-          <div className="border border-gray-100 rounded-lg overflow-hidden">
-            {coverageRows.map((row, i) => <CoverageRow key={i} row={row} i={i} />)}
-          </div>
-          {!showCoverage ? (
-            <button
-              type="button"
-              onClick={() => setShowCoverage(true)}
-              className="mt-3 text-xs font-montserrat font-bold text-cyan hover:underline flex items-center gap-1">
-              View Full Coverage <ChevronDown className="w-3 h-3" />
-            </button>
-          ) : (
-            <>
-              <div className="mt-4 border border-gray-100 rounded-lg overflow-hidden">
-                <div className="flex items-center px-3 py-2 bg-grey100 border-b border-gray-100">
-                  <span className="text-[11px] font-montserrat font-bold text-muted-foreground flex-1">Benefit</span>
-                  <span className="text-[11px] font-montserrat font-bold text-muted-foreground text-right" style={{ flex: '0 0 35%' }}>Coverage</span>
-                </div>
-                {coverageRows.map((row, i) => <CoverageRow key={i} row={row} i={i} />)}
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowCoverage(false)}
-                className="mt-3 text-xs font-montserrat font-bold text-cyan hover:underline flex items-center gap-1">
-                Hide Full Coverage <ChevronUp className="w-3 h-3" />
-              </button>
-            </>
-          )}
+        <SectionHeader title="Core Cover(s)" subtitle={`Included in your ${coverLabels[coverType]} plan`} />
+        <div>
+          {coverageRows.map((row, i) => <CoverageRow key={i} row={row} i={i} />)}
         </div>
+        <div className="px-4 py-3 border-t border-gray-100">
+          <a href="#" className="text-xs font-montserrat font-bold text-cyan hover:underline">View Full Coverage Document</a>
+        </div>
+      </div>
+
+      {/* SECTION B — Optional Cover(s): collapsed by default */}
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setShowOptional(v => !v)}
+          className="w-full flex items-center justify-between px-4 py-3 bg-grey100 border-b border-gray-200">
+          <div className="text-left">
+            <p className="font-montserrat font-bold text-sm text-carbon">Optional Cover(s) You Can Choose</p>
+            <p className="font-montserrat text-xs text-muted-foreground mt-0.5">Add extra protection to your policy</p>
+          </div>
+          {showOptional ? <ChevronUp className="w-4 h-4 text-muted-foreground flex-shrink-0" /> : <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />}
+        </button>
+
+        {showOptional && (
+          <>
+            <div>
+              {OPTIONAL_COVERS.map((name, i) => (
+                <div key={i} className={`flex items-center justify-between gap-2 px-3 py-3 ${i % 2 === 0 ? 'bg-white' : 'bg-grey100'}`}>
+                  <span className="text-xs font-montserrat text-carbon leading-snug flex-1">{name}</span>
+                  <span className="flex-shrink-0 flex items-center gap-1 text-xs font-montserrat font-bold text-cyan">
+                    <Plus className="w-3 h-3" /> Available
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="px-4 py-3 border-t border-gray-100">
+              <a href="#" className="text-xs font-montserrat font-bold text-cyan hover:underline">View Full Coverage Document</a>
+            </div>
+          </>
+        )}
       </div>
 
       <p className="text-[11px] text-muted-foreground font-montserrat leading-relaxed">
