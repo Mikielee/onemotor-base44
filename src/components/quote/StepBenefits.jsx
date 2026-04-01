@@ -6,8 +6,10 @@ import HelpDrawer from './HelpDrawer';
 import PillButton from './PillButton';
 import { HELP_TEXTS } from '../../lib/quoteData';
 
+const PA_PRICES = { 50000: 78, 100000: 110, 200000: 158 };
+
 const BENEFITS = [
-  { key: 'benefitPA', icon: Shield, name: 'Personal Accident & Medical', desc: 'Cover for you and passengers for medical bills', price: '$78/year', helpKey: 'pa', hasLevels: true },
+  { key: 'benefitPA', icon: Shield, name: 'Personal Accident & Medical', desc: 'Cover for you and passengers for medical bills', helpKey: 'pa', hasLevels: true },
   { key: 'benefitNCD', icon: ShieldCheck, name: 'NCD Protection', desc: 'Protect your NCD if you make a claim', price: '$95/year', helpKey: 'ncdProtection' },
   { key: 'benefitLOU', icon: Car, name: 'Loss of Use (Hire Car)', desc: 'Hire car while yours is being repaired, up to 30 days', price: '$120/year', helpKey: 'lou' },
   { key: 'benefitWindscreen', icon: Wind, name: 'Excess-free Windscreen', desc: 'Repair or replace windscreen once/year with no excess', price: '$60/year', helpKey: 'windscreen' },
@@ -28,6 +30,7 @@ export default function StepBenefits({ formData, onChange, onNext, onBack }) {
         {BENEFITS.map(b => {
           const Icon = b.icon;
           const isOn = !!formData[b.key];
+          const displayPrice = b.hasLevels && isOn ? `$${PA_PRICES[formData.paCoverLevel || 50000]}/year` : b.price;
           return (
             <div key={b.key} className="bg-white rounded-lg border border-gray-200 p-4">
               <div className="flex items-start gap-3">
@@ -49,7 +52,7 @@ export default function StepBenefits({ formData, onChange, onNext, onBack }) {
                     </button>
                   </div>
                   <p className="text-xs text-muted-foreground font-montserrat mt-1">{b.desc}</p>
-                  <p className="text-xs font-montserrat font-bold text-bdred mt-1">{b.price}</p>
+                  <p className="text-xs font-montserrat font-bold text-bdred mt-1">{displayPrice || b.price}</p>
                 </div>
               </div>
 
