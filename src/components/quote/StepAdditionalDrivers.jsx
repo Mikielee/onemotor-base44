@@ -14,6 +14,23 @@ function DriverForm({ driver, onSave, onCancel }) {
     preferredName: '', dobDay: '', dobMonth: '', dobYear: '',
     gender: '', licenceYears: '', claims: '', atFaultTimes: '', com: '',
   });
+  const [dobRaw, setDobRaw] = useState(
+    form.dobDay && form.dobMonth && form.dobYear
+      ? `${form.dobDay}/${form.dobMonth}/${form.dobYear}`
+      : ''
+  );
+
+  const handleDobChange = (e) => {
+    const digits = e.target.value.replace(/\D/g, '').slice(0, 8);
+    let val = digits;
+    if (digits.length > 4) val = digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4);
+    else if (digits.length > 2) val = digits.slice(0, 2) + '/' + digits.slice(2);
+    setDobRaw(val);
+    const parts = val.split('/');
+    set('dobDay', parts[0] || '');
+    set('dobMonth', parts[1] || '');
+    set('dobYear', parts[2] || '');
+  };
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
   const canSave = form.dobDay && form.dobMonth && form.dobYear && form.gender && form.licenceYears && form.claims
@@ -31,17 +48,16 @@ function DriverForm({ driver, onSave, onCancel }) {
 
       <div>
         <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Date of birth</p>
-        <div className="flex gap-2">
-          <input type="text" placeholder="DD" maxLength={2} value={form.dobDay}
-            onChange={(e) => set('dobDay', e.target.value.replace(/\D/g, ''))}
-            className={`w-14 text-center px-2 py-2.5 ${inputBase}`} />
-          <input type="text" placeholder="MM" maxLength={2} value={form.dobMonth}
-            onChange={(e) => set('dobMonth', e.target.value.replace(/\D/g, ''))}
-            className={`w-14 text-center px-2 py-2.5 ${inputBase}`} />
-          <input type="text" placeholder="YYYY" maxLength={4} value={form.dobYear}
-            onChange={(e) => set('dobYear', e.target.value.replace(/\D/g, ''))}
-            className={`flex-1 text-center px-2 py-2.5 ${inputBase}`} />
-        </div>
+        <input
+          type="text"
+          inputMode="numeric"
+          placeholder="DD/MM/YYYY"
+          maxLength={10}
+          value={dobRaw}
+          onChange={handleDobChange}
+          autoComplete="bday"
+          className={`w-full px-3 py-2.5 ${inputBase}`}
+        />
       </div>
 
       <div className="flex gap-2">
