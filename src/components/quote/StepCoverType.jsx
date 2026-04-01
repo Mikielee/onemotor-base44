@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Shield } from 'lucide-react';
+import { Shield, ShieldCheck, ShieldAlert } from 'lucide-react';
 import { COVER_TYPES, HELP_TEXTS } from '../../lib/quoteData';
 import HelpIcon from './HelpIcon';
 import StepFooter from './StepFooter';
@@ -49,13 +49,31 @@ export default function StepCoverType({ formData, onChange, onNext, onBack }) {
                   ? 'bg-bdred'
                   : 'bg-gray-200'
               }`}>
-                <Shield className={`w-6 h-6 ${
-                  disabled
-                    ? 'text-gray-400'
-                    : selected
-                    ? 'text-white'
-                    : 'text-muted-foreground'
-                }`} />
+                {ct.id === 'COMP' ? (
+                  <ShieldCheck className={`w-6 h-6 ${
+                    disabled
+                      ? 'text-gray-400'
+                      : selected
+                      ? 'text-white'
+                      : 'text-muted-foreground'
+                  }`} />
+                ) : ct.id === 'TPFT' ? (
+                  <Shield className={`w-6 h-6 ${
+                    disabled
+                      ? 'text-gray-400'
+                      : selected
+                      ? 'text-white'
+                      : 'text-muted-foreground'
+                  }`} />
+                ) : (
+                  <ShieldAlert className={`w-6 h-6 ${
+                    disabled
+                      ? 'text-gray-400'
+                      : selected
+                      ? 'text-white'
+                      : 'text-muted-foreground'
+                  }`} />
+                )}
               </div>
 
               {/* Centre: Title & Description */}
