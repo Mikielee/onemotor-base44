@@ -191,44 +191,12 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
             S${displayPrice.toLocaleString()} / {periodLabel}
           </span>
         </div>
-        <div className="flex bg-gray-100 rounded-full p-0.5 gap-0.5">
-          {['monthly', 'annual'].map(p => (
-            <button
-              key={p}
-              type="button"
-              onClick={() => handleSetPeriod(p)}
-              className={`px-2.5 py-1 rounded-full font-montserrat font-semibold text-xs transition-all capitalize ${
-                syncedPeriod === p ? 'bg-white text-carbon shadow-sm' : 'bg-transparent text-muted-foreground'
-              }`}
-            >
-              {p === 'monthly' ? 'Month' : 'Year'}
-            </button>
-          ))}
-        </div>
         <button
           type="button"
           onClick={() => setExpanded(true)}
           className="hover:text-carbon text-muted-foreground flex-shrink-0"
         >
           <ChevronUp className="w-4 h-4" />
-        </button>
-      </div>
-
-      {/* Sticky footer buttons */}
-      <div className="border-t border-gray-100 flex gap-3 px-4 py-3 bg-white shadow-lg">
-        <button
-          type="button"
-          onClick={onBack}
-          className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 font-montserrat font-bold text-sm text-carbon hover:border-carbon/40 transition-colors"
-        >
-          ← Back
-        </button>
-        <button
-          type="button"
-          onClick={onNext}
-          className="flex-1 px-4 py-3 rounded-lg bg-bdred text-white font-montserrat font-bold text-sm hover:bg-bdred/90 transition-colors"
-        >
-          Continue
         </button>
       </div>
     </div>
