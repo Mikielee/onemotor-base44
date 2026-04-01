@@ -1,27 +1,10 @@
-export default function QuoteLayout({ children, step, totalSteps, showPriceWidget }) {
-  const progress = Math.round((step / totalSteps) * 100);
+import QuoteHeader from './QuoteHeader';
 
+export default function QuoteLayout({ children, step, totalSteps, showPriceWidget }) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 sticky top-0 z-40">
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase">
-              Car Insurance Quote
-            </span>
-            <span className="text-[10px] font-montserrat text-muted-foreground">
-              Step {step} of {totalSteps}
-            </span>
-          </div>
-          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-bdred rounded-full transition-all duration-500"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
-      </div>
+      <QuoteHeader step={step} totalSteps={totalSteps} />
 
       {/* Content */}
       <div className="flex-1 overflow-x-hidden">
