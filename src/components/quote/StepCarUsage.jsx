@@ -86,7 +86,7 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden space-y-0"
+            className="overflow-hidden space-y-0.5"
           >
             <div className="bg-grey100 rounded-lg p-4 mt-2">
               <p className="font-montserrat font-bold text-sm text-carbon mb-3">
@@ -103,7 +103,6 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="overflow-hidden"
               >
                 <div className="bg-grey100 rounded-lg p-4">
                   <p className="font-montserrat font-bold text-sm text-carbon mb-3">
