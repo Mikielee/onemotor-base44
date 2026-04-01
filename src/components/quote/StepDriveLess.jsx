@@ -1,4 +1,4 @@
-import { Info, CheckCircle } from 'lucide-react';
+import { Info, CheckCircle, TrendingDown } from 'lucide-react';
 import { useState } from 'react';
 import StepFooter from './StepFooter';
 import { HELP_TEXTS } from '../../lib/quoteData';
@@ -38,11 +38,14 @@ export default function StepDriveLess({ formData, onChange, onNext, onBack }) {
       </div>
 
       {/* Savings Card */}
-      <div className="bg-gradient-to-br from-cyan/10 to-emerald-50 border border-cyan/20 rounded-xl px-6 py-6 text-center">
-        <p className="font-montserrat font-bold text-4xl text-bdred mb-2">
-          Save S$150/year
+      <div className="bg-gradient-to-br from-bdred to-[#b91c0c] rounded-xl px-6 py-6 text-center">
+        <div className="flex justify-center mb-3">
+          <TrendingDown className="w-6 h-6 text-white" />
+        </div>
+        <p className="font-montserrat font-bold text-2xl text-white mb-2">
+          Save up to S$150/year
         </p>
-        <p className="text-xs font-montserrat text-muted-foreground">
+        <p className="text-xs font-montserrat text-white/90">
           Pay per kilometre up to your selected limit. If you drive less, you save more.
         </p>
       </div>
