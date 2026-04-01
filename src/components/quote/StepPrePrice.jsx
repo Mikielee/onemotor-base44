@@ -167,9 +167,10 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
             Your Indicative Premium:
           </p>
           <p className="font-montserrat font-bold text-4xl text-bdred">
-            S${displayPrice.toLocaleString()} <span className="text-lg font-semibold">per {period === 'monthly' ? 'month' : 'year'}</span>
+            S${displayPrice.toLocaleString()}
           </p>
-          <p className="font-montserrat text-xs text-muted-foreground mt-1">including prevailing GST</p>
+          <p className="font-montserrat text-xs text-muted-foreground mt-1">per {period === 'monthly' ? 'month' : 'year'}</p>
+          <p className="font-montserrat text-xs text-muted-foreground mt-0.5">including prevailing GST</p>
         </div>
 
         {/* Nested breakdown */}
