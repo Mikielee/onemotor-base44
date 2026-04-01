@@ -23,6 +23,7 @@ import StepSummary from '../components/quote/StepSummary';
 import StepPayment from '../components/quote/StepPayment';
 import StepConfirmation from '../components/quote/StepConfirmation';
 import StoryTag from '../components/quote/StoryTag';
+import PricePinned from '../components/quote/PricePinned';
 
 const TOTAL_STEPS = 19;
 
@@ -32,6 +33,7 @@ export default function QuoteJourney() {
   const [formData, setFormData] = useState({ excess: 1000 });
   const [blocked, setBlocked] = useState(false);
   const [paymentType, setPaymentType] = useState('annual');
+  const [period, setPeriod] = useState('monthly');
 
   const price = calculatePrice(formData);
 
@@ -129,11 +131,14 @@ export default function QuoteJourney() {
     }
   };
 
+  const showPriceWidget = step >= 10 && step <= 17;
+
   return (
     <>
       <AdminPanel />
+      {showPriceWidget && <PricePinned formData={formData} price={price} period={period} setPeriod={setPeriod} onNext={goNext} onBack={goBack} />}
       <StoryTag step={step} />
-      <QuoteLayout step={step} totalSteps={TOTAL_STEPS}>
+      <QuoteLayout step={step} totalSteps={TOTAL_STEPS} showPriceWidget={showPriceWidget}>
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={step}

@@ -1,4 +1,4 @@
-export default function QuoteLayout({ children, step, totalSteps }) {
+export default function QuoteLayout({ children, step, totalSteps, showPriceWidget }) {
   const progress = Math.round((step / totalSteps) * 100);
 
   return (
@@ -25,7 +25,7 @@ export default function QuoteLayout({ children, step, totalSteps }) {
 
       {/* Content */}
       <div className="flex-1 overflow-x-hidden">
-        <div className="max-w-lg mx-auto px-4 py-6 pb-6">
+        <div className={`max-w-lg mx-auto px-4 py-6 ${showPriceWidget ? 'pb-80' : 'pb-6'}`}>
           {children}
         </div>
       </div>
