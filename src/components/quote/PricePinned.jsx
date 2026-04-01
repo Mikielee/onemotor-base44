@@ -182,22 +182,37 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
       </AnimatePresence>
 
       {/* Collapsed bar */}
-      <button
-        type="button"
-        onClick={() => setExpanded(true)}
-        className="w-full flex items-center justify-between px-4 py-3 border-t border-gray-100 hover:bg-gray-50/50 transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <span className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase">
-            Your Indicative Premium:
+      <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 gap-3 bg-white">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <span className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase whitespace-nowrap">
+            Your Premium:
           </span>
-          <span className="font-montserrat font-bold text-bdred text-base">
-            S${displayPrice.toLocaleString()}
+          <span className="font-montserrat font-bold text-bdred text-base whitespace-nowrap">
+            S${displayPrice.toLocaleString()} / {periodLabel}
           </span>
-          <span className="text-xs font-montserrat text-muted-foreground">/ {periodLabel}</span>
         </div>
-        <ChevronUp className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-      </button>
+        <div className="flex bg-gray-100 rounded-full p-0.5 gap-0.5">
+          {['monthly', 'annual'].map(p => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => handleSetPeriod(p)}
+              className={`px-2.5 py-1 rounded-full font-montserrat font-semibold text-xs transition-all capitalize ${
+                syncedPeriod === p ? 'bg-white text-carbon shadow-sm' : 'bg-transparent text-muted-foreground'
+              }`}
+            >
+              {p === 'monthly' ? 'Month' : 'Year'}
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => setExpanded(true)}
+          className="hover:text-carbon text-muted-foreground flex-shrink-0"
+        >
+          <ChevronUp className="w-4 h-4" />
+        </button>
+      </div>
 
       {/* Sticky footer buttons */}
       <div className="border-t border-gray-100 flex gap-3 px-4 py-3 bg-white shadow-lg">
