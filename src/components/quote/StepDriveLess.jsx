@@ -1,4 +1,4 @@
-import { Info, CheckCircle, TrendingDown } from 'lucide-react';
+import { Info, CheckCircle, Gauge } from 'lucide-react';
 import { useState } from 'react';
 import StepFooter from './StepFooter';
 import { HELP_TEXTS } from '../../lib/quoteData';
@@ -40,7 +40,7 @@ export default function StepDriveLess({ formData, onChange, onNext, onBack }) {
       {/* Savings Card */}
       <div className="bg-gradient-to-br from-bdred to-[#b91c0c] rounded-xl px-6 py-6 text-center">
         <div className="flex justify-center mb-3">
-          <TrendingDown className="w-6 h-6 text-white" />
+          <Gauge className="w-6 h-6 text-white" />
         </div>
         <p className="font-montserrat font-bold text-2xl text-white mb-2">
           Save up to S$150/year
