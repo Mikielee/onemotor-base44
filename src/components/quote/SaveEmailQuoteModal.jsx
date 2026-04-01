@@ -124,7 +124,7 @@ export default function SaveEmailQuoteModal({ isOpen, onClose, formData, price }
                   <div>
                     <p className="text-xs font-montserrat text-muted-foreground mb-1">Vehicle</p>
                     <p className="font-montserrat text-sm text-carbon">
-                      {[formData.make, formData.model, formData.registrationYear].filter(Boolean).join(' · ') || '—'}
+                      {[formData.carMake, formData.carModel, formData.yearOfReg].filter(Boolean).join(' · ') || '—'}
                     </p>
                   </div>
 
