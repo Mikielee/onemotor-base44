@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Tag, ChevronDown, ChevronUp, X, Plus } from 'lucide-react';
+import { Tag, ChevronDown, ChevronUp, X, Plus, Shield, Car } from 'lucide-react';
 import { BASE_PRICES } from '../../lib/quoteData';
 import StepFooter from './StepFooter';
 
@@ -241,17 +241,13 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
 
       {/* Confirmation mini-card */}
       <div className="rounded-lg border border-gray-200 bg-grey100 px-4 py-3 space-y-2">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-base flex-shrink-0">🛡️</span>
-            <span className="text-sm font-montserrat font-bold text-carbon leading-snug">{coverLabels[coverType]}</span>
-          </div>
-          <button type="button" className="flex-shrink-0 text-xs font-montserrat font-bold text-cyan hover:underline ml-2">
-            Change
-          </button>
+        <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase mb-1">Your Policy:</p>
+        <div className="flex items-center gap-2 min-w-0">
+          <Shield className="w-4 h-4 text-cyan flex-shrink-0" />
+          <span className="text-sm font-montserrat font-bold text-carbon leading-snug">{coverLabels[coverType] || '—'}</span>
         </div>
         <div className="flex items-center gap-2 min-w-0">
-          <span className="text-base flex-shrink-0">🚗</span>
+          <Car className="w-4 h-4 text-cyan flex-shrink-0" />
           <span className="text-sm font-montserrat text-carbon leading-snug">
             {[formData.make, formData.model, formData.registrationYear].filter(Boolean).join(' · ') || '—'}
           </span>

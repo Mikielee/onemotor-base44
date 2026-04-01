@@ -103,7 +103,7 @@ export default function QuoteJourney() {
 
   if (blocked) return <BlockerScreen />;
 
-  const DevJump = () => (
+  const devButton = (
     <button
       type="button"
       onClick={() => {
@@ -118,9 +118,9 @@ export default function QuoteJourney() {
         setDirection(1);
         setStep(9);
       }}
-      style={{ position: 'fixed', bottom: '40px', left: '10px', zIndex: 9999, background: '#555', color: '#fff', fontSize: '10px', padding: '4px 8px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontFamily: 'monospace', opacity: 0.7 }}
+      style={{ background: '#555', color: '#fff', fontSize: '10px', padding: '3px 7px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontFamily: 'monospace', opacity: 0.6 }}
     >
-      DEV → Step 9
+      DEV →9
     </button>
   );
 
@@ -173,7 +173,6 @@ export default function QuoteJourney() {
 
   return (
     <>
-      <DevJump />
       <AdminPanel />
       <StoryTag step={step} />
       <QuoteLayout
@@ -183,6 +182,7 @@ export default function QuoteJourney() {
         showPriceBar={step >= 10 && step < 19}
         price={price}
         formData={formData}
+        headerExtra={devButton}
       >
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div

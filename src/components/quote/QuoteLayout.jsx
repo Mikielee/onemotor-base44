@@ -1,7 +1,7 @@
 import { Phone } from 'lucide-react';
 import PriceBar from './PriceBar';
 
-export default function QuoteLayout({ step, totalSteps, showPriceBar, price, formData, children }) {
+export default function QuoteLayout({ step, totalSteps, showPriceBar, price, formData, children, headerExtra }) {
   const progress = (step / totalSteps) * 100;
 
   return (
@@ -24,6 +24,7 @@ export default function QuoteLayout({ step, totalSteps, showPriceBar, price, for
               </div>
               <span className="font-montserrat font-bold text-carbon text-sm hidden sm:block">Budget Direct</span>
             </div>
+            {headerExtra && <div>{headerExtra}</div>}
             <a href="tel:+6562210011" className="flex items-center gap-1.5 text-cyan text-xs font-montserrat font-medium">
               <Phone className="w-3.5 h-3.5" />
               <span>6221 0011</span>
