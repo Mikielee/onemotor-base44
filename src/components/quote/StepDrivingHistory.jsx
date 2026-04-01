@@ -77,24 +77,24 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
             Any accidents or claims in past 3 years?
           </p>
           <YesNoButtons value={formData.claimsInPast3Years} onChange={(v) => onChange('claimsInPast3Years', v)} />
-        </div>
-      </FadeIn>
 
-      {/* How many times at fault */}
-      <FadeIn show={formData.claimsInPast3Years === 'yes'}>
-        <div className="bg-grey100 rounded-lg p-4 mt-3">
-          <p className="font-montserrat font-bold text-sm text-carbon mb-3">How many times were you at fault?</p>
-          <div className="relative">
-            <select
-              value={formData.atFaultTimes || ''}
-              onChange={(e) => onChange('atFaultTimes', e.target.value)}
-              className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
-            >
-              <option value="" disabled>Select</option>
-              {AT_FAULT_VALUES.map(v => <option key={v} value={v}>{v === 'More than 5' ? 'More than 5' : v}</option>)}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-          </div>
+          {/* Nested follow-up */}
+          <FadeIn show={formData.claimsInPast3Years === 'yes'}>
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <p className="font-montserrat font-medium text-sm text-carbon mb-2">How many times were you at fault?</p>
+              <div className="relative">
+                <select
+                  value={formData.atFaultTimes || ''}
+                  onChange={(e) => onChange('atFaultTimes', e.target.value)}
+                  className="w-full appearance-none px-3 py-3 bg-grey100 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+                >
+                  <option value="" disabled>Select</option>
+                  {AT_FAULT_VALUES.map(v => <option key={v} value={v}>{v}</option>)}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+              </div>
+            </div>
+          </FadeIn>
         </div>
       </FadeIn>
 
