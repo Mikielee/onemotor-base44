@@ -182,32 +182,52 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
         {promoApplied && <p className="text-xs text-emerald-600 mt-1.5 font-montserrat">✓ Code applied — saving ${promoDiscount}</p>}
       </div>
 
-      {/* Core benefits accordion */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <button
-          type="button"
-          onClick={() => setShowFullCoverage(v => !v)}
-          className="w-full flex items-center justify-between px-4 py-3.5 font-montserrat font-bold text-sm text-carbon">
-          <span>What's covered — {coverLabels[coverType]}</span>
-          {showFullCoverage ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-        </button>
-        {showFullCoverage && (
-          <div className="border-t border-gray-100">
-            {(COVERAGE_DATA[coverType] || COVERAGE_DATA.COMP).map((row, i) => (
-              <div key={i} className={`flex items-start justify-between gap-3 px-4 py-3 ${i % 2 === 0 ? 'bg-white' : 'bg-grey100'}`}>
-                <span className="text-xs font-montserrat text-carbon leading-snug flex-1">{row.label}</span>
-                <span className="flex-shrink-0 text-right">
-                  {row.value !== undefined ? (
-                    <span className="text-xs font-montserrat font-medium text-carbon">{row.value}</span>
-                  ) : row.included ? (
-                    <span className="text-emerald-600 text-base leading-none">✓</span>
-                  ) : (
-                    <span className="text-bdred text-base leading-none">✕</span>
-                  )}
-                </span>
-              </div>
-            ))}
-          </div>
+      {/* Core benefits — 2-level */}
+      <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <p className="font-montserrat font-bold text-sm text-carbon mb-3">Core Cover(s)</p>
+
+        {!showFullCoverage ? (
+          <>
+            <div className="space-y-2">
+              {(COVERAGE_DATA[coverType] || COVERAGE_DATA.COMP).map((row, i) => (
+                <div key={i} className="flex items-start gap-2">
+                  <span className="text-muted-foreground text-xs mt-0.5">•</span>
+                  <span className="text-xs font-montserrat text-carbon leading-snug">{row.label}</span>
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowFullCoverage(true)}
+              className="mt-4 text-xs font-montserrat font-bold text-cyan hover:underline flex items-center gap-1">
+              View Full Coverage <ChevronDown className="w-3 h-3" />
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="border border-gray-100 rounded-lg overflow-hidden">
+              {(COVERAGE_DATA[coverType] || COVERAGE_DATA.COMP).map((row, i) => (
+                <div key={i} className={`flex items-start justify-between gap-3 px-3 py-2.5 ${i % 2 === 0 ? 'bg-white' : 'bg-grey100'}`}>
+                  <span className="text-xs font-montserrat text-carbon leading-snug flex-1">{row.label}</span>
+                  <span className="flex-shrink-0 text-right">
+                    {row.value !== undefined ? (
+                      <span className="text-xs font-montserrat font-medium text-carbon">{row.value}</span>
+                    ) : row.included ? (
+                      <span className="text-emerald-600 font-bold text-sm">✓</span>
+                    ) : (
+                      <span className="text-bdred font-bold text-sm">✕</span>
+                    )}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowFullCoverage(false)}
+              className="mt-4 text-xs font-montserrat font-bold text-cyan hover:underline flex items-center gap-1">
+              Hide Full Coverage <ChevronUp className="w-3 h-3" />
+            </button>
+          </>
         )}
       </div>
 
