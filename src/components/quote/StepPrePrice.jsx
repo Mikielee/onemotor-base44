@@ -243,11 +243,11 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
       <div className="rounded-lg border border-gray-200 bg-grey100 px-4 py-3 space-y-2">
         <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase mb-1">Your Policy:</p>
         <div className="flex items-center gap-2 min-w-0">
-          <Shield className="w-4 h-4 text-cyan flex-shrink-0" />
+          <Shield className="w-4 h-4 text-bdred flex-shrink-0" />
           <span className="text-sm font-montserrat font-bold text-carbon leading-snug">{coverLabels[coverType] || '—'}</span>
         </div>
         <div className="flex items-center gap-2 min-w-0">
-          <Car className="w-4 h-4 text-cyan flex-shrink-0" />
+          <Car className="w-4 h-4 text-bdred flex-shrink-0" />
           <span className="text-sm font-montserrat text-carbon leading-snug">
             {[formData.make, formData.model, formData.registrationYear].filter(Boolean).join(' · ') || '—'}
           </span>
