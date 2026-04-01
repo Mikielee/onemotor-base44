@@ -188,11 +188,19 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
 
         {!showFullCoverage ? (
           <>
-            <div className="space-y-2">
+            <div className="border border-gray-100 rounded-lg overflow-hidden">
               {(COVERAGE_DATA[coverType] || COVERAGE_DATA.COMP).map((row, i) => (
-                <div key={i} className="flex items-start gap-2">
-                  <span className="text-muted-foreground text-xs mt-0.5">•</span>
-                  <span className="text-xs font-montserrat text-carbon leading-snug">{row.label}</span>
+                <div key={i} className={`flex items-start justify-between gap-3 px-3 py-2.5 ${i % 2 === 0 ? 'bg-white' : 'bg-grey100'}`}>
+                  <span className="text-xs font-montserrat text-carbon leading-snug flex-1">{row.label}</span>
+                  <span className="flex-shrink-0 text-right">
+                    {row.value !== undefined ? (
+                      <span className="text-xs font-montserrat font-medium text-carbon">{row.value}</span>
+                    ) : row.included ? (
+                      <span className="text-emerald-600 font-bold text-sm">✓</span>
+                    ) : (
+                      <span className="text-bdred font-bold text-sm">✕</span>
+                    )}
+                  </span>
                 </div>
               ))}
             </div>
