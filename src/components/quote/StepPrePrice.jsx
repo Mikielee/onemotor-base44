@@ -290,7 +290,7 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
         <button
           type="button"
           onClick={() => setShowOptional(v => !v)}
-          className="w-full flex items-center justify-between px-4 py-3 bg-grey100 border-b border-gray-200">
+          className="w-full flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
           <div className="text-left">
             <p className="font-montserrat font-bold text-sm text-carbon">Optional Cover(s) You Can Choose</p>
             <p className="font-montserrat text-xs text-muted-foreground mt-0.5">Add extra protection to your policy</p>
