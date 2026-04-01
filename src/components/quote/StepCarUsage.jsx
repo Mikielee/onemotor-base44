@@ -1,19 +1,28 @@
+import { useState } from 'react';
 import ChoiceButton from './ChoiceButton';
 import YesNoButtons from './YesNoButtons';
 import StepFooter from './StepFooter';
-import BlockerScreen from './BlockerScreen';
+import ErrorBlockerModal from './ErrorBlockerModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Briefcase } from 'lucide-react';
 
 export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlock }) {
+  const [showBlocker, setShowBlocker] = useState(false);
   const isDeliveryDriver = formData.carUsage === 'business' && formData.isDeliveryDriver === 'yes';
   const canProceed = formData.carUsage && (formData.carUsage === 'business' || (formData.commuteToWork && formData.isOffPeakCar));
 
-  // Trigger blocker if delivery driver selected business use
-  if (isDeliveryDriver && onBlock) {
-    onBlock();
-    return null;
-  }
+  const handleDeliverySelection = (value) => {
+    onChange('isDeliveryDriver', value);
+    if (value === 'yes') {
+      setShowBlocker(true);
+    }
+  };
+
+  const handleGoBack = () => {
+    setShowBlocker(false);
+    onChange('carUsage', '');
+    onChange('isDeliveryDriver', '');
+  };
 
   return (
     <div className="space-y-1.5">
@@ -125,14 +134,24 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
               </p>
               <YesNoButtons
                 value={formData.isDeliveryDriver}
-                onChange={(v) => onChange('isDeliveryDriver', v)}
+                onChange={handleDeliverySelection}
               />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {!isDeliveryDriver && <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />}
+      {!showBlocker && <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />}
+
+      <AnimatePresence>
+        {showBlocker && (
+          <ErrorBlockerModal
+            title="We Cannot Quote You"
+            message="Unfortunately, we're unable to provide quotes for delivery services at this time. Please contact our support team for assistance."
+            onGoBack={handleGoBack}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
