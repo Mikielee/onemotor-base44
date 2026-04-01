@@ -60,10 +60,14 @@ function DriverForm({ driver, onSave, onCancel }) {
         />
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         {['Male', 'Female'].map(g => (
           <button key={g} type="button" onClick={() => set('gender', g.toLowerCase())}
-            className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${form.gender === g.toLowerCase() ? 'bg-bdred text-white border-bdred' : 'bg-white text-carbon border-gray-200'}`}>
+            className={`flex-1 py-3 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
+              form.gender === g.toLowerCase()
+                ? 'bg-bdred text-white border-bdred'
+                : 'bg-white text-carbon border-carbon/30 hover:border-carbon/60'
+            }`}>
             {g}
           </button>
         ))}
@@ -80,10 +84,14 @@ function DriverForm({ driver, onSave, onCancel }) {
 
       <div>
         <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Any accidents or claims in past 3 years?</p>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           {[['yes', 'Yes'], ['no', 'No']].map(([v, l]) => (
             <button key={v} type="button" onClick={() => set('claims', v)}
-              className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${form.claims === v ? 'bg-bdred text-white border-bdred' : 'bg-white text-carbon border-gray-200'}`}>
+              className={`flex-1 py-3 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
+                form.claims === v
+                  ? 'bg-bdred text-white border-bdred'
+                  : 'bg-white text-carbon border-carbon/30 hover:border-carbon/60'
+              }`}>
               {l}
             </button>
           ))}
@@ -92,23 +100,24 @@ function DriverForm({ driver, onSave, onCancel }) {
 
       {form.claims === 'yes' && (
         <>
-          <div>
-            <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">How many times were they at fault?</p>
-            <div className="grid grid-cols-4 gap-2">
-              {AT_FAULT_VALUES.map(v => (
-                <button key={v} type="button" onClick={() => set('atFaultTimes', v)}
-                  className={`py-2 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${form.atFaultTimes === v ? 'bg-bdred text-white border-bdred' : 'bg-white text-carbon border-gray-200'}`}>
-                  {v === 'moreThan5' ? '5+' : v}
-                </button>
-              ))}
-            </div>
+          <div className="relative">
+            <select value={form.atFaultTimes} onChange={(e) => set('atFaultTimes', e.target.value)}
+              className={`w-full appearance-none px-3 py-2.5 ${inputBase} cursor-pointer`}>
+              <option value="" disabled>How many times at fault?</option>
+              {AT_FAULT_VALUES.map(v => <option key={v} value={v}>{v === 'moreThan5' ? '5+' : v}</option>)}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           </div>
           <div>
             <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Certificate of Merit (COM)?</p>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               {[['yes', 'Yes'], ['no', 'No']].map(([v, l]) => (
                 <button key={v} type="button" onClick={() => set('com', v)}
-                  className={`flex-1 py-2 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${form.com === v ? 'bg-bdred text-white border-bdred' : 'bg-white text-carbon border-gray-200'}`}>
+                  className={`flex-1 py-3 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
+                    form.com === v
+                      ? 'bg-bdred text-white border-bdred'
+                      : 'bg-white text-carbon border-carbon/30 hover:border-carbon/60'
+                  }`}>
                   {l}
                 </button>
               ))}
