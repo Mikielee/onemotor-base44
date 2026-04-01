@@ -47,26 +47,16 @@ export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
             Date of birth
           </label>
-          <div className="relative">
-            {/* Hidden native date input for device autofill (iOS/Android) */}
-            <input
-              type="date"
-              onChange={handleDobNative}
-              className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
-              tabIndex={-1}
-              aria-hidden
-            />
-            <input
-              type="text"
-              inputMode="numeric"
-              placeholder="DD/MM/YYYY"
-              maxLength={10}
-              value={dobRaw}
-              onChange={handleDobChange}
-              autoComplete="bday"
-              className="relative w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
-            />
-          </div>
+          <input
+            type="text"
+            inputMode="numeric"
+            placeholder="DD/MM/YYYY"
+            maxLength={10}
+            value={dobRaw}
+            onChange={handleDobChange}
+            autoComplete="bday"
+            className="w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+          />
         </div>
 
         <div>
