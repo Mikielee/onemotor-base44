@@ -109,6 +109,11 @@ function DriverForm({ driver, onSave, onCancel }) {
       </div>
 
       <div>
+        <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Certificate of Merit (COM)?</p>
+        <YesNoButtons value={form.com} onChange={(v) => set('com', v)} />
+      </div>
+
+      <div>
         <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">
           How many accidents and/or claims in the past 3 years?
         </p>
@@ -138,12 +143,7 @@ function DriverForm({ driver, onSave, onCancel }) {
         </div>
       )}
 
-      {form.claims && form.claims !== '0' && (
-        <div>
-          <p className="text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Certificate of Merit (COM)?</p>
-          <YesNoButtons value={form.com} onChange={(v) => set('com', v)} />
-        </div>
-      )}
+
 
       <div className="flex gap-2 pt-1">
         <button type="button" onClick={onCancel}
