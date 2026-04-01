@@ -215,7 +215,7 @@ export default function StepAdditionalDrivers({ formData, onChange, onNext, onBa
             <ChoiceButton
               selected={formData.additionalDriverPlan === 'named'}
               onClick={() => onChange('additionalDriverPlan', 'named')}
-              subtitle={`Add up to ${MAX_DRIVERS} named drivers — +$80 per driver`}
+              subtitle={`Add up to ${MAX_DRIVERS} named drivers`}
             >
               Add named drivers
             </ChoiceButton>
