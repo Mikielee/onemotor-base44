@@ -50,8 +50,7 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
     if (formData.ncdEntitlement === '0' && !formData.zeroNcdReason) return false;
     if (formData.zeroNcdReason === 'I have NCD on another car' && !formData.otherCarNcd) return false;
     if (formData.ncdEntitlement === '50' && !formData.fiftyNcdYears) return false;
-    const needsTransfer = (formData.ncdEntitlement !== '0') || formData.zeroNcdReason === 'I have NCD on another car';
-    if (needsTransfer && !formData.ncdTransferFrom) return false;
+    if (formData.zeroNcdReason === 'I have NCD on another car' && !formData.ncdTransferFrom) return false;
     return true;
   };
 
@@ -202,8 +201,8 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
         </div>
       </FadeIn>
 
-      {/* NCD transfer from — only for 10-50% NCD or 'I have NCD on another car' reason */}
-      <FadeIn show={formData.ncdEntitlement > '0' || formData.zeroNcdReason === 'I have NCD on another car'}>
+      {/* NCD transfer from — only when 0% NCD + 'I have NCD on another car' reason */}
+      <FadeIn show={formData.zeroNcdReason === 'I have NCD on another car'}>
         <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3">
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
             NCD transferred from
