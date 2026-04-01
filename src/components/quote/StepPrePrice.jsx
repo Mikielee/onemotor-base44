@@ -253,7 +253,7 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-base flex-shrink-0">🚗</span>
           <span className="text-sm font-montserrat text-carbon leading-snug">
-            {[formData.make, formData.model, formData.registrationYear].filter(Boolean).join(' · ') || 'Your vehicle'}
+            {[formData.make, formData.model, formData.registrationYear].filter(Boolean).join(' · ') || '—'}
           </span>
         </div>
       </div>

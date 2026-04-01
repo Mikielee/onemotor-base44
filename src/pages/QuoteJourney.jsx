@@ -103,6 +103,27 @@ export default function QuoteJourney() {
 
   if (blocked) return <BlockerScreen />;
 
+  const DevJump = () => (
+    <button
+      type="button"
+      onClick={() => {
+        setFormData(prev => ({
+          ...prev,
+          coverType: 'COMP',
+          make: 'Toyota',
+          model: 'Vios',
+          registrationYear: '2020',
+          preferredName: 'Sarah',
+        }));
+        setDirection(1);
+        setStep(9);
+      }}
+      style={{ position: 'fixed', bottom: '40px', left: '10px', zIndex: 9999, background: '#555', color: '#fff', fontSize: '10px', padding: '4px 8px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontFamily: 'monospace', opacity: 0.7 }}
+    >
+      DEV → Step 9
+    </button>
+  );
+
   const AdminPanel = () => (
     <div className="fixed top-16 right-2 z-[999] bg-carbon/90 text-white rounded-lg px-2 py-1.5 flex items-center gap-1.5 shadow-xl">
       <button
@@ -152,6 +173,7 @@ export default function QuoteJourney() {
 
   return (
     <>
+      <DevJump />
       <AdminPanel />
       <StoryTag step={step} />
       <QuoteLayout
