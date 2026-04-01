@@ -1,23 +1,51 @@
 import { useState } from 'react';
-import { Check, Tag, ChevronDown, ChevronUp } from 'lucide-react';
+import { Tag, ChevronDown, ChevronUp } from 'lucide-react';
 import { BASE_PRICES } from '../../lib/quoteData';
-import CoverageTable from './CoverageTable';
 import StepFooter from './StepFooter';
 
 const VALID_PROMOS = { 'NEWCAR': 30, 'SAVE50': 50, 'BUDGET10': 10 };
 
-const CORE_BENEFITS = [
-'Injury or death to someone else',
-'Damage to other people\'s property',
-'Legal costs against criminal charges',
-'Towing after an accident',
-'Damage by fire',
-'Damage or loss to your car due to theft',
-'Damage to your car if someone else crashes into you',
-'Damage to your car when it\'s your fault',
-'Damage by fallen trees, flood, storms or natural disaster',
-'Damage by vandals',
-'Damage to windscreen or windows'];
+const COVERAGE_DATA = {
+  COMP: [
+    { label: 'Injury or death to someone else', value: 'Unlimited cover' },
+    { label: "Damage to other people's property", value: 'up to S$5,000,000' },
+    { label: 'Legal costs against criminal charges', value: 'up to S$3,000' },
+    { label: 'Towing after an accident', value: 'S$500 overseas / S$200 local tow' },
+    { label: 'Damage by fire', included: true },
+    { label: 'Damage or loss to your car due to theft', included: true },
+    { label: 'Damage to your car if someone else crashes into you', included: true },
+    { label: 'Damage to your car when it\'s your fault', included: true },
+    { label: 'Damage by fallen trees, flood, storms or natural disaster', included: true },
+    { label: 'Damage by vandals', included: true },
+    { label: 'Damage to windscreen or windows', included: true },
+  ],
+  TPFT: [
+    { label: 'Injury or death to someone else', value: 'Unlimited cover' },
+    { label: "Damage to other people's property", value: 'up to S$5,000,000' },
+    { label: 'Legal costs against criminal charges', value: 'up to S$3,000' },
+    { label: 'Towing after an accident', value: 'S$500 overseas / S$200 local (fire or theft only)' },
+    { label: 'Damage by fire', included: true },
+    { label: 'Damage or loss to your car due to theft', included: true },
+    { label: 'Damage to your car if someone else crashes into you', included: false },
+    { label: 'Damage to your car when it\'s your fault', included: false },
+    { label: 'Damage by fallen trees, flood, storms or natural disaster', included: false },
+    { label: 'Damage by vandals', included: false },
+    { label: 'Damage to windscreen or windows', included: false },
+  ],
+  TPO: [
+    { label: 'Injury or death to someone else', value: 'Unlimited cover' },
+    { label: "Damage to other people's property", value: 'up to S$5,000,000' },
+    { label: 'Legal costs against criminal charges', value: 'up to S$3,000' },
+    { label: 'Towing after an accident', included: false },
+    { label: 'Damage by fire', included: false },
+    { label: 'Damage or loss to your car due to theft', included: false },
+    { label: 'Damage to your car if someone else crashes into you', included: false },
+    { label: 'Damage to your car when it\'s your fault', included: false },
+    { label: 'Damage by fallen trees, flood, storms or natural disaster', included: false },
+    { label: 'Damage by vandals', included: false },
+    { label: 'Damage to windscreen or windows', included: false },
+  ],
+};
 
 
 export default function StepPrePrice({ formData, price, onNext, onBack }) {
@@ -154,38 +182,33 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
         {promoApplied && <p className="text-xs text-emerald-600 mt-1.5 font-montserrat">✓ Code applied — saving ${promoDiscount}</p>}
       </div>
 
-      {/* Core benefits */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
-        <p className="font-montserrat font-bold text-sm text-carbon mb-3">
-          {coverLabels[coverType] || 'Your cover'} includes:
-        </p>
-
-        {!showFullCoverage ?
-        <>
-            <div className="space-y-2">
-              {CORE_BENEFITS.map((b, i) =>
-            <div key={i} className="flex items-start gap-2.5">
-                  <div className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Check className="w-2.5 h-2.5 text-emerald-600" />
-                  </div>
-                  <span className="text-xs font-montserrat text-carbon leading-snug">{b}</span>
-                </div>
-            )}
-            </div>
-            <button
-            type="button"
-            onClick={() => setShowFullCoverage(true)}
-            className="mt-3 text-xs font-montserrat font-bold text-cyan hover:underline flex items-center gap-1">
-            
-              View Full Coverage <ChevronDown className="w-3 h-3" />
-            </button>
-          </> :
-
-        <CoverageTable
-          selectedCoverType={formData.coverType}
-          onHide={() => setShowFullCoverage(false)} />
-
-        }
+      {/* Core benefits accordion */}
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setShowFullCoverage(v => !v)}
+          className="w-full flex items-center justify-between px-4 py-3.5 font-montserrat font-bold text-sm text-carbon">
+          <span>What's covered — {coverLabels[coverType]}</span>
+          {showFullCoverage ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+        </button>
+        {showFullCoverage && (
+          <div className="border-t border-gray-100">
+            {(COVERAGE_DATA[coverType] || COVERAGE_DATA.COMP).map((row, i) => (
+              <div key={i} className={`flex items-start justify-between gap-3 px-4 py-3 ${i % 2 === 0 ? 'bg-white' : 'bg-grey100'}`}>
+                <span className="text-xs font-montserrat text-carbon leading-snug flex-1">{row.label}</span>
+                <span className="flex-shrink-0 text-right">
+                  {row.value !== undefined ? (
+                    <span className="text-xs font-montserrat font-medium text-carbon">{row.value}</span>
+                  ) : row.included ? (
+                    <span className="text-emerald-600 text-base leading-none">✓</span>
+                  ) : (
+                    <span className="text-bdred text-base leading-none">✕</span>
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <p className="text-[11px] text-muted-foreground font-montserrat leading-relaxed">
