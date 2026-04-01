@@ -152,19 +152,6 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
 
       {/* Price card */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
-        {/* Quote ID - subtle support info */}
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
-          <p className="text-[10px] font-montserrat text-muted-foreground tracking-widest uppercase">Reference ID: P11361049R00</p>
-          <button
-            type="button"
-            onClick={() => setShowEmailModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-montserrat font-bold text-cyan hover:bg-cyan/5 transition-all"
-          >
-            <Mail className="w-3.5 h-3.5" />
-            Save & Email
-          </button>
-        </div>
-
         {/* Compact toggle inside card */}
         <div className="flex bg-grey100 rounded-pill p-0.5 mb-4 w-fit mx-auto">
           <button
@@ -260,8 +247,19 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
       </div>
 
       {/* Confirmation mini-card */}
-      <div className="rounded-lg border border-gray-200 bg-white px-4 py-3 space-y-2">
-        <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase mb-1">Your Policy:</p>
+      <div className="rounded-lg border border-gray-200 bg-white px-4 py-3 space-y-3">
+        <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-100">
+          <p className="text-[10px] font-montserrat text-muted-foreground tracking-widest uppercase">Reference ID: P11361049R00</p>
+          <button
+            type="button"
+            onClick={() => setShowEmailModal(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-montserrat font-bold text-cyan hover:bg-cyan/5 transition-all"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            Save & Email
+          </button>
+        </div>
+        <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase">Your Policy:</p>
         <div className="flex items-center gap-2 min-w-0">
           <Shield className="w-4 h-4 text-bdred flex-shrink-0" />
           <span className="text-sm font-montserrat font-bold text-carbon leading-snug">{coverLabels[coverType] || '—'}</span>
