@@ -133,7 +133,7 @@ export default function QuoteJourney() {
   return (
     <>
       <AdminPanel />
-      <PriceWidget formData={formData} price={price} />
+      {step >= 10 && <PriceWidget formData={formData} price={price} />}
       <StoryTag step={step} />
       <QuoteLayout step={step} totalSteps={TOTAL_STEPS}>
         <AnimatePresence mode="wait" custom={direction}>
