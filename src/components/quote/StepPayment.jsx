@@ -3,20 +3,28 @@ import { CreditCard, Lock, QrCode } from 'lucide-react';
 import StepFooter from './StepFooter';
 import PillButton from './PillButton';
 
-export default function StepPayment({ formData, price, onNext, onBack }) {
+export default function StepPayment({ formData, price, onNext, onBack, goToStep }) {
   const [paymentType, setPaymentType] = useState(formData.paymentType || 'annual');
   const [method, setMethod] = useState('card');
   const [loading, setLoading] = useState(false);
   const [card, setCard] = useState({ number: '', expiry: '', cvv: '', name: '' });
+
+  const coverLabels = { COMP: 'Comprehensive', TPFT: 'Third Party, Fire & Theft', TPO: 'Third Party Only' };
+  const coverType = formData.coverType || 'COMP';
+  const vehicleStr = [formData.carMake, formData.carModel, formData.yearOfReg].filter(Boolean).join(' · ');
 
   const monthlyPrice = Math.round((price * 1.10) / 12);
   const displayPrice = paymentType === 'monthly' ? monthlyPrice : price;
 
   const handlePay = () => {
     setLoading(true);
-    setTimeout(() => {
-      onNext(paymentType);
-    }, 2000);
+    if (method === 'card') {
+      // Redirect to card payment gateway
+      window.location.href = `/payment/card?amount=${displayPrice}&type=${paymentType}`;
+    } else {
+      // Redirect to PayNow gateway
+      window.location.href = `/payment/paynow?amount=${displayPrice}`;
+    }
   };
 
   const inputClass = 'w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none';
@@ -37,27 +45,62 @@ export default function StepPayment({ formData, price, onNext, onBack }) {
         Complete your purchase
       </h1>
 
-      {/* Payment frequency toggle */}
-      <div className="flex gap-0 bg-grey100 rounded-pill p-1">
-      {paymentType === 'monthly' && (
-        <p className="text-xs font-montserrat text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-          <span className="font-bold">Monthly instalment is only available for UOB and DBS credit card holders.</span>
-        </p>
-      )}
+      {/* Price card with period toggle - matching Step 3 design */}
+      <div className="bg-white rounded-lg border border-gray-200 p-5">
+        <div className="flex bg-grey100 rounded-pill p-0.5 mb-4 w-fit mx-auto">
+          <button
+            type="button"
+            onClick={() => setPaymentType('monthly')}
+            className={`px-4 py-1.5 rounded-pill font-montserrat font-semibold text-xs transition-all ${paymentType === 'monthly' ? 'bg-white text-carbon shadow-sm' : 'text-muted-foreground'}`}
+          >
+            Monthly
+          </button>
+          <button
+            type="button"
+            onClick={() => setPaymentType('annual')}
+            className={`px-4 py-1.5 rounded-pill font-montserrat font-semibold text-xs transition-all flex items-center gap-1 ${paymentType === 'annual' ? 'bg-white text-carbon shadow-sm' : 'text-muted-foreground'}`}
+          >
+            Annual
+          </button>
+        </div>
+
+        <div className="text-center">
+          <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase mb-2">
+            Your Indicative Premium:
+          </p>
+          <p className="font-montserrat font-bold text-4xl text-bdred">
+            S${displayPrice.toLocaleString()}
+          </p>
+          <p className="font-montserrat text-xs text-muted-foreground mt-1">
+            per {paymentType === 'monthly' ? 'month' : 'year'}
+          </p>
+          <p className="font-montserrat text-xs text-muted-foreground mt-0.5">
+            including prevailing GST
+          </p>
+        </div>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
-        <p className="font-montserrat font-bold text-3xl text-bdred">
-          SGD ${displayPrice.toLocaleString()}
-        </p>
-        <p className="font-montserrat text-sm text-carbon mt-1">
-          {paymentType === 'monthly' ? 'per month' : 'per year'}
-        </p>
-        {paymentType === 'monthly' && (
-          <p className="text-[11px] text-muted-foreground font-montserrat mt-1">
-            +10% loading for monthly payments
-          </p>
-        )}
+      {/* Monthly restriction warning */}
+      {paymentType === 'monthly' && (
+        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+          <div className="text-amber-700 font-montserrat text-xs leading-relaxed">
+            <p className="font-bold">Monthly plan is only available for DBS, POST, and UOB cardholders</p>
+            <p className="mt-1">If paying with another card, please select Annual payment.</p>
+          </div>
+        </div>
+      )}
+
+      {/* Quote summary card */}
+      <div className="rounded-lg border border-gray-200 bg-white px-4 py-3 space-y-3">
+        <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase">Your Quote:</p>
+        <div className="flex items-center gap-2 min-w-0">
+          <svg className="w-4 h-4 text-bdred flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
+          <span className="text-sm font-montserrat font-bold text-carbon leading-snug">{coverLabels[coverType] || '—'}</span>
+        </div>
+        <div className="flex items-center gap-2 min-w-0">
+          <svg className="w-4 h-4 text-bdred flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm11 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+          <span className="text-sm font-montserrat text-carbon leading-snug">{vehicleStr || '—'}</span>
+        </div>
       </div>
 
       {/* Payment method */}
@@ -87,7 +130,7 @@ export default function StepPayment({ formData, price, onNext, onBack }) {
           <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
             {paymentType === 'monthly' && (
               <div className="flex gap-2 mb-2">
-                {['UOB', 'DBS'].map(bank => (
+                {['DBS', 'POST', 'UOB'].map(bank => (
                   <div key={bank} className="flex-1 py-2 rounded-lg border-2 border-gray-200 bg-grey100 text-center font-montserrat font-bold text-sm text-carbon">{bank}</div>
                 ))}
               </div>
@@ -127,7 +170,23 @@ export default function StepPayment({ formData, price, onNext, onBack }) {
         </div>
       </div>
 
-      <StepFooter onBack={onBack} onNext={handlePay} label={`Pay Now — SGD $${displayPrice.toLocaleString()}`} />
+      <div className="flex gap-3 pt-2">
+        <button
+          type="button"
+          onClick={onBack}
+          className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 font-montserrat font-bold text-sm text-carbon hover:border-carbon/40 transition-colors"
+        >
+          ← Back
+        </button>
+        <button
+          type="button"
+          onClick={handlePay}
+          disabled={method === 'card' && (!card.number || !card.expiry || !card.cvv || !card.name)}
+          className="flex-1 px-4 py-3 rounded-lg bg-bdred text-white font-montserrat font-bold text-sm hover:bg-bdred/90 disabled:bg-gray-200 disabled:text-gray-400 transition-colors"
+        >
+          {loading ? 'Processing...' : method === 'card' ? 'Pay by Card' : 'Pay by PayNow'}
+        </button>
+      </div>
     </div>
   );
 }
