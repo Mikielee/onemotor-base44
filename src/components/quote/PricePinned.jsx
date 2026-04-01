@@ -62,7 +62,7 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
   const periodLabel = syncedPeriod === 'monthly' ? 'month' : 'year';
 
   return (
-    <div className="fixed bottom-20 left-0 right-0 z-10 bg-white border-t border-gray-200">
+    <div className="fixed bottom-0 left-0 right-0 z-10 bg-white border-t border-gray-200">
       <AnimatePresence>
         {expanded && (
           <motion.div
