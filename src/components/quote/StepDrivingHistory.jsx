@@ -13,7 +13,7 @@ const LICENCE_OPTIONS = ['Less than 1 yr', '1–2 yrs', '3–5 yrs', '6–10 yrs
 const CLAIMS_OPTIONS = ['0', '1', '2', '3', '4', '5', 'More than 5+'];
 const AT_FAULT_VALUES = ['0', '1', '2', '3', '4', '5', 'More than 5+'];
 const NCD_OPTIONS = ['0', '10', '20', '30', '40', '50'];
-const ZERO_NCD_REASONS = ['New driver', 'No previous insurance', 'I have NCD on another car', 'Claims in past year'];
+const ZERO_NCD_REASONS = ['New driver', 'No previous insurance', 'Claims in past year', 'I have NCD on another car'];
 const OTHER_NCD_OPTIONS = ['0', '10', '20', '30', '40', '50'];
 const FIFTY_NCD_YEARS = ['1 year', '2 years', '3 years or more'];
 
