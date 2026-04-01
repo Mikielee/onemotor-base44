@@ -104,11 +104,8 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
   const ncd = parseInt(formData.ncdEntitlement || '0');
   const ncdDiscount = Math.round(basePrice * ncd / 100);
 
-  // Annual = base after NCD (lump sum, no loading)
   const annualPrice = price;
-  // Monthly = annual × 1.03 ÷ 12 (3% instalment loading)
-  const monthlyPrice = Math.round((annualPrice * 1.03) / 12);
-  const monthlyTotal = Math.round(annualPrice * 1.03);
+  const monthlyPrice = Math.round(annualPrice / 12);
 
   const displayPrice = period === 'annual' ? annualPrice : monthlyPrice;
 
@@ -173,11 +170,7 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
             S${displayPrice.toLocaleString()}
           </p>
           <p className="font-montserrat text-sm text-carbon mt-1">per {period === 'monthly' ? 'month' : 'year'}</p>
-          {period === 'monthly' && (
-            <p className="font-montserrat text-xs text-muted-foreground mt-1">
-              Total over 12 months: S${monthlyTotal.toLocaleString()}
-            </p>
-          )}
+
         </div>
 
         {/* Nested breakdown */}
@@ -192,18 +185,7 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
               <span className="text-emerald-600 font-medium">−S${ncdDiscount.toLocaleString()}</span>
             </div>
           )}
-          {period === 'monthly' && (
-            <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
-              <span>Monthly instalment loading (3%)</span>
-              <span className="text-carbon font-medium">+S${(monthlyTotal - annualPrice).toLocaleString()}</span>
-            </div>
-          )}
-          {period === 'annual' && (
-            <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
-              <span>Annual pay saving (vs monthly)</span>
-              <span className="text-emerald-600 font-medium">−S${(monthlyTotal - annualPrice).toLocaleString()}</span>
-            </div>
-          )}
+
           {promoActive && (
             <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
               <span>CapitaVoucher S$20</span>
@@ -264,7 +246,7 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
           {coverageRows.map((row, i) => <CoverageRow key={i} row={row} i={i} />)}
         </div>
         <div className="px-4 py-3 border-t border-gray-100">
-          <a href="#" className="text-xs font-montserrat font-bold text-cyan hover:underline">View Full Coverage Document</a>
+          <a href="#" className="text-xs font-montserrat font-bold text-cyan hover:underline">View Car Insurance Product Disclosure Document</a>
         </div>
       </div>
 
@@ -294,7 +276,7 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
               ))}
             </div>
             <div className="px-4 py-3 border-t border-gray-100">
-              <a href="#" className="text-xs font-montserrat font-bold text-cyan hover:underline">View Full Coverage Document</a>
+              <a href="#" className="text-xs font-montserrat font-bold text-cyan hover:underline">View Car Insurance Product Disclosure Document</a>
             </div>
           </>
         )}
