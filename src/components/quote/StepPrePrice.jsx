@@ -193,6 +193,13 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
             </div>
           )}
 
+          {period === 'annual' && (
+            <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
+              <span>Annual discount</span>
+              <span className="text-emerald-600 font-medium">−3%</span>
+            </div>
+          )}
+
           {promoActive && (
             <div className="flex justify-between text-xs font-montserrat text-muted-foreground">
               <span>CapitaVoucher S$20</span>
