@@ -1,8 +1,8 @@
 import { ChevronLeft } from 'lucide-react';
 
-export default function StepFooter({ onBack, onNext, disabled = false, label = 'Continue', children }) {
+export default function StepFooter({ onBack, onNext, disabled = false, label = 'Continue' }) {
   return (
-    <div className="fixed bottom-[68px] left-0 right-0 z-40 bg-background border-t border-gray-200 px-4 py-3">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-gray-200 px-4 py-3">
       <div className="max-w-lg mx-auto flex items-center gap-3">
         {onBack && (
           <button
@@ -13,18 +13,14 @@ export default function StepFooter({ onBack, onNext, disabled = false, label = '
             <ChevronLeft className="w-5 h-5" />
           </button>
         )}
-        {children ? (
-          <div className="flex-1 space-y-2">{children}</div>
-        ) : (
-          <button
-            type="button"
-            onClick={onNext}
-            disabled={disabled}
-            className="flex-1 py-3.5 px-6 rounded-pill font-montserrat font-bold text-base bg-bdred text-white transition-all hover:bg-carbon disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
-          >
-            {label}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={onNext}
+          disabled={disabled}
+          className="flex-1 py-3.5 px-6 rounded-pill font-montserrat font-bold text-base bg-bdred text-white transition-all hover:bg-carbon disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
+        >
+          {label}
+        </button>
       </div>
     </div>
   );
