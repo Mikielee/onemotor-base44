@@ -10,11 +10,21 @@ import { HELP_TEXTS } from '../../lib/quoteData';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LICENCE_OPTIONS = ['Less than 1 yr', '1–2 yrs', '3–5 yrs', '6–10 yrs', 'More than 10 yrs'];
-const AT_FAULT_VALUES = ['0', '1', '2', '3', '4', '5', 'More than 5'];
+const CLAIMS_OPTIONS = ['0', '1', '2', '3', '4', '5', 'More than 5+'];
+const AT_FAULT_VALUES = ['0', '1', '2', '3', '4', '5', 'More than 5+'];
 const NCD_OPTIONS = ['0', '10', '20', '30', '40', '50'];
 const ZERO_NCD_REASONS = ['New driver', 'No previous insurance', 'I have NCD on another car', 'Claims in past year'];
 const OTHER_NCD_OPTIONS = ['10', '20', '30', '40', '50'];
 const FIFTY_NCD_YEARS = ['1 year', '2 years', '3 years or more'];
+
+function getAtFaultOptions(claimsValue) {
+  if (!claimsValue || claimsValue === '0') return [];
+  if (claimsValue === 'More than 5+') return AT_FAULT_VALUES;
+  const max = parseInt(claimsValue);
+  const opts = [];
+  for (let i = 0; i <= max; i++) opts.push(String(i));
+  return opts;
+}
 
 function FadeIn({ show, children }) {
   return (
@@ -34,13 +44,12 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
   const canProceed = () => {
     if (!formData.licenceYears) return false;
     if (!formData.claimsInPast3Years) return false;
-    if (formData.claimsInPast3Years === 'yes' && !formData.atFaultTimes) return false;
+    if (formData.claimsInPast3Years !== '0' && !formData.atFaultTimes) return false;
     if (!formData.certificateOfMerit) return false;
     if (!formData.ncdEntitlement) return false;
     if (formData.ncdEntitlement === '0' && !formData.zeroNcdReason) return false;
     if (formData.zeroNcdReason === 'I have NCD on another car' && !formData.otherCarNcd) return false;
     if (formData.ncdEntitlement === '50' && !formData.fiftyNcdYears) return false;
-    // ncdTransferFrom only required for 10-50% NCD or I have NCD on another car
     const needsTransfer = (formData.ncdEntitlement !== '0') || formData.zeroNcdReason === 'I have NCD on another car';
     if (needsTransfer && !formData.ncdTransferFrom) return false;
     return true;
@@ -70,18 +79,29 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
         </div>
       </div>
 
-      {/* Claims */}
+      {/* Claims count */}
       <FadeIn show={!!formData.licenceYears}>
         <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3">
-          <p className="font-montserrat font-bold text-sm text-carbon mb-3">
-            Any accidents or claims in past 3 years?
-          </p>
-          <YesNoButtons value={formData.claimsInPast3Years} onChange={(v) => onChange('claimsInPast3Years', v)} />
+          <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
+            How many accidents and/or claims in the past 3 years?
+          </label>
+          <div className="relative">
+            <select
+              value={formData.claimsInPast3Years || ''}
+              onChange={(e) => { onChange('claimsInPast3Years', e.target.value); onChange('atFaultTimes', ''); }}
+              className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+            >
+              <option value="" disabled>Select</option>
+              {CLAIMS_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+          </div>
 
-          {/* Nested follow-up */}
-          <FadeIn show={formData.claimsInPast3Years === 'yes'}>
+          <FadeIn show={!!formData.claimsInPast3Years && formData.claimsInPast3Years !== '0'}>
             <div className="mt-4 pt-4 border-t border-gray-100">
-              <p className="font-montserrat font-medium text-sm text-carbon mb-2">How many times were you at fault?</p>
+              <p className="font-montserrat font-medium text-sm text-carbon mb-2">
+                How many of those accidents or claims were you or any driver at-fault?
+              </p>
               <div className="relative">
                 <select
                   value={formData.atFaultTimes || ''}
@@ -89,7 +109,7 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
                   className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
                 >
                   <option value="" disabled>Select</option>
-                  {AT_FAULT_VALUES.map(v => <option key={v} value={v}>{v}</option>)}
+                  {getAtFaultOptions(formData.claimsInPast3Years).map(v => <option key={v} value={v}>{v}</option>)}
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
               </div>
