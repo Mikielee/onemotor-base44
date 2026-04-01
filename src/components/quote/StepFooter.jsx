@@ -1,6 +1,6 @@
 export default function StepFooter({ onBack, onNext, disabled, label = 'Continue' }) {
   return (
-    <div className="sticky bottom-0 bg-white pt-3 pb-5 mt-6 -mx-5 px-5 border-t border-gray-100 shadow-[0_-4px_8px_rgba(0,0,0,0.05)]">
+    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white pt-3 pb-5 px-5 border-t border-gray-100 shadow-[0_-4px_8px_rgba(0,0,0,0.05)] z-20">
       <div className="flex gap-3">
         {onBack && (
           <button
