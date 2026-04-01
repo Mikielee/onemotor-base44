@@ -84,21 +84,16 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
       <FadeIn show={formData.claimsInPast3Years === 'yes'}>
         <div className="bg-grey100 rounded-lg p-4 mt-3">
           <p className="font-montserrat font-bold text-sm text-carbon mb-3">How many times were you at fault?</p>
-          <div className="grid grid-cols-4 gap-2">
-            {AT_FAULT_VALUES.map(v => (
-              <button
-                key={v}
-                type="button"
-                onClick={() => onChange('atFaultTimes', v)}
-                className={`py-2.5 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
-                  formData.atFaultTimes === v
-                    ? 'bg-bdred text-white border-bdred'
-                    : 'bg-white text-carbon border-gray-200 hover:border-carbon/40'
-                }`}
-              >
-                {v === 'More than 5' ? '5+' : v}
-              </button>
-            ))}
+          <div className="relative">
+            <select
+              value={formData.atFaultTimes || ''}
+              onChange={(e) => onChange('atFaultTimes', e.target.value)}
+              className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+            >
+              <option value="" disabled>Select</option>
+              {AT_FAULT_VALUES.map(v => <option key={v} value={v}>{v === 'More than 5' ? 'More than 5' : v}</option>)}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           </div>
         </div>
       </FadeIn>
