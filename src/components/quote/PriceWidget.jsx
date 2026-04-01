@@ -110,6 +110,101 @@ export default function PriceWidget({ formData, price }) {
           </button>
 
           {/* Expanded panel */}
+          <AnimatePresence>
+            {expanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+                className="overflow-hidden"
+              >
+                <div className="border-t border-gray-100 px-4 pt-3 pb-3 space-y-1 max-h-[60vh] overflow-y-auto">
+
+                  {/* Cover & vehicle */}
+                  <div className="flex items-center gap-2 mb-1">
+                    <Shield className="w-4 h-4 text-bdred flex-shrink-0" />
+                    <span className="text-sm font-montserrat font-bold text-carbon">{COVER_LABELS[coverType]}</span>
+                  </div>
+                  {vehicleStr && (
+                    <div className="flex items-center gap-2 mb-2">
+                      <Car className="w-4 h-4 text-bdred flex-shrink-0" />
+                      <span className="text-xs font-montserrat text-carbon">{vehicleStr}</span>
+                    </div>
+                  )}
+
+                  <Divider />
+
+                  {/* Base premium */}
+                  <Row
+                    label={`Base Indicative Premium (${COVER_LABELS[coverType]})`}
+                    value={`S$${basePrice.toLocaleString()} / ${periodLabel}`}
+                  />
+                  <p className="text-[10px] font-montserrat text-muted-foreground -mt-0.5 mb-1">including prevailing GST</p>
+
+                  {/* Premium raisers */}
+                  {raises.length > 0 && (
+                    <>
+                      <Divider />
+                      <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase mb-0.5">Increases Premium</p>
+                      {raises.map((r, i) => (
+                        <Row key={i} label={r.label} value={`+S$${Math.abs(r.amount).toLocaleString()}`} type="raise" />
+                      ))}
+                    </>
+                  )}
+
+                  {/* Premium lowerers */}
+                  {lowers.length > 0 && (
+                    <>
+                      <Divider />
+                      <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase mb-0.5">Discounts</p>
+                      {lowers.map((l, i) => (
+                        <Row key={i} label={l.label} value={`−S$${l.amount.toLocaleString()}`} type="lower" />
+                      ))}
+                    </>
+                  )}
+
+                  {/* Promo / eVoucher */}
+                  {promoLabel && (
+                    <>
+                      <Divider />
+                      <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase mb-0.5">Promotion</p>
+                      <div className="flex justify-between items-start py-1.5">
+                        <div>
+                          <p className="text-xs font-montserrat text-carbon">CapitaVoucher S$20</p>
+                          <p className="text-[10px] font-montserrat text-muted-foreground">Gift · sent 30 days after policy start</p>
+                          <p className="text-[10px] font-montserrat text-muted-foreground italic">Not included in your premium</p>
+                        </div>
+                        <span className="text-xs font-montserrat font-semibold text-emerald-600 flex-shrink-0 ml-2">S$20 gift</span>
+                      </div>
+                    </>
+                  )}
+
+                  <Divider />
+
+                  {/* Period toggle */}
+                  <div className="flex justify-center pt-1 pb-0.5">
+                    <div className="flex bg-gray-100 rounded-pill p-0.5">
+                      {['monthly', 'annual'].map(p => (
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={() => setPeriod(p)}
+                          className={`px-4 py-1.5 rounded-pill font-montserrat font-semibold text-xs transition-all capitalize ${
+                            period === p ? 'bg-white text-carbon shadow-sm' : 'text-muted-foreground'
+                          }`}
+                        >
+                          {p}
+                          {p === 'annual' && period === 'annual' && <span className="text-emerald-600 text-[10px] ml-1">Save 3%</span>}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
