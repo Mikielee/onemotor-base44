@@ -55,7 +55,7 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
   };
 
   return (
-    <div className="space-y-4 pb-24">
+    <div className="space-y-3 pb-24">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         Your driving history
       </h1>

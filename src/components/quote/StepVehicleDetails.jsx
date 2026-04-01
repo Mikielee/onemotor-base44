@@ -10,7 +10,7 @@ export default function StepVehicleDetails({ formData, onChange, onNext, onBack 
   const canProceed = !!formData.vehicleReg;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         More details about your vehicle
       </h1>

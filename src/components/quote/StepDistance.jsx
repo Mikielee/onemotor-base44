@@ -19,7 +19,7 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
   const canProceed = formData.annualDistance && formData.offPeak;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         How much do you drive each year?
       </h1>

@@ -134,7 +134,7 @@ export default function StepAdditionalDrivers({ formData, onChange, onNext, onBa
   const canProceed = !!formData.hasAdditionalDrivers;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         Does anyone else drive this car?
       </h1>

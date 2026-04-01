@@ -32,7 +32,7 @@ export default function StepPayment({ formData, price, onNext, onBack }) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         Complete your purchase
       </h1>

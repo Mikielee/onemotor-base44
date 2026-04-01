@@ -11,7 +11,7 @@ export default function StepExcess({ formData, onChange, onNext, onBack }) {
   const selected = formData.excess || 1000;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="flex items-center gap-2">
         <h1 className="font-montserrat font-bold text-xl text-carbon">
           Choose your excess
