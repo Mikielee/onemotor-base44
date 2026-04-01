@@ -4,21 +4,23 @@ import StepFooter from './StepFooter';
 import { HELP_TEXTS } from '../../lib/quoteData';
 
 export default function StepDriveLess({ formData, onChange, onNext, onBack }) {
+  const [selectedOption, setSelectedOption] = useState(formData.driveLessOptIn ? 'save' : formData.driveLessUpgrade ? 'upgrade' : null);
+
   const handleOptIn = () => {
+    setSelectedOption('save');
     onChange('driveLessOptIn', true);
     onChange('driveLessUpgrade', false);
-    onNext();
+  };
+
+  const handleUpgrade = () => {
+    setSelectedOption('upgrade');
+    onChange('driveLessOptIn', false);
+    onChange('driveLessUpgrade', true);
   };
 
   const handleDecline = () => {
     onChange('driveLessOptIn', false);
     onChange('driveLessUpgrade', false);
-    onNext();
-  };
-
-  const handleUpgrade = () => {
-    onChange('driveLessOptIn', false);
-    onChange('driveLessUpgrade', true);
     onNext();
   };
 
@@ -37,35 +39,88 @@ export default function StepDriveLess({ formData, onChange, onNext, onBack }) {
         </p>
       </div>
 
-      {/* Savings Card */}
-      <div className="bg-gradient-to-br from-bdred to-[#b91c0c] rounded-xl px-6 py-6 text-center">
-        <div className="flex justify-center mb-3">
-          <Gauge className="w-6 h-6 text-white" />
-        </div>
-        <p className="font-montserrat font-bold text-2xl text-white mb-2">
-          Save up to S$150/year
-        </p>
-        <p className="text-xs font-montserrat text-white/90">
-          Pay per kilometre up to your selected limit. If you drive less, you save more.
-        </p>
-      </div>
-
-      {/* Opt-In Card */}
-      <button
-        type="button"
-        onClick={handleOptIn}
-        className="w-full text-left border-2 border-emerald-400 bg-white rounded-xl px-5 py-4 hover:bg-emerald-50/30 transition-all"
-      >
-        <div className="flex items-start gap-3">
-          <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-          <div className="flex-1 min-w-0">
-            <p className="font-montserrat font-bold text-sm text-carbon">Yes, I want to save</p>
-            <p className="font-montserrat text-xs text-muted-foreground mt-1">
-              Opt in to Drive Less, Pay Less — save up to S$150/year
+      {/* Grouped Card Container */}
+      <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+        {/* Savings Card */}
+        <div className="bg-gradient-to-br from-bdred to-[#b91c0c] px-6 py-6 text-center">
+          <div className="flex justify-center mb-3">
+            <Gauge className="w-6 h-6 text-white" />
+          </div>
+          <p className="font-montserrat font-bold text-2xl text-white mb-2">
+            Save up to S$150/year
+          </p>
+          <p className="text-xs font-montserrat text-white/90 mb-4">
+            Pay per kilometre up to your selected limit. If you drive less, you save more.
+          </p>
+          
+          {/* Odometer Info Note Inside Savings Card */}
+          <div className="flex items-start gap-2.5 bg-white/20 rounded-lg px-3 py-2.5">
+            <Info className="w-3.5 h-3.5 text-white flex-shrink-0 mt-0.5" />
+            <p className="text-[11px] font-montserrat text-white/90 leading-relaxed">
+              You'll need to submit an odometer photo when your policy starts and at renewal.
             </p>
           </div>
         </div>
-      </button>
+
+        {/* Option Buttons */}
+        <div className="border-t border-gray-100 p-4 space-y-3">
+          {/* Option A: Save */}
+          <button
+            type="button"
+            onClick={handleOptIn}
+            className={`w-full text-left border-2 rounded-lg px-4 py-4 transition-all ${
+              selectedOption === 'save'
+                ? 'border-bdred bg-red-50/30'
+                : 'border-gray-200 bg-white hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-start gap-3">
+              <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center ${
+                selectedOption === 'save' ? 'border-bdred bg-bdred' : 'border-gray-300'
+              }`}>
+                {selectedOption === 'save' && <div className="w-2 h-2 bg-white rounded-full" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="font-montserrat font-bold text-sm text-carbon">Yes, I want to save</p>
+                  <span className="text-sm font-montserrat font-bold text-emerald-600">−S$150/year</span>
+                </div>
+                <p className="font-montserrat text-xs text-muted-foreground">
+                  Opt in to Drive Less, Pay Less
+                </p>
+              </div>
+            </div>
+          </button>
+
+          {/* Option B: Upgrade */}
+          <button
+            type="button"
+            onClick={handleUpgrade}
+            className={`w-full text-left border-2 rounded-lg px-4 py-4 transition-all ${
+              selectedOption === 'upgrade'
+                ? 'border-bdred bg-red-50/30'
+                : 'border-gray-200 bg-white hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-start gap-3">
+              <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center ${
+                selectedOption === 'upgrade' ? 'border-bdred bg-bdred' : 'border-gray-300'
+              }`}>
+                {selectedOption === 'upgrade' && <div className="w-2 h-2 bg-white rounded-full" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="font-montserrat font-bold text-sm text-carbon">Upgrade to unlimited km</p>
+                  <span className="text-sm font-montserrat font-bold text-bdred">+S$80/year</span>
+                </div>
+                <p className="font-montserrat text-xs text-muted-foreground">
+                  Drive as much as you want
+                </p>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
 
       {/* Decline Text Link */}
       <div className="text-center">
@@ -78,27 +133,8 @@ export default function StepDriveLess({ formData, onChange, onNext, onBack }) {
         </button>
       </div>
 
-      {/* Odometer Info Note */}
-      <div className="flex items-start gap-2.5 bg-blue-50/60 border border-blue-100/50 rounded-lg px-4 py-3">
-        <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-        <p className="text-xs font-montserrat text-blue-900 leading-relaxed">
-          Note: If you opt in, you'll need to submit an odometer photo when your policy starts and at each renewal.
-        </p>
-      </div>
-
-      {/* Upgrade Option */}
-      <div className="text-center pt-2">
-        <button
-          type="button"
-          onClick={handleUpgrade}
-          className="text-xs font-montserrat text-cyan hover:underline"
-        >
-          Upgrade to unlimited km (+S$80/year)
-        </button>
-      </div>
-
       {/* Footer */}
-      <StepFooter onBack={onBack} onNext={() => {}} disabled={true} hideNext={true} />
+      <StepFooter onBack={onBack} onNext={onNext} disabled={selectedOption === null} />
     </div>
   );
 }
