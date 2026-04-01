@@ -98,7 +98,7 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
 
           <FadeIn show={!!formData.claimsInPast3Years && formData.claimsInPast3Years !== '0'}>
             <div className="mt-4 pt-4 border-t border-gray-100">
-              <p className="font-montserrat font-medium text-sm text-carbon mb-2">
+              <p className="font-montserrat font-medium text-xs text-carbon mb-2">
                 How many of those accidents or claims were you or any driver at-fault?
               </p>
               <div className="relative">
