@@ -1,10 +1,12 @@
 import { Phone } from 'lucide-react';
+import { QuoteProvider } from './QuoteContext';
 import PriceBar from './PriceBar';
 
 export default function QuoteLayout({ step, totalSteps, showPriceBar, price, formData, children, headerExtra }) {
   const progress = (step / totalSteps) * 100;
 
   return (
+    <QuoteProvider showPriceBar={showPriceBar}>
     <div className="min-h-screen bg-grey100 flex justify-center">
       <div className="w-full max-w-[390px] bg-white min-h-screen flex flex-col relative shadow-xl">
         {/* Progress bar */}
@@ -46,5 +48,6 @@ export default function QuoteLayout({ step, totalSteps, showPriceBar, price, for
         {showPriceBar && <PriceBar price={price} formData={formData} />}
       </div>
     </div>
+    </QuoteProvider>
   );
 }
