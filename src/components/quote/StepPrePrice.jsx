@@ -289,7 +289,7 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
               {OPTIONAL_COVERS.map((name, i) => (
                 <div key={i} className={`flex items-center justify-between gap-2 px-3 py-3 ${i % 2 === 0 ? 'bg-white' : 'bg-grey100'}`}>
                   <span className="text-xs font-montserrat text-carbon leading-snug flex-1">{name}</span>
-                  <span className="text-xs font-montserrat font-bold text-cyan">Available</span>
+                  <span className="text-xs font-montserrat font-bold text-cyan">Available as Add-on</span>
                 </div>
               ))}
             </div>
