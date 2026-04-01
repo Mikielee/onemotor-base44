@@ -130,7 +130,7 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
 
       {/* NCD */}
       <FadeIn show={!!formData.certificateOfMerit}>
-       <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3">
+       <div className="bg-white rounded-lg border border-gray-200 p-4 mt-3 space-y-3">
          <div className="flex items-center gap-2 mb-3">
            <p className="text-xs font-montserrat font-medium text-muted-foreground">What is your NCD entitlement?</p>
             <HelpIcon onClick={() => setHelpOpen('ncd')} />
@@ -151,41 +151,41 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
               </button>
             ))}
           </div>
-        </div>
-      </FadeIn>
 
-      {/* 0% NCD reason */}
-      <FadeIn show={formData.ncdEntitlement === '0'}>
-       <div className="bg-grey100 rounded-lg p-4 mt-3 space-y-3">
-         <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">Reason for 0% NCD</p>
-          {ZERO_NCD_REASONS.map(r => (
-            <ChoiceButton key={r} selected={formData.zeroNcdReason === r} onClick={() => onChange('zeroNcdReason', r)}>
-              {r}
-            </ChoiceButton>
-          ))}
-
-         {/* NCD on another car — nested subsection */}
-         {formData.zeroNcdReason === 'I have NCD on another car' && (
-           <div className="border-t border-gray-300 pt-3 mt-3">
-             <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">NCD% on your other car?</p>
-             <div className="grid grid-cols-3 gap-2">
-               {OTHER_NCD_OPTIONS.map(n => (
-                 <button
-                   key={n}
-                   type="button"
-                   onClick={() => onChange('otherCarNcd', n)}
-                   className={`py-2.5 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
-                     formData.otherCarNcd === n
-                       ? 'bg-bdred text-white border-bdred'
-                       : 'bg-white text-carbon border-gray-200 hover:border-carbon/40'
-                   }`}
-                 >
-                   {n}%
-                 </button>
+          {/* 0% NCD reason — nested subsection */}
+          {formData.ncdEntitlement === '0' && (
+            <div className="border-t border-gray-300 pt-3 mt-3">
+              <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">Reason for 0% NCD</p>
+               {ZERO_NCD_REASONS.map(r => (
+                 <ChoiceButton key={r} selected={formData.zeroNcdReason === r} onClick={() => onChange('zeroNcdReason', r)}>
+                   {r}
+                 </ChoiceButton>
                ))}
-             </div>
-           </div>
-         )}
+
+              {/* NCD on another car — nested under reason */}
+              {formData.zeroNcdReason === 'I have NCD on another car' && (
+                <div className="border-t border-gray-300 pt-3 mt-3">
+                  <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">NCD% on your other car?</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {OTHER_NCD_OPTIONS.map(n => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => onChange('otherCarNcd', n)}
+                        className={`py-2.5 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
+                          formData.otherCarNcd === n
+                            ? 'bg-bdred text-white border-bdred'
+                            : 'bg-white text-carbon border-gray-200 hover:border-carbon/40'
+                        }`}
+                      >
+                        {n}%
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </FadeIn>
 
