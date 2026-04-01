@@ -7,8 +7,8 @@ const COVER_LABELS = { COMP: 'Comprehensive', TPFT: 'Third Party, Fire & Theft',
 
 function Row({ label, value, color = 'neutral' }) {
   const valueClass =
-    color === 'raise' ? 'text-carbon font-medium' :
-    color === 'lower' ? 'text-emerald-600 font-semibold' :
+    color === 'adds' ? 'text-emerald-600 font-semibold' :
+    color === 'discount' ? 'text-bdred font-semibold' :
     color === 'promo' ? 'text-cyan font-semibold' :
     'text-carbon font-medium';
   return (
@@ -22,6 +22,12 @@ function Row({ label, value, color = 'neutral' }) {
 export default function PricePinned({ formData, price, onNext, onBack, period, setPeriod }) {
   const [expanded, setExpanded] = useState(false);
 
+  // Sync period with formData.premiumFrequency if available
+  const syncedPeriod = formData.premiumFrequency || period;
+  const handleSetPeriod = (p) => {
+    setPeriod(p);
+  };
+
   const coverType = formData.coverType || 'COMP';
   const basePrice = BASE_PRICES[coverType] || price;
   const ncd = parseInt(formData.ncdEntitlement || '0');
@@ -32,7 +38,7 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
 
   // Build adds section
   const adds = [];
-  if (excessDelta > 0) adds.push({ label: `Excess (S$${formData.excess || 1000})`, amount: excessDelta });
+  if (excessDelta !== 0) adds.push({ label: `Excess (S$${formData.excess || 1000})`, amount: excessDelta });
   if (formData.benefitNCD) adds.push({ label: 'NCD Protection', amount: 95 });
   if (formData.benefitPA) {
     const paMap = { 50000: 78, 100000: 110, 200000: 158 };
@@ -52,8 +58,8 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
 
   const annualPrice = price;
   const monthlyPrice = Math.round(annualPrice / 12);
-  const displayPrice = period === 'monthly' ? monthlyPrice : annualPrice;
-  const periodLabel = period === 'monthly' ? 'month' : 'year';
+  const displayPrice = syncedPeriod === 'monthly' ? monthlyPrice : annualPrice;
+  const periodLabel = syncedPeriod === 'monthly' ? 'month' : 'year';
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 bg-white">
@@ -121,7 +127,7 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
                   <div className="border-t border-gray-100 my-3" />
                   <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase mb-2">Adds to your premium</p>
                   {adds.map((a, i) => (
-                    <Row key={i} label={a.label} value={`+S$${a.amount.toLocaleString()}`} color="raise" />
+                    <Row key={i} label={a.label} value={a.amount > 0 ? `+S$${a.amount.toLocaleString()}` : `−S$${Math.abs(a.amount).toLocaleString()}`} color={a.amount > 0 ? 'adds' : 'discount'} />
                   ))}
                 </>
               )}
@@ -132,7 +138,7 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
                   <div className="border-t border-gray-100 my-3" />
                   <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase mb-2">Discounts applied</p>
                   {discounts.map((d, i) => (
-                    <Row key={i} label={d.label} value={`−S$${d.amount.toLocaleString()}`} color="lower" />
+                    <Row key={i} label={d.label} value={`−S$${d.amount.toLocaleString()}`} color="discount" />
                   ))}
                 </>
               )}
@@ -141,9 +147,13 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
               {hasPromo && (
                 <>
                   <div className="border-t border-gray-100 my-3" />
-                  <p className="text-[10px] font-montserrat font-semibold tracking-widest text-muted-foreground uppercase mb-2">Promotions & gifts</p>
-                  <Row label="CapitaVoucher S$20" value="🎁 gift, sent 30 days post-purchase" color="promo" />
-                  <p className="text-[10px] font-montserrat text-muted-foreground italic mt-1">Not deducted from your premium</p>
+                  <div className="bg-cyan/5 border border-cyan/20 rounded-lg p-3 mb-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs font-montserrat text-carbon font-semibold">CapitaVoucher S$20</span>
+                      <span className="text-xl">🎁</span>
+                    </div>
+                    <p className="text-[10px] font-montserrat text-muted-foreground">Sent 30 days post-purchase. Not deducted from premium.</p>
+                  </div>
                 </>
               )}
 
@@ -156,33 +166,15 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
                     <button
                       key={p}
                       type="button"
-                      onClick={() => setPeriod(p)}
+                      onClick={() => handleSetPeriod(p)}
                       className={`px-4 py-1.5 rounded-full font-montserrat font-semibold text-xs transition-all capitalize ${
-                        period === p ? 'bg-white text-carbon shadow-sm' : 'bg-transparent text-muted-foreground'
+                        syncedPeriod === p ? 'bg-white text-carbon shadow-sm' : 'bg-transparent text-muted-foreground'
                       }`}
                     >
                       {p}
                     </button>
                   ))}
                 </div>
-              </div>
-
-              {/* Buttons */}
-              <div className="flex gap-3 mt-6 pb-4">
-                <button
-                  type="button"
-                  onClick={onBack}
-                  className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 font-montserrat font-bold text-sm text-carbon hover:border-carbon/40 transition-colors"
-                >
-                  ← Back
-                </button>
-                <button
-                  type="button"
-                  onClick={onNext}
-                  className="flex-1 px-4 py-3 rounded-lg bg-bdred text-white font-montserrat font-bold text-sm hover:bg-bdred/90 transition-colors"
-                >
-                  Continue
-                </button>
               </div>
             </div>
           </motion.div>
@@ -207,25 +199,23 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
         <ChevronUp className="w-4 h-4 text-muted-foreground flex-shrink-0" />
       </button>
 
-      {/* Footer buttons (collapsed state) */}
-      {!expanded && (
-        <div className="border-t border-gray-100 flex gap-3 px-4 py-3 bg-gray-50/50">
-          <button
-            type="button"
-            onClick={onBack}
-            className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 font-montserrat font-bold text-sm text-carbon hover:border-carbon/40 transition-colors"
-          >
-            ← Back
-          </button>
-          <button
-            type="button"
-            onClick={onNext}
-            className="flex-1 px-4 py-3 rounded-lg bg-bdred text-white font-montserrat font-bold text-sm hover:bg-bdred/90 transition-colors"
-          >
-            Continue
-          </button>
-        </div>
-      )}
+      {/* Sticky footer buttons */}
+      <div className="border-t border-gray-100 flex gap-3 px-4 py-3 bg-white shadow-lg">
+        <button
+          type="button"
+          onClick={onBack}
+          className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 font-montserrat font-bold text-sm text-carbon hover:border-carbon/40 transition-colors"
+        >
+          ← Back
+        </button>
+        <button
+          type="button"
+          onClick={onNext}
+          className="flex-1 px-4 py-3 rounded-lg bg-bdred text-white font-montserrat font-bold text-sm hover:bg-bdred/90 transition-colors"
+        >
+          Continue
+        </button>
+      </div>
     </div>
   );
 }
