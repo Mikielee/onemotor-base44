@@ -239,6 +239,25 @@ export default function StepPrePrice({ formData, price, onNext, onBack }) {
         )}
       </div>
 
+      {/* Confirmation mini-card */}
+      <div className="rounded-lg border border-gray-200 bg-grey100 px-4 py-3 space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-base flex-shrink-0">🛡️</span>
+            <span className="text-sm font-montserrat font-bold text-carbon leading-snug">{coverLabels[coverType]}</span>
+          </div>
+          <button type="button" className="flex-shrink-0 text-xs font-montserrat font-bold text-cyan hover:underline ml-2">
+            Change
+          </button>
+        </div>
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-base flex-shrink-0">🚗</span>
+          <span className="text-sm font-montserrat text-carbon leading-snug">
+            {[formData.make, formData.model, formData.registrationYear].filter(Boolean).join(' · ') || 'Your vehicle'}
+          </span>
+        </div>
+      </div>
+
       {/* SECTION A — Core Cover(s): always visible */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <SectionHeader title="Core Cover(s)" subtitle={`Included in your ${coverLabels[coverType]} plan`} />
