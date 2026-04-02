@@ -138,7 +138,7 @@ export default function NamedDriverForm({ drivers, onChange }) {
   const handleRemove = (idx) => onChange(drivers.filter((_, i) => i !== idx));
 
   return (
-    <div className="space-y-4">
+    <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-4">
       {/* Counter */}
       <div className="flex items-center justify-between">
         <p className="font-montserrat font-bold text-sm text-carbon">
