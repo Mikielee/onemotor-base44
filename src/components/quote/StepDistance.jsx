@@ -43,7 +43,7 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
           <div>
             <p className="font-montserrat font-bold text-sm text-carbon mb-1">You've unlocked Drive Less Pay Less Cover</p>
             <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
-              If you drive 15,000km or less a year, you've got the option to choose Drive Less Pay Less Cover. Select the KM's you need and save up to S$150 compared to our regular Comprehensive Cover.
+              If you drive 8,000km or less a year, you've got the option to choose Drive Less Pay Less Cover. Select the KM's you need and save up to S$150 compared to our regular Comprehensive Cover.
             </p>
           </div>
         </div>
