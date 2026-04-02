@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { ChevronDown, Search, AlertTriangle } from 'lucide-react';
 import StepFooter from './StepFooter';
+import MyinfoButton from './MyinfoButton';
 import { CAR_MAKES, CAR_MODELS, SUB_MODELS, COVER_TYPES } from '../../lib/quoteData';
 import PillButton from './PillButton';
 
@@ -107,6 +108,9 @@ const YEARS = (() => {
 })();
 
 export default function StepMakeModel({ formData, onChange, onNext, onBack, goToStep }) {
+  const handleMyinfo = (data) => {
+    Object.entries(data).forEach(([k, v]) => onChange(k, v));
+  };
   const vehicleAge = formData.yearOfReg ? new Date().getFullYear() - parseInt(formData.yearOfReg) : null;
 
   const coverConflict = useMemo(() => {
@@ -126,6 +130,8 @@ export default function StepMakeModel({ formData, onChange, onNext, onBack, goTo
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         Tell us about your car
       </h1>
+
+      <MyinfoButton onDataRetrieved={handleMyinfo} />
 
       <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
         {/* Year first */}
