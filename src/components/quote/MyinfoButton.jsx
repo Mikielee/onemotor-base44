@@ -5,6 +5,7 @@ import { CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 const MOCK_DATA = {
   nricFin: 'S8712345A',
   principalName: 'TAN WEI MING',
+  preferredName: 'Tan Wei Ming',
   gender: 'male',
   dobDay: '15',
   dobMonth: '03',
@@ -12,6 +13,7 @@ const MOCK_DATA = {
   email: 'tanweiming@email.com',
   mobile: '91234567',
   postalCode: '520123',
+  postcode: '520123',
   address: '123 Tampines Street 11, #08-22',
   maritalStatus: 'married',
   // Vehicle
