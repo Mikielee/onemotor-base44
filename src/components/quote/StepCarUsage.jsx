@@ -77,28 +77,19 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden space-y-2"
           >
-            {/* OPC question — only for business */}
-            {showOPC && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="overflow-hidden"
-              >
-                <div className="bg-grey100 rounded-lg p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <p className="font-montserrat font-bold text-sm text-carbon">
-                      Is this an off-peak car (OPC)?
-                    </p>
-                    <HelpIcon onClick={() => setHelpOpen(true)} />
-                  </div>
-                  <YesNoButtons
-                    value={formData.isOffPeakCar}
-                    onChange={(v) => onChange('isOffPeakCar', v)}
-                  />
-                </div>
-              </motion.div>
-            )}
+            {/* OPC question */}
+            <div className="bg-grey100 rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <p className="font-montserrat font-bold text-sm text-carbon">
+                  Is this an off-peak car (OPC)?
+                </p>
+                <HelpIcon onClick={() => setHelpOpen(true)} />
+              </div>
+              <YesNoButtons
+                value={formData.isOffPeakCar}
+                onChange={(v) => onChange('isOffPeakCar', v)}
+              />
+            </div>
 
             {/* Delivery question — only after OPC answered */}
             <AnimatePresence>
