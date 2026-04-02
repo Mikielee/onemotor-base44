@@ -36,7 +36,8 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
 
   const showFollowUp = !!formData.carUsage;
   const showOPC = !!formData.carUsage;
-  const opcAnswered = formData.carUsage !== 'business' || !!formData.isOffPeakCar;
+  const opcAnswered = !!formData.isOffPeakCar;
+  const showDelivery = opcAnswered;
   const canProceed = !!formData.carUsage && !!formData.isDeliveryDriver && opcAnswered;
 
   return (
@@ -99,16 +100,27 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
               </motion.div>
             )}
 
-            {/* Delivery question — for both */}
-            <div className="bg-grey100 rounded-lg p-4">
-              <p className="font-montserrat font-bold text-sm text-carbon mb-3">
-                Do you use this car for delivery services (e.g. Grab, Gojek)?
-              </p>
-              <YesNoButtons
-                value={formData.isDeliveryDriver}
-                onChange={handleDeliverySelection}
-              />
-            </div>
+            {/* Delivery question — only after OPC answered */}
+            <AnimatePresence>
+              {showDelivery && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="bg-grey100 rounded-lg p-4">
+                    <p className="font-montserrat font-bold text-sm text-carbon mb-3">
+                      Do you use this car for delivery services (e.g. Grab, Gojek)?
+                    </p>
+                    <YesNoButtons
+                      value={formData.isDeliveryDriver}
+                      onChange={handleDeliverySelection}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
