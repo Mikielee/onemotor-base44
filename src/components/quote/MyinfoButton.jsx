@@ -63,7 +63,7 @@ export default function MyinfoButton({ onDataRetrieved }) {
           <span className="text-sm font-montserrat font-semibold text-carbon">
             Retrieve Your Information with
           </span>
-          <span className="font-bold text-lg leading-none">
+          <span className="font-bold text-lg leading-tight">
             <span className="text-[#DA291C]">my</span>
             <span className="text-[#1a1a1a] relative">
               <span className="inline-block">i</span>
