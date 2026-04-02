@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Mail, MessageCircle, Phone } from 'lucide-react';
 import StepFooter from './StepFooter';
+import ValidatedInput from './ValidatedInput';
 
 const MARKETING_PREFS = [
   { key: 'Email', icon: Mail },
@@ -40,56 +41,64 @@ export default function StepContact({ formData, onChange, onNext, onBack }) {
       <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
         <div>
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Preferred name</label>
-          <input
-            type="text"
-            value={formData.preferredName || ''}
-            onChange={(e) => onChange('preferredName', e.target.value)}
-            className={inputClass('name')}
-            placeholder="John Doe"
-          />
+          <ValidatedInput value={formData.preferredName}>
+            <input
+              type="text"
+              value={formData.preferredName || ''}
+              onChange={(e) => onChange('preferredName', e.target.value)}
+              className={inputClass('name')}
+              placeholder="John Doe"
+            />
+          </ValidatedInput>
           {errors.name && <p className="text-[11px] text-bdred mt-1 font-montserrat">{errors.name}</p>}
         </div>
 
         <div>
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Email address</label>
-          <input
-            type="email"
-            value={formData.email || ''}
-            onChange={(e) => onChange('email', e.target.value)}
-            className={inputClass('email')}
-            placeholder="john@example.com"
-          />
+          <ValidatedInput value={formData.email}>
+            <input
+              type="email"
+              value={formData.email || ''}
+              onChange={(e) => onChange('email', e.target.value)}
+              className={inputClass('email')}
+              placeholder="john@example.com"
+            />
+          </ValidatedInput>
           {errors.email && <p className="text-[11px] text-bdred mt-1 font-montserrat">{errors.email}</p>}
         </div>
 
         <div>
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Mobile number</label>
-          <div className="flex gap-2">
-            <div className="px-3 py-3 bg-grey100 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-muted-foreground">
-              +65
+          <ValidatedInput value={formData.mobile}>
+            <div className="flex gap-2">
+              <div className="px-3 py-3 bg-grey100 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-muted-foreground">
+                +65
+              </div>
+              <input
+                type="tel"
+                maxLength={8}
+                value={formData.mobile || ''}
+                onChange={(e) => onChange('mobile', e.target.value.replace(/\D/g, ''))}
+                className={`flex-1 ${inputClass('mobile')}`}
+                placeholder="9123 4567"
+              />
             </div>
-            <input
-              type="tel"
-              maxLength={8}
-              value={formData.mobile || ''}
-              onChange={(e) => onChange('mobile', e.target.value.replace(/\D/g, ''))}
-              className={`flex-1 ${inputClass('mobile')}`}
-              placeholder="9123 4567"
-            />
-          </div>
+          </ValidatedInput>
           {errors.mobile && <p className="text-[11px] text-bdred mt-1 font-montserrat">{errors.mobile}</p>}
         </div>
 
         <div>
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Postcode</label>
-          <input
-            type="text"
-            maxLength={6}
-            value={formData.postcode || ''}
-            onChange={(e) => onChange('postcode', e.target.value.replace(/\D/g, ''))}
-            className={inputClass('postcode')}
-            placeholder="123456"
-          />
+          <ValidatedInput value={formData.postcode}>
+            <input
+              type="text"
+              maxLength={6}
+              value={formData.postcode || ''}
+              onChange={(e) => onChange('postcode', e.target.value.replace(/\D/g, ''))}
+              className={inputClass('postcode')}
+              placeholder="123456"
+            />
+          </ValidatedInput>
           {errors.postcode && <p className="text-[11px] text-bdred mt-1 font-montserrat">{errors.postcode}</p>}
         </div>
 
