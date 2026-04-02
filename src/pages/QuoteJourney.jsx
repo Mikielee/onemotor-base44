@@ -148,7 +148,7 @@ export default function QuoteJourney() {
             animate="center"
             exit="exit"
             transition={{ type: 'tween', duration: 0.25, ease: 'easeInOut' }}
-            className="overflow-y-auto max-h-[calc(100vh-200px)]"
+            className="w-full"
           >
             {renderStep()}
           </motion.div>

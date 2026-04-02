@@ -7,8 +7,8 @@ export default function QuoteLayout({ children, step, totalSteps, showPriceWidge
       <QuoteHeader step={step} totalSteps={totalSteps} />
 
       {/* Content */}
-      <div className="overflow-x-hidden">
-        <div className={`max-w-lg mx-auto px-4 py-6 ${showPriceWidget ? 'pb-80' : 'pb-6'}`}>
+      <div className="overflow-x-hidden overflow-y-auto">
+        <div className={`max-w-lg mx-auto px-4 py-6 ${showPriceWidget ? 'pb-80' : 'pb-24'}`}>
           {children}
         </div>
       </div>
