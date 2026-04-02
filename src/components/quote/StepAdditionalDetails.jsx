@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Fingerprint } from 'lucide-react';
+import ValidatedInput from './ValidatedInput';
 import HelpIcon from './HelpIcon';
 import HelpDrawer from './HelpDrawer';
 import StepFooter from './StepFooter';
@@ -17,6 +18,24 @@ export default function StepAdditionalDetails({ formData, onChange, onNext, onBa
   const [singpassFilled, setSingpassFilled] = useState(false);
   const [lookupLoading, setLookupLoading] = useState(false);
   const [lookupDone, setLookupDone] = useState(false);
+
+  // Auto-prefill from Myinfo data if available
+  useEffect(() => {
+    if (formData.nricFin && !formData.fullName) {
+      onChange('fullName', formData.principalName || '');
+      onChange('nric', formData.nricFin || '');
+      const pc = formData.postalCode || formData.postcode || '';
+      onChange('postalCode', pc);
+      // Parse address: '123 Tampines Street 11, #08-22'
+      const addr = formData.address || '';
+      const parts = addr.split(',');
+      onChange('blockNo', parts[0]?.trim() || '');
+      onChange('streetName', parts[0]?.trim() || '');
+      onChange('unitNo', parts[1]?.trim() || '');
+      setSingpassFilled(true);
+      setLookupDone(true);
+    }
+  }, []);
 
   const handleSingpass = () => {
     setSingpassFilled(true);
@@ -70,23 +89,29 @@ export default function StepAdditionalDetails({ formData, onChange, onNext, onBa
       <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
         <div>
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Full name (as per NRIC)</label>
-          <input type="text" value={formData.fullName || ''} onChange={(e) => onChange('fullName', e.target.value)} className={inputClass} placeholder={formData.preferredName || 'John Tan Wei Ming'} />
+          <ValidatedInput value={formData.fullName}>
+            <input type="text" value={formData.fullName || ''} onChange={(e) => onChange('fullName', e.target.value)} className={inputClass} placeholder={formData.preferredName || 'John Tan Wei Ming'} />
+          </ValidatedInput>
         </div>
 
         <div>
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">NRIC/FIN</label>
-          <input type="text" value={formData.nric || ''} onChange={(e) => onChange('nric', e.target.value.toUpperCase())} className={inputClass} placeholder="e.g. S9012345A" />
+          <ValidatedInput value={formData.nric}>
+            <input type="text" value={formData.nric || ''} onChange={(e) => onChange('nric', e.target.value.toUpperCase())} className={inputClass} placeholder="e.g. S9012345A" />
+          </ValidatedInput>
         </div>
 
         {/* Address section */}
         <div>
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Postal code</label>
           <div className="flex gap-2">
-            <input
-              type="text" maxLength={6} value={formData.postalCode || ''}
-              onChange={(e) => { onChange('postalCode', e.target.value.replace(/\D/g, '')); setLookupDone(false); onChange('blockNo', ''); onChange('streetName', ''); }}
-              className={`flex-1 ${inputClass}`} placeholder="e.g. 570123"
-            />
+            <ValidatedInput value={formData.postalCode}>
+              <input
+                type="text" maxLength={6} value={formData.postalCode || ''}
+                onChange={(e) => { onChange('postalCode', e.target.value.replace(/\D/g, '')); setLookupDone(false); onChange('blockNo', ''); onChange('streetName', ''); }}
+                className={`flex-1 ${inputClass}`} placeholder="e.g. 570123"
+              />
+            </ValidatedInput>
             <button
               type="button"
               onClick={handlePostcodeLookup}

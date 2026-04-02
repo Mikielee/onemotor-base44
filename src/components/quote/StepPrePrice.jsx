@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Tag, ChevronDown, ChevronUp, X, Plus, Shield, Car, Mail } from 'lucide-react';
+import FeefoTrustBadge from './FeefoTrustBadge';
 import { BASE_PRICES } from '../../lib/quoteData';
 import StepFooter from './StepFooter';
 import SaveEmailQuoteModal from './SaveEmailQuoteModal';
@@ -323,6 +324,8 @@ export default function StepPrePrice({ formData, onChange, price, onNext, onBack
       <p className="text-[11px] text-muted-foreground font-montserrat leading-relaxed">
         This is an estimated price based on the information provided. Final price confirmed after all details are completed.
       </p>
+
+      <FeefoTrustBadge />
 
       <StepFooter onBack={onBack} onNext={onNext} label="Continue to personalise your quote" />
 

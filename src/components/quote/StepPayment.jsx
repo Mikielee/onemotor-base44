@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CreditCard, Lock, QrCode, Shield, Car } from 'lucide-react';
+import FeefoTrustBadge from './FeefoTrustBadge';
 import StepFooter from './StepFooter';
 import PillButton from './PillButton';
 
@@ -174,6 +175,8 @@ export default function StepPayment({ formData, price, onNext, onBack, goToStep 
           <span className="text-[11px] font-montserrat text-muted-foreground">256-bit SSL Encrypted · PCI DSS Compliant</span>
         </div>
       </div>
+
+      <FeefoTrustBadge />
 
       <div className="flex gap-3 pt-2">
         <button

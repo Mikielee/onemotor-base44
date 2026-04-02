@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
+import ValidatedInput from './ValidatedInput';
 import { INSURERS, FINANCE_COMPANIES } from '../../lib/quoteData';
 import YesNoButtons from './YesNoButtons';
 import StepFooter from './StepFooter';
 
 export default function StepVehicleDetails({ formData, onChange, onNext, onBack }) {
   const inputClass = 'w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none';
+
+  // Auto-prefill vehicle reg from Myinfo data
+  useEffect(() => {
+    if (formData.vehicleNumber && !formData.vehicleReg) {
+      onChange('vehicleReg', formData.vehicleNumber);
+    }
+  }, []);
 
   const canProceed = !!formData.vehicleReg;
 
@@ -18,13 +26,15 @@ export default function StepVehicleDetails({ formData, onChange, onNext, onBack 
       <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
         <div>
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Vehicle registration number</label>
-          <input
-            type="text"
-            value={formData.vehicleReg || ''}
-            onChange={(e) => onChange('vehicleReg', e.target.value.toUpperCase())}
-            className={inputClass}
-            placeholder="e.g. SBA1234A"
-          />
+          <ValidatedInput value={formData.vehicleReg}>
+            <input
+              type="text"
+              value={formData.vehicleReg || ''}
+              onChange={(e) => onChange('vehicleReg', e.target.value.toUpperCase())}
+              className={inputClass}
+              placeholder="e.g. SBA1234A"
+            />
+          </ValidatedInput>
         </div>
 
         <div>
