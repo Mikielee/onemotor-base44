@@ -80,12 +80,12 @@ export default function StepSummary({ formData, price, onNext, onBack, goToStep 
       )}
 
       {addOns.length > 0 && (
-        <Section title="Optional Benefits" editStep={14} onEdit={goToStep}>
+        <Section title="Optional Benefits" editStep={12} onEdit={goToStep}>
           {addOns.map((a, i) => <Row key={i} label={a.label} value={`$${a.value}/yr`} />)}
         </Section>
       )}
 
-      <Section title="Excess" editStep={13} onEdit={goToStep}>
+      <Section title="Excess" editStep={11} onEdit={goToStep}>
         <Row label="Excess amount" value={`$${(formData.excess || 1000).toLocaleString()}`} />
       </Section>
 

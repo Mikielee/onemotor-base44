@@ -111,10 +111,10 @@ export default function StepPayment({ formData, price, onNext, onBack, goToStep 
             <span className="text-xs font-montserrat text-muted-foreground">Base Premium</span>
             <span className="text-xs font-montserrat font-semibold text-carbon">S${Math.round(price * 1.1).toLocaleString()}</span>
           </div>
-          {formData.ncdEntitlement && parseInt(formData.ncdEntitlement) > 0 && (
+          {(formData.driveLessOptIn || formData.annualDistance === 'lt8000') && (
             <div className="flex justify-between items-center">
-              <span className="text-xs font-montserrat text-muted-foreground">NCD Discount ({formData.ncdEntitlement}%)</span>
-              <span className="text-xs font-montserrat font-semibold text-emerald-600">−S${Math.round((price * 1.1) * parseInt(formData.ncdEntitlement) / 100).toLocaleString()}</span>
+              <span className="text-xs font-montserrat text-muted-foreground">Drive Less Pay Less</span>
+              <span className="text-xs font-montserrat font-semibold text-emerald-600">−S$150</span>
             </div>
           )}
           {formData.driveLessOptIn && (

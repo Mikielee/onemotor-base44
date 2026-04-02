@@ -14,7 +14,7 @@ import StepDrivingHistory from '../components/quote/StepDrivingHistory';
 import StepContact from '../components/quote/StepContact';
 import StepPrePrice from '../components/quote/StepPrePrice';
 import StepAdditionalDrivers from '../components/quote/StepAdditionalDrivers';
-import StepDriveLess from '../components/quote/StepDriveLess';
+
 import StepExcess from '../components/quote/StepExcess';
 import StepBenefits from '../components/quote/StepBenefits';
 import StepAdditionalDetails from '../components/quote/StepAdditionalDetails';
@@ -26,7 +26,7 @@ import StepConfirmation from '../components/quote/StepConfirmation';
 import StoryTag from '../components/quote/StoryTag';
 import PricePinned from '../components/quote/PricePinned';
 
-const TOTAL_STEPS = 19;
+const TOTAL_STEPS = 18;
 
 export default function QuoteJourney() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -52,10 +52,7 @@ export default function QuoteJourney() {
     setFormData(prev => ({ ...prev, [key]: value }));
   }, []);
 
-  const getEffectiveStep = (rawStep) => {
-    if (rawStep === 11 && formData.annualDistance !== 'lt8000') return null;
-    return rawStep;
-  };
+  const getEffectiveStep = (rawStep) => rawStep;
 
   const goNext = () => {
     if (step === 7 && formData.atFaultTimes && formData.atFaultTimes !== '0' && parseInt(formData.atFaultTimes) > 0) {
@@ -129,20 +126,19 @@ export default function QuoteJourney() {
       case 8:  return <StepContact {...sharedProps} />;
       case 9:  return <StepPrePrice {...sharedProps} />;
       case 10: return <StepAdditionalDrivers {...sharedProps} />;
-      case 11: return <StepDriveLess {...sharedProps} />;
-      case 12: return <StepExcess {...sharedProps} />;
-      case 13: return <StepBenefits {...sharedProps} />;
-      case 14: return <StepAdditionalDetails {...sharedProps} />;
-      case 15: return <StepVehicleDetails {...sharedProps} />;
-      case 16: return <StepDutyOfDisclosure onNext={goNext} onBack={goBack} goToStep={goToStep} />;
-      case 17: return <StepSummary {...sharedProps} />;
-      case 18: return <StepPayment {...sharedProps} onNext={handlePaymentNext} />;
-      case 19: return <StepConfirmation {...sharedProps} paymentType={paymentType} />;
+      case 11: return <StepExcess {...sharedProps} />;
+      case 12: return <StepBenefits {...sharedProps} />;
+      case 13: return <StepAdditionalDetails {...sharedProps} />;
+      case 14: return <StepVehicleDetails {...sharedProps} />;
+      case 15: return <StepDutyOfDisclosure onNext={goNext} onBack={goBack} goToStep={goToStep} />;
+      case 16: return <StepSummary {...sharedProps} />;
+      case 17: return <StepPayment {...sharedProps} onNext={handlePaymentNext} />;
+      case 18: return <StepConfirmation {...sharedProps} paymentType={paymentType} />;
       default: return null;
     }
   };
 
-  const showPriceWidget = step >= 9 && step <= 17;
+  const showPriceWidget = step >= 9 && step <= 16;
 
   return (
     <>

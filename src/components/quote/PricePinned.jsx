@@ -38,7 +38,6 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
 
   // Build adds section
   const adds = [];
-  if (excessDelta !== 0) adds.push({ label: `Excess (S$${formData.excess || 1000})`, amount: excessDelta });
   if (formData.benefitNCD) adds.push({ label: 'NCD Protection', amount: 95 });
   if (formData.benefitPA) {
     const paMap = { 50000: 78, 100000: 110, 200000: 158 };
@@ -50,8 +49,7 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
 
   // Build discounts section
   const discounts = [];
-  if (ncdDiscount > 0) discounts.push({ label: `NCD Discount (${ncd}%)`, amount: ncdDiscount });
-  if (formData.driveLessOptIn) discounts.push({ label: 'Drive Less Pay Less', amount: 150 });
+  if (formData.driveLessOptIn || formData.annualDistance === 'lt8000') discounts.push({ label: 'Drive Less Pay Less', amount: 150 });
 
   // Promo section
   const hasPromo = formData.promoApplied || formData.utmPromo;
