@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import YesNoButtons from './YesNoButtons';
 import StepFooter from './StepFooter';
 import NamedDriverForm from './NamedDriverForm';
+import HouseholdAndAuthorisedDrivers from './HouseholdAndAuthorisedDrivers';
 
 const MAX_DRIVERS = 8;
 
@@ -132,17 +133,14 @@ export default function StepAdditionalDrivers({ formData, onChange, onNext, onBa
               )}
             </AnimatePresence>
 
-            {/* If NO unlimited: household member form */}
+            {/* If NO unlimited: household & authorised drivers sections */}
             <AnimatePresence>
               {plan === 'authorised' && unlimitedCover === 'no' && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                  <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-                    <p className="font-montserrat font-bold text-sm text-carbon">Please list all household members and anyone you authorized to drive your car.</p>
-                    <NamedDriverForm
-                      drivers={formData.namedDrivers || []}
-                      onChange={(updated) => onChange('namedDrivers', updated)}
-                    />
-                  </div>
+                  <HouseholdAndAuthorisedDrivers
+                    formData={formData}
+                    onChange={onChange}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
