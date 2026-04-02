@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Phone } from 'lucide-react';
+import { Phone, Tag } from 'lucide-react';
 
 export default function QuoteHeader({ step, totalSteps = 19 }) {
   const [activeTooltip, setActiveTooltip] = useState(null);
@@ -33,20 +33,27 @@ export default function QuoteHeader({ step, totalSteps = 19 }) {
       <div className="px-4 pb-4">
         <div className="space-y-2">
           {/* Step dots for all pages */}
-          <div className="flex gap-0.5 w-full">
+          <div className="flex gap-0.5 w-full items-end pt-4">
             {Array.from({ length: totalSteps }).map((_, i) => {
               const stepNum = i + 1;
               const isStepCompleted = step > stepNum;
               const isStepCurrent = step === stepNum;
-              const dotSize = isStepCurrent ? 'h-3' : 'h-2';
-              const dotColor = isStepCompleted || isStepCurrent ? 'bg-bdred' : 'bg-gray-300';
-              const dotFlex = isStepCurrent ? 'flex-grow' : 'flex-1';
+              const isPriceGoal = stepNum === 9 && step < 9;
+              const dotHeight = isStepCurrent || isPriceGoal ? 'h-3' : 'h-2';
+              const dotColor = isStepCompleted || isStepCurrent ? 'bg-bdred' : isPriceGoal ? 'bg-bdred/40' : 'bg-gray-300';
+              const grow = isStepCurrent || isPriceGoal ? 'flex-[2]' : 'flex-1';
 
               return (
-                <div
-                  key={stepNum}
-                  className={`${dotSize} ${dotColor} rounded-full transition-all ${dotFlex} ${isStepCurrent ? 'shadow-md' : ''}`}
-                />
+                <div key={stepNum} className={`relative ${grow}`}>
+                  {isPriceGoal && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                      <span className="text-[9px] font-montserrat font-bold text-bdred flex items-center gap-0.5">
+                        <Tag className="w-2.5 h-2.5" />Price
+                      </span>
+                    </div>
+                  )}
+                  <div className={`${dotHeight} ${dotColor} rounded-full transition-all w-full ${isStepCurrent ? 'shadow-md' : ''} ${isPriceGoal ? 'animate-pulse' : ''}`} />
+                </div>
               );
             })}
           </div>
