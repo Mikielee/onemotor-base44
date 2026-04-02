@@ -63,13 +63,11 @@ export default function MyinfoButton({ onDataRetrieved }) {
           <span className="text-sm font-montserrat font-semibold text-carbon">
             Retrieve Your Information with
           </span>
-          <span className="font-bold text-lg leading-tight">
-            <span className="text-[#DA291C]">my</span>
-            <span className="text-[#1a1a1a] relative">
-              <span className="inline-block">i</span>
-              <span className="text-[#DA291C]">nfo</span>
-            </span>
-          </span>
+          <img
+            src="https://media.base44.com/images/public/69cbaefc69ec721334277fa7/f71ebbb33_image.png"
+            alt="Myinfo"
+            className="h-7 w-auto object-contain"
+          />
         </button>
       )}
 
