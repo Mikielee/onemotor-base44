@@ -1,4 +1,5 @@
 import { Star } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 
 const REVIEWS = [
   {
@@ -42,19 +43,55 @@ function StarRating({ count = 5 }) {
 }
 
 function ReviewCard({ review }) {
+  const [expanded, setExpanded] = useState(false);
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
-      <p className="font-montserrat font-bold text-sm text-carbon mb-1.5">"{review.title}"</p>
-      <div className="flex items-center gap-2 mb-2 flex-wrap">
-        <StarRating />
-        <span className="text-xs font-montserrat font-semibold text-carbon">{review.author}</span>
-        <span className="text-xs text-muted-foreground font-montserrat">· {review.date}</span>
-        <span className="flex items-center gap-1 text-xs text-muted-foreground font-montserrat">
-          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 inline-block" />
-          {review.tag}
-        </span>
+    <div className="bg-white rounded-lg border border-gray-200 p-4 w-56 flex-shrink-0 flex flex-col justify-between" style={{ height: '164px' }}>
+      <div className="overflow-hidden flex-1">
+        <p className="font-montserrat font-bold text-xs text-carbon mb-1 truncate">"{review.title}"</p>
+        <div className="flex items-center gap-1 mb-1.5">
+          <StarRating />
+          <span className="text-[10px] font-montserrat font-semibold text-carbon ml-1">{review.author}</span>
+        </div>
+        <p className={`text-[11px] font-montserrat text-carbon/80 leading-relaxed ${expanded ? '' : 'line-clamp-3'}`}>{review.body}</p>
       </div>
-      <p className="text-xs font-montserrat text-carbon/80 leading-relaxed">{review.body}</p>
+      <button
+        type="button"
+        onClick={() => setExpanded(v => !v)}
+        className="text-[10px] font-montserrat font-bold text-cyan mt-1.5 text-left hover:underline"
+      >
+        {expanded ? 'Show less' : 'Read more'}
+      </button>
+    </div>
+  );
+}
+
+function AutoScrollCarousel() {
+  const trackRef = useRef(null);
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    let raf;
+    let pos = 0;
+    const speed = 0.4;
+    const step = () => {
+      pos += speed;
+      const half = track.scrollWidth / 2;
+      if (pos >= half) pos = 0;
+      track.style.transform = `translateX(-${pos}px)`;
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  const doubled = [...REVIEWS, ...REVIEWS];
+  return (
+    <div className="overflow-hidden">
+      <div ref={trackRef} className="flex gap-3" style={{ width: 'max-content' }}>
+        {doubled.map((r, i) => (
+          <ReviewCard key={i} review={r} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -85,12 +122,8 @@ export default function FeefoTrustBadge() {
         </div>
       </div>
 
-      {/* Review cards */}
-      <div className="space-y-2">
-        {REVIEWS.map((r, i) => (
-          <ReviewCard key={i} review={r} />
-        ))}
-      </div>
+      {/* Review carousel */}
+      <AutoScrollCarousel />
 
       <p className="text-[11px] text-center font-montserrat text-muted-foreground">
         Reviews collected and verified by <span className="font-semibold">Feefo</span>
