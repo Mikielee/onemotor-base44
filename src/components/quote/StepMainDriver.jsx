@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import StepFooter from './StepFooter';
+import MyinfoButton from './MyinfoButton';
 
 export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
   const [dobRaw, setDobRaw] = useState(
@@ -32,11 +33,18 @@ export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
 
   const canProceed = formData.dobDay && formData.dobMonth && formData.dobYear && formData.gender;
 
+  const handleMyinfo = (data) => {
+    if (data.dobDay) { setDobRaw(`${data.dobDay}/${data.dobMonth}/${data.dobYear}`); }
+    Object.entries(data).forEach(([k, v]) => onChange(k, v));
+  };
+
   return (
     <div className="space-y-1.5">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         About the main driver
       </h1>
+
+      <MyinfoButton onDataRetrieved={handleMyinfo} />
 
       <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
         <div>
