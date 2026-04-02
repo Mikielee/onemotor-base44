@@ -102,7 +102,7 @@ function SearchDropdown({ label, value, options, onChange, placeholder }) {
 
 const YEARS = (() => {
   const result = [];
-  for (let y = 2025; y >= 2000; y--) result.push(y);
+  for (let y = new Date().getFullYear(); y >= 2000; y--) result.push(y);
   return result;
 })();
 
