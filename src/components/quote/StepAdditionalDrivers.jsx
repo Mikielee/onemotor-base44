@@ -150,10 +150,13 @@ export default function StepAdditionalDrivers({ formData, onChange, onNext, onBa
     if (!formData.hasAdditionalDrivers) return false;
     if (formData.hasAdditionalDrivers === 'no') return true;
     if (!plan) return false;
-    if (!unlimitedCover) return false;
-    if (unlimitedCover === 'yes') return !!formData.hasRiskyDrivers;
-    // unlimitedCover === 'no' → named driver form, need at least 0 drivers is fine
-    return true;
+    if (plan === 'named') return true;
+    if (plan === 'authorised') {
+      if (!unlimitedCover) return false;
+      if (unlimitedCover === 'yes') return !!formData.hasRiskyDrivers;
+      return true;
+    }
+    return false;
   })();
 
   return (
@@ -180,7 +183,7 @@ export default function StepAdditionalDrivers({ formData, onChange, onNext, onBa
 
       <AnimatePresence>
         {formData.hasAdditionalDrivers === 'yes' && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden space-y-2">
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden space-y-4">
 
             {/* Plan selection */}
             <div className="space-y-2">
@@ -201,89 +204,137 @@ export default function StepAdditionalDrivers({ formData, onChange, onNext, onBa
               ))}
             </div>
 
-            {/* Follow-up: Unlimited Driver Optional Cover */}
+            {/* Named Driver: go straight to driver form */}
             <AnimatePresence>
-              {plan && (
+              {plan === 'named' && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                  <div className="ml-4 pl-3 border-l-2 border-bdred/30 space-y-2">
-                    <div className="bg-grey100 rounded-lg p-4">
-                      <p className="font-montserrat font-bold text-sm text-carbon mb-3">
-                        Would you like to add Unlimited Driver Optional Cover?
-                      </p>
-                      <YesNoButtons
-                        value={unlimitedCover}
-                        onChange={(v) => { onChange('unlimitedDriverCover', v); onChange('hasRiskyDrivers', ''); onChange('namedDrivers', []); setShowForm(false); }}
-                      />
-                    </div>
-
-                    {/* If YES: risky drivers follow-up */}
-                    <AnimatePresence>
-                      {unlimitedCover === 'yes' && (
-                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                          <div className="ml-4 pl-3 border-l-2 border-bdred/20">
-                            <div className="bg-grey100 rounded-lg p-4">
-                              <p className="font-montserrat font-bold text-sm text-carbon mb-3">
-                                Are there any young, inexperienced, or elderly drivers who will use this car?
-                              </p>
-                              <YesNoButtons
-                                value={formData.hasRiskyDrivers}
-                                onChange={(v) => onChange('hasRiskyDrivers', v)}
-                              />
-                            </div>
+                  <div className="space-y-3">
+                    <p className="font-montserrat font-bold text-sm text-carbon">Add named drivers (up to {MAX_DRIVERS})</p>
+                    {drivers.map((d, i) => (
+                      <div key={i} className="bg-white rounded-lg border border-gray-200 p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-bdred/10 flex items-center justify-center flex-shrink-0">
+                            <User className="w-5 h-5 text-bdred" />
                           </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
-                    {/* If NO: named driver form */}
-                    <AnimatePresence>
-                      {unlimitedCover === 'no' && (
-                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden space-y-3">
-                          {drivers.map((d, i) => (
-                            <div key={i} className="bg-white rounded-lg border border-gray-200 p-4">
-                              <div className="flex items-start gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-bdred/10 flex items-center justify-center flex-shrink-0">
-                                  <User className="w-5 h-5 text-bdred" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center justify-between gap-2">
-                                    <span className="font-montserrat font-bold text-sm text-carbon truncate">{d.nameDisplayedOnCard || `Driver ${i + 1}`}</span>
-                                  </div>
-                                  <p className="text-xs text-muted-foreground font-montserrat mt-0.5">DOB: {d.dobDay}/{d.dobMonth}/{d.dobYear} · {d.gender}</p>
-                                </div>
-                                <div className="flex gap-1 flex-shrink-0">
-                                  <button type="button" onClick={() => { setEditIdx(i); setShowForm(true); }} className="p-1.5 rounded-full hover:bg-grey100">
-                                    <Pencil className="w-3.5 h-3.5 text-cyan" />
-                                  </button>
-                                  <button type="button" onClick={() => handleRemove(i)} className="p-1.5 rounded-full hover:bg-grey100">
-                                    <Trash2 className="w-3.5 h-3.5 text-bdred" />
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-
-                          {showForm ? (
-                            <DriverForm
-                              driver={editIdx >= 0 ? drivers[editIdx] : null}
-                              onSave={handleSave}
-                              onCancel={() => { setShowForm(false); setEditIdx(-1); }}
-                            />
-                          ) : drivers.length < MAX_DRIVERS ? (
-                            <button type="button" onClick={() => setShowForm(true)}
-                              className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm font-montserrat font-medium text-cyan flex items-center justify-center gap-2 hover:border-cyan/50">
-                              <Plus className="w-4 h-4" /> Add driver
+                          <div className="flex-1 min-w-0">
+                            <span className="font-montserrat font-bold text-sm text-carbon truncate block">{d.nameDisplayedOnCard || `Driver ${i + 1}`}</span>
+                            <p className="text-xs text-muted-foreground font-montserrat mt-0.5">DOB: {d.dobDay}/{d.dobMonth}/{d.dobYear} · {d.gender}</p>
+                          </div>
+                          <div className="flex gap-1 flex-shrink-0">
+                            <button type="button" onClick={() => { setEditIdx(i); setShowForm(true); }} className="p-1.5 rounded-full hover:bg-grey100">
+                              <Pencil className="w-3.5 h-3.5 text-cyan" />
                             </button>
-                          ) : (
-                            <p className="text-xs text-center text-muted-foreground font-montserrat">Maximum of {MAX_DRIVERS} named drivers reached.</p>
-                          )}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                            <button type="button" onClick={() => handleRemove(i)} className="p-1.5 rounded-full hover:bg-grey100">
+                              <Trash2 className="w-3.5 h-3.5 text-bdred" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    {showForm ? (
+                      <DriverForm
+                        driver={editIdx >= 0 ? drivers[editIdx] : null}
+                        onSave={handleSave}
+                        onCancel={() => { setShowForm(false); setEditIdx(-1); }}
+                      />
+                    ) : drivers.length < MAX_DRIVERS ? (
+                      <button type="button" onClick={() => setShowForm(true)}
+                        className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm font-montserrat font-medium text-cyan flex items-center justify-center gap-2 hover:border-cyan/50">
+                        <Plus className="w-4 h-4" /> Add driver
+                      </button>
+                    ) : (
+                      <p className="text-xs text-center text-muted-foreground font-montserrat">Maximum of {MAX_DRIVERS} named drivers reached.</p>
+                    )}
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* Authorised Driver Plan: show unlimited cover question */}
+            <AnimatePresence>
+              {plan === 'authorised' && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                  <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
+                    <div>
+                      <p className="font-montserrat font-bold text-sm text-carbon">
+                        Would you like to add Unlimited Driver Optional Cover for +S$89?
+                      </p>
+                      <p className="font-montserrat text-xs text-muted-foreground mt-1">
+                        With this option, all authorised drivers in your household are automatically covered — no need to manually list each person one by one.
+                      </p>
+                    </div>
+                    <YesNoButtons
+                      value={unlimitedCover}
+                      onChange={(v) => { onChange('unlimitedDriverCover', v); onChange('hasRiskyDrivers', ''); onChange('namedDrivers', []); setShowForm(false); }}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* If YES unlimited: risky drivers follow-up */}
+            <AnimatePresence>
+              {plan === 'authorised' && unlimitedCover === 'yes' && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                  <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
+                    <p className="font-montserrat font-bold text-sm text-carbon">
+                      Are there any young, inexperienced, or elderly drivers who will use this car?
+                    </p>
+                    <YesNoButtons
+                      value={formData.hasRiskyDrivers}
+                      onChange={(v) => onChange('hasRiskyDrivers', v)}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* If NO unlimited: household member form */}
+            <AnimatePresence>
+              {plan === 'authorised' && unlimitedCover === 'no' && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                  <div className="space-y-3">
+                    <p className="font-montserrat font-bold text-sm text-carbon">Please list all your household members information below.</p>
+                    {drivers.map((d, i) => (
+                      <div key={i} className="bg-white rounded-lg border border-gray-200 p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-bdred/10 flex items-center justify-center flex-shrink-0">
+                            <User className="w-5 h-5 text-bdred" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="font-montserrat font-bold text-sm text-carbon truncate block">{d.nameDisplayedOnCard || `Member ${i + 1}`}</span>
+                            <p className="text-xs text-muted-foreground font-montserrat mt-0.5">DOB: {d.dobDay}/{d.dobMonth}/{d.dobYear} · {d.gender}</p>
+                          </div>
+                          <div className="flex gap-1 flex-shrink-0">
+                            <button type="button" onClick={() => { setEditIdx(i); setShowForm(true); }} className="p-1.5 rounded-full hover:bg-grey100">
+                              <Pencil className="w-3.5 h-3.5 text-cyan" />
+                            </button>
+                            <button type="button" onClick={() => handleRemove(i)} className="p-1.5 rounded-full hover:bg-grey100">
+                              <Trash2 className="w-3.5 h-3.5 text-bdred" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    {showForm ? (
+                      <DriverForm
+                        driver={editIdx >= 0 ? drivers[editIdx] : null}
+                        onSave={handleSave}
+                        onCancel={() => { setShowForm(false); setEditIdx(-1); }}
+                      />
+                    ) : drivers.length < MAX_DRIVERS ? (
+                      <button type="button" onClick={() => setShowForm(true)}
+                        className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm font-montserrat font-medium text-cyan flex items-center justify-center gap-2 hover:border-cyan/50">
+                        <Plus className="w-4 h-4" /> Add member
+                      </button>
+                    ) : (
+                      <p className="text-xs text-center text-muted-foreground font-montserrat">Maximum of {MAX_DRIVERS} members reached.</p>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
           </motion.div>
         )}
       </AnimatePresence>
