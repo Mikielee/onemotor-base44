@@ -128,8 +128,7 @@ export default function MyinfoButton({ onDataRetrieved }) {
             <div className="flex-1">
               <p className="font-montserrat font-bold text-sm text-carbon">Retrieval Failed</p>
               <p className="font-montserrat text-xs text-muted-foreground mt-0.5">Unable to retrieve from Myinfo. Please try again or fill in manually.</p>
-              <button type="button" onClick={() => setStage('choose')}
-                className="mt-2 text-xs font-montserrat font-bold text-bdred">Try Again</button>
+
             </div>
           </motion.div>
         )}
