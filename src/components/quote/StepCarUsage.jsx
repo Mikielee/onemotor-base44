@@ -3,11 +3,15 @@ import ChoiceButton from './ChoiceButton';
 import YesNoButtons from './YesNoButtons';
 import StepFooter from './StepFooter';
 import ErrorBlockerModal from './ErrorBlockerModal';
+import HelpIcon from './HelpIcon';
+import HelpDrawer from './HelpDrawer';
+import { HELP_TEXTS } from '../../lib/quoteData';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Briefcase } from 'lucide-react';
 
 export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlock }) {
   const [showBlocker, setShowBlocker] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const isDeliveryDriver = formData.carUsage === 'business' && formData.isDeliveryDriver === 'yes';
   const canProceed = formData.carUsage && (formData.carUsage === 'business' || (formData.commuteToWork && formData.isOffPeakCar));
 
@@ -105,9 +109,12 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
                 exit={{ opacity: 0, height: 0 }}
               >
                 <div className="bg-grey100 rounded-lg p-4">
-                  <p className="font-montserrat font-bold text-sm text-carbon mb-3">
-                    Is this an off-peak car?
-                  </p>
+                  <div className="flex items-center gap-2 mb-3">
+                    <p className="font-montserrat font-bold text-sm text-carbon">
+                      Is this an off-peak car?
+                    </p>
+                    <HelpIcon onClick={() => setHelpOpen(true)} />
+                  </div>
                   <YesNoButtons
                     value={formData.isOffPeakCar}
                     onChange={(v) => onChange('isOffPeakCar', v)}
@@ -141,6 +148,10 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
       </AnimatePresence>
 
       {!showBlocker && <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />}
+
+      <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} title="Off-Peak Car">
+        {HELP_TEXTS.offPeak}
+      </HelpDrawer>
 
       <AnimatePresence>
         {showBlocker && (

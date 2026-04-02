@@ -1,11 +1,5 @@
-import { useState } from 'react';
 import ChoiceButton from './ChoiceButton';
 import StepFooter from './StepFooter';
-import YesNoButtons from './YesNoButtons';
-import HelpIcon from './HelpIcon';
-import HelpDrawer from './HelpDrawer';
-import PillButton from './PillButton';
-import { HELP_TEXTS } from '../../lib/quoteData';
 
 const DISTANCE_OPTIONS = [
   { id: 'lt8000', label: 'Less than 8,000 km' },
@@ -15,8 +9,7 @@ const DISTANCE_OPTIONS = [
 ];
 
 export default function StepDistance({ formData, onChange, onNext, onBack }) {
-  const [helpOpen, setHelpOpen] = useState(false);
-  const canProceed = formData.annualDistance && formData.offPeak;
+  const canProceed = !!formData.annualDistance;
 
   return (
     <div className="space-y-1.5">
@@ -36,26 +29,7 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
         ))}
       </div>
 
-      {formData.annualDistance && (
-       <div className="bg-white rounded-lg border border-gray-200 p-4 mt-4">
-         <div className="flex items-center gap-2 mb-3">
-           <p className="text-xs font-montserrat font-medium text-muted-foreground">
-             Is your vehicle an off-peak car?
-           </p>
-            <HelpIcon onClick={() => setHelpOpen(true)} />
-          </div>
-          <YesNoButtons
-            value={formData.offPeak}
-            onChange={(v) => onChange('offPeak', v)}
-          />
-        </div>
-      )}
-
       <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />
-
-      <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} title="Off-Peak Car">
-        {HELP_TEXTS.offPeak}
-      </HelpDrawer>
     </div>
   );
 }
