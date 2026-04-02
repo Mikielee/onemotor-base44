@@ -35,7 +35,7 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
   };
 
   const showFollowUp = !!formData.carUsage;
-  const showOPC = formData.carUsage === 'business';
+  const showOPC = !!formData.carUsage;
   const opcAnswered = formData.carUsage !== 'business' || !!formData.isOffPeakCar;
   const canProceed = !!formData.carUsage && !!formData.isDeliveryDriver && opcAnswered;
 
