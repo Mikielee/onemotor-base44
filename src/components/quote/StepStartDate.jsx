@@ -11,10 +11,13 @@ export default function StepStartDate({ formData, onChange, onNext, onBack }) {
   const [inputValue, setInputValue] = useState(selected ? format(selected, 'dd/MM/yyyy') : '');
 
   const handleInputChange = (e) => {
-    const val = e.target.value;
+    const digits = e.target.value.replace(/\D/g, '').slice(0, 8);
+    let val = digits;
+    if (digits.length > 4) val = digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4);
+    else if (digits.length > 2) val = digits.slice(0, 2) + '/' + digits.slice(2);
     setInputValue(val);
-    if (val.length === 10 && val[2] === '/' && val[5] === '/') {
-      const [d, m, y] = val.split('/');
+    if (digits.length === 8) {
+      const d = digits.slice(0, 2), m = digits.slice(2, 4), y = digits.slice(4);
       const parsed = new Date(`${y}-${m}-${d}`);
       if (!isNaN(parsed) && !isDisabled(parsed)) {
         onChange('coverStartDate', parsed.toISOString());
