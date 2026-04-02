@@ -52,118 +52,88 @@ export default function MyinfoButton({ onDataRetrieved }) {
   };
 
   return (
-    <>
+    <div className="space-y-2">
       {/* Myinfo Button */}
-      <button
-        type="button"
-        onClick={() => setStage('choose')}
-        className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 rounded-xl py-3.5 px-4 hover:border-[#DA291C] hover:shadow-sm transition-all"
-      >
-        <span className="text-sm font-montserrat font-semibold text-carbon">
-          Retrieve Your Information with
-        </span>
-        <span className="font-bold text-lg leading-none">
-          <span className="text-[#DA291C]">my</span>
-          <span className="text-[#1a1a1a] relative">
-            <span className="inline-block">i</span>
-            <span className="text-[#DA291C]">nfo</span>
+      {stage !== 'success' && (
+        <button
+          type="button"
+          onClick={() => setStage('choose')}
+          className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 rounded-xl py-3.5 px-4 hover:border-[#DA291C] hover:shadow-sm transition-all"
+        >
+          <span className="text-sm font-montserrat font-semibold text-carbon">
+            Retrieve Your Information with
           </span>
-        </span>
-      </button>
+          <span className="font-bold text-lg leading-none">
+            <span className="text-[#DA291C]">my</span>
+            <span className="text-[#1a1a1a] relative">
+              <span className="inline-block">i</span>
+              <span className="text-[#DA291C]">nfo</span>
+            </span>
+          </span>
+        </button>
+      )}
 
-      {/* Modal Overlay */}
+      {/* Prototype scenario chooser - inline */}
       <AnimatePresence>
-        {stage !== 'idle' && (
+        {stage === 'choose' && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4"
-            onClick={() => stage === 'choose' && setStage('idle')}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
           >
-            <motion.div
-              initial={{ y: 40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 40, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-2xl w-full max-w-sm p-6 space-y-4"
-            >
-              {stage === 'choose' && (
-                <>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold mb-1">
-                      <span className="text-[#DA291C]">my</span><span className="text-[#1a1a1a]">info</span>
-                    </div>
-                    <p className="font-montserrat font-bold text-base text-carbon">Prototype: Choose a scenario</p>
-                    <p className="font-montserrat text-xs text-muted-foreground mt-1">Select how you'd like to simulate the Myinfo retrieval</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleChoose('success')}
-                    className="w-full py-3.5 bg-green-500 text-white rounded-xl font-montserrat font-bold text-sm flex items-center justify-center gap-2"
-                  >
-                    <CheckCircle className="w-4 h-4" /> Simulate Success
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleChoose('fail')}
-                    className="w-full py-3.5 bg-bdred text-white rounded-xl font-montserrat font-bold text-sm flex items-center justify-center gap-2"
-                  >
-                    <XCircle className="w-4 h-4" /> Simulate Failure
-                  </button>
-                  <button type="button" onClick={() => setStage('idle')} className="w-full text-center text-xs text-muted-foreground font-montserrat py-1">
-                    Cancel
-                  </button>
-                </>
-              )}
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-3">
+              <p className="font-montserrat font-bold text-xs text-muted-foreground uppercase tracking-wide">Prototype: Choose a scenario</p>
+              <div className="flex gap-2">
+                <button type="button" onClick={() => handleChoose('success')}
+                  className="flex-1 py-2.5 bg-green-500 text-white rounded-lg font-montserrat font-bold text-sm flex items-center justify-center gap-1.5">
+                  <CheckCircle className="w-4 h-4" /> Success
+                </button>
+                <button type="button" onClick={() => handleChoose('fail')}
+                  className="flex-1 py-2.5 bg-bdred text-white rounded-lg font-montserrat font-bold text-sm flex items-center justify-center gap-1.5">
+                  <XCircle className="w-4 h-4" /> Failure
+                </button>
+              </div>
+              <button type="button" onClick={() => setStage('idle')} className="text-xs text-muted-foreground font-montserrat">
+                Cancel
+              </button>
+            </div>
+          </motion.div>
+        )}
 
-              {stage === 'loading' && (
-                <div className="text-center py-6 space-y-3">
-                  <RefreshCw className="w-8 h-8 text-[#DA291C] mx-auto animate-spin" />
-                  <p className="font-montserrat font-semibold text-carbon text-sm">Retrieving your information…</p>
-                </div>
-              )}
+        {stage === 'loading' && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl p-4">
+            <RefreshCw className="w-5 h-5 text-[#DA291C] animate-spin flex-shrink-0" />
+            <p className="font-montserrat font-semibold text-carbon text-sm">Retrieving your information…</p>
+          </motion.div>
+        )}
 
-              {stage === 'success' && (
-                <div className="text-center space-y-4">
-                  <CheckCircle className="w-12 h-12 text-green-500 mx-auto" />
-                  <div>
-                    <p className="font-montserrat font-bold text-carbon text-base">Information Retrieved!</p>
-                    <p className="font-montserrat text-xs text-muted-foreground mt-1">Your details have been prefilled from Myinfo. Please review and continue.</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setStage('idle')}
-                    className="w-full py-3 bg-bdred text-white rounded-xl font-montserrat font-bold text-sm"
-                  >
-                    Continue
-                  </button>
-                </div>
-              )}
+        {stage === 'success' && (
+          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            className="bg-green-50 border border-green-200 rounded-xl p-4 flex gap-3 items-start">
+            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-montserrat font-bold text-sm text-carbon">Information Retrieved!</p>
+              <p className="font-montserrat text-xs text-muted-foreground mt-0.5">Your details have been prefilled from Myinfo. Please review and continue.</p>
+            </div>
+            <button type="button" onClick={() => setStage('idle')} className="text-xs text-muted-foreground font-montserrat flex-shrink-0">Reset</button>
+          </motion.div>
+        )}
 
-              {stage === 'fail' && (
-                <div className="text-center space-y-4">
-                  <XCircle className="w-12 h-12 text-bdred mx-auto" />
-                  <div>
-                    <p className="font-montserrat font-bold text-carbon text-base">Retrieval Failed</p>
-                    <p className="font-montserrat text-xs text-muted-foreground mt-1">We were unable to retrieve your information from Myinfo. Please try again or fill in manually.</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setStage('choose')}
-                    className="w-full py-3 bg-bdred text-white rounded-xl font-montserrat font-bold text-sm"
-                  >
-                    Try Again
-                  </button>
-                  <button type="button" onClick={() => setStage('idle')} className="w-full text-center text-xs text-muted-foreground font-montserrat py-1">
-                    Fill in manually
-                  </button>
-                </div>
-              )}
-            </motion.div>
+        {stage === 'fail' && (
+          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            className="bg-red-50 border border-red-200 rounded-xl p-4 flex gap-3 items-start">
+            <XCircle className="w-5 h-5 text-bdred flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-montserrat font-bold text-sm text-carbon">Retrieval Failed</p>
+              <p className="font-montserrat text-xs text-muted-foreground mt-0.5">Unable to retrieve from Myinfo. Please try again or fill in manually.</p>
+              <button type="button" onClick={() => setStage('choose')}
+                className="mt-2 text-xs font-montserrat font-bold text-bdred">Try Again</button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
