@@ -2,6 +2,7 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import { ChevronDown, Search, AlertTriangle } from 'lucide-react';
 import StepFooter from './StepFooter';
 import MyinfoButton from './MyinfoButton';
+import ValidatedInput from './ValidatedInput';
 import { CAR_MAKES, CAR_MODELS, SUB_MODELS, COVER_TYPES } from '../../lib/quoteData';
 import PillButton from './PillButton';
 
@@ -111,6 +112,16 @@ export default function StepMakeModel({ formData, onChange, onNext, onBack, goTo
   const handleMyinfo = (data) => {
     Object.entries(data).forEach(([k, v]) => onChange(k, v));
   };
+
+  // Auto-prefill from Myinfo data if available
+  useEffect(() => {
+    if (formData.vehicleFirstRegDate && !formData.yearOfReg) {
+      const year = formData.vehicleFirstRegDate.split('-')[0];
+      if (year) onChange('yearOfReg', year);
+    }
+    if (formData.carMake && !formData.carMake) onChange('carMake', formData.carMake);
+    if (formData.carModel && !formData.carModel) onChange('carModel', formData.carModel);
+  }, []);
   const vehicleAge = formData.yearOfReg ? new Date().getFullYear() - parseInt(formData.yearOfReg) : null;
 
   const coverConflict = useMemo(() => {
@@ -137,24 +148,26 @@ export default function StepMakeModel({ formData, onChange, onNext, onBack, goTo
         {/* Year first */}
         <div>
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">Year of Registration</label>
-          <div className="relative">
-            <select
-              value={formData.yearOfReg || ''}
-              onChange={(e) => {
-                onChange('yearOfReg', e.target.value);
-                onChange('carMake', '');
-                onChange('carModel', '');
-                onChange('subModel', '');
-              }}
-              className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none cursor-pointer"
-            >
-              <option value="" disabled>Select year</option>
-              {YEARS.map(y => (
-                <option key={y} value={y}>{y}</option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-          </div>
+          <ValidatedInput value={formData.yearOfReg}>
+            <div className="relative">
+              <select
+                value={formData.yearOfReg || ''}
+                onChange={(e) => {
+                  onChange('yearOfReg', e.target.value);
+                  onChange('carMake', '');
+                  onChange('carModel', '');
+                  onChange('subModel', '');
+                }}
+                className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none cursor-pointer"
+              >
+                <option value="" disabled>Select year</option>
+                {YEARS.map(y => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            </div>
+          </ValidatedInput>
           {vehicleAge !== null && !coverConflict && (
             <p className="text-xs text-muted-foreground font-montserrat mt-1.5">Vehicle age: {vehicleAge} years</p>
           )}
@@ -181,23 +194,27 @@ export default function StepMakeModel({ formData, onChange, onNext, onBack, goTo
 
         {/* Car Make — only after year selected */}
         {formData.yearOfReg && !coverConflict && (
-          <SearchDropdown
-            label="Car Make"
-            value={formData.carMake}
-            options={CAR_MAKES}
-            onChange={(v) => { onChange('carMake', v); onChange('carModel', ''); onChange('subModel', ''); }}
-            placeholder="Select make"
-          />
+          <ValidatedInput value={formData.carMake}>
+            <SearchDropdown
+              label="Car Make"
+              value={formData.carMake}
+              options={CAR_MAKES}
+              onChange={(v) => { onChange('carMake', v); onChange('carModel', ''); onChange('subModel', ''); }}
+              placeholder="Select make"
+            />
+          </ValidatedInput>
         )}
 
         {formData.carMake && (
-          <SearchDropdown
-            label="Car Model"
-            value={formData.carModel}
-            options={models}
-            onChange={(v) => { onChange('carModel', v); onChange('subModel', ''); }}
-            placeholder="Select model"
-          />
+          <ValidatedInput value={formData.carModel}>
+            <SearchDropdown
+              label="Car Model"
+              value={formData.carModel}
+              options={models}
+              onChange={(v) => { onChange('carModel', v); onChange('subModel', ''); }}
+              placeholder="Select model"
+            />
+          </ValidatedInput>
         )}
 
         {formData.carModel && (
