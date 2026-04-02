@@ -15,7 +15,7 @@ export default function ValidatedInput({ value, children }) {
 
   return (
     <div className="relative">
-      <div className={`transition-all duration-200 rounded-lg ${filled ? 'ring-2 ring-green-400 ring-offset-0' : ''}`}>
+      <div className={`transition-all duration-200 rounded-lg ${filled ? 'ring-2 ring-green-400 ring-offset-0 [&_input]:border-transparent [&_select]:border-transparent [&_input]:focus:border-transparent [&_select]:focus:border-transparent' : ''}`}>
         {children}
       </div>
       {filled && (
