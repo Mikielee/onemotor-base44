@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { calculatePrice } from '../lib/quoteData';
 import QuoteLayout from '../components/quote/QuoteLayout.jsx';
@@ -28,12 +29,22 @@ import PricePinned from '../components/quote/PricePinned';
 const TOTAL_STEPS = 19;
 
 export default function QuoteJourney() {
-  const [step, setStep] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialStep = parseInt(searchParams.get('step') || '1', 10);
+  const [step, setStepState] = useState(isNaN(initialStep) || initialStep < 1 || initialStep > TOTAL_STEPS ? 1 : initialStep);
   const [direction, setDirection] = useState(1);
   const [formData, setFormData] = useState({ excess: 1000 });
   const [blocked, setBlocked] = useState(false);
   const [paymentType, setPaymentType] = useState('annual');
   const [period, setPeriod] = useState('monthly');
+
+  const setStep = useCallback((valOrFn) => {
+    setStepState(prev => {
+      const next = typeof valOrFn === 'function' ? valOrFn(prev) : valOrFn;
+      setSearchParams({ step: String(next) }, { replace: true });
+      return next;
+    });
+  }, [setSearchParams]);
 
   const price = calculatePrice(formData);
 
