@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import StepFooter from './StepFooter';
 import { addDays, addMonths, isBefore, isAfter, format } from 'date-fns';
 
 function DateInput({ label, value, onSelect, minDate, maxDate }) {
   const [raw, setRaw] = useState(value ? format(value, 'dd/MM/yyyy') : '');
+
+  useEffect(() => {
+    setRaw(value ? format(value, 'dd/MM/yyyy') : '');
+  }, [value]);
 
   const handleChange = (e) => {
     const digits = e.target.value.replace(/\D/g, '').slice(0, 8);
