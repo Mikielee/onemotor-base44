@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import MyinfoButton from './MyinfoButton';
 import { Mail, MessageCircle, Phone } from 'lucide-react';
 import StepFooter from './StepFooter';
 import ValidatedInput from './ValidatedInput';
@@ -11,6 +12,10 @@ const MARKETING_PREFS = [
 
 export default function StepContact({ formData, onChange, onNext, onBack }) {
   const [errors, setErrors] = useState({});
+
+  const handleMyinfo = (data) => {
+    Object.entries(data).forEach(([k, v]) => onChange(k, v));
+  };
 
   const validate = () => {
     const errs = {};
@@ -37,6 +42,8 @@ export default function StepContact({ formData, onChange, onNext, onBack }) {
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         How can we reach you?
       </h1>
+
+      <MyinfoButton onDataRetrieved={handleMyinfo} />
 
       <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
         <div>

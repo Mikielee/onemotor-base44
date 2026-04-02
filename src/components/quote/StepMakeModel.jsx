@@ -1,10 +1,8 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { ChevronDown, Search, AlertTriangle } from 'lucide-react';
 import StepFooter from './StepFooter';
-import MyinfoButton from './MyinfoButton';
 import ValidatedInput from './ValidatedInput';
 import { CAR_MAKES, CAR_MODELS, SUB_MODELS, COVER_TYPES } from '../../lib/quoteData';
-import PillButton from './PillButton';
 
 function SearchDropdown({ label, value, options, onChange, placeholder, validated }) {
   const [open, setOpen] = useState(false);
@@ -116,19 +114,6 @@ const YEARS = (() => {
 })();
 
 export default function StepMakeModel({ formData, onChange, onNext, onBack, goToStep }) {
-  const handleMyinfo = (data) => {
-    Object.entries(data).forEach(([k, v]) => onChange(k, v));
-  };
-
-  // Auto-prefill from Myinfo data if available
-  useEffect(() => {
-    if (formData.vehicleFirstRegDate && !formData.yearOfReg) {
-      const year = formData.vehicleFirstRegDate.split('-')[0];
-      if (year) onChange('yearOfReg', year);
-    }
-    if (formData.carMake && !formData.carMake) onChange('carMake', formData.carMake);
-    if (formData.carModel && !formData.carModel) onChange('carModel', formData.carModel);
-  }, []);
   const vehicleAge = formData.yearOfReg ? new Date().getFullYear() - parseInt(formData.yearOfReg) : null;
 
   const coverConflict = useMemo(() => {
@@ -148,8 +133,6 @@ export default function StepMakeModel({ formData, onChange, onNext, onBack, goTo
       <h1 className="font-montserrat font-bold text-xl text-carbon">
         Tell us about your car
       </h1>
-
-      <MyinfoButton onDataRetrieved={handleMyinfo} />
 
       <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
         {/* Year first */}
