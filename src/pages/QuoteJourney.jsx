@@ -131,7 +131,7 @@ export default function QuoteJourney() {
     }
   };
 
-  const showPriceWidget = step >= 10 && step <= 17;
+  const showPriceWidget = step >= 9 && step <= 17;
 
   return (
     <>
