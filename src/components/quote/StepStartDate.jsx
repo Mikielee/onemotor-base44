@@ -1,15 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import StepFooter from './StepFooter';
-import { addDays, addMonths, isBefore, isAfter, format } from 'date-fns';
+import { addDays, addMonths, isBefore, isAfter, format, startOfMonth, getDaysInMonth, getDay } from 'date-fns';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-function DateInput({ label, value, onSelect, minDate, maxDate }) {
+function CalendarPopup({ label, value, onSelect, minDate, maxDate }) {
+  const [open, setOpen] = useState(false);
   const [raw, setRaw] = useState(value ? format(value, 'dd/MM/yyyy') : '');
+  const [displayMonth, setDisplayMonth] = useState(value ? startOfMonth(value) : startOfMonth(new Date()));
+  const containerRef = useRef(null);
 
   useEffect(() => {
     setRaw(value ? format(value, 'dd/MM/yyyy') : '');
   }, [value]);
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    if (open) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [open]);
+
+  const handleInputChange = (e) => {
     const digits = e.target.value.replace(/\D/g, '').slice(0, 8);
     let val = digits;
     if (digits.length > 4) val = digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4);
@@ -21,23 +35,102 @@ function DateInput({ label, value, onSelect, minDate, maxDate }) {
       if (!isNaN(parsed)) {
         const tooEarly = minDate && isBefore(parsed, minDate);
         const tooLate = maxDate && isAfter(parsed, maxDate);
-        if (!tooEarly && !tooLate) onSelect(parsed);
+        if (!tooEarly && !tooLate) {
+          onSelect(parsed);
+          setDisplayMonth(startOfMonth(parsed));
+        }
       }
     }
   };
 
+  const isDateDisabled = (day) => {
+    if (minDate && isBefore(day, minDate)) return true;
+    if (maxDate && isAfter(day, maxDate)) return true;
+    return false;
+  };
+
+  const renderCalendar = () => {
+    const firstDay = getDay(displayMonth);
+    const daysInMonth = getDaysInMonth(displayMonth);
+    const days = [];
+    for (let i = 0; i < firstDay; i++) days.push(null);
+    for (let i = 1; i <= daysInMonth; i++) days.push(i);
+    return days;
+  };
+
+  const days = renderCalendar();
+  const monthLabel = format(displayMonth, 'MMMM yyyy');
+
   return (
-    <div>
+    <div ref={containerRef} className="relative">
       <label className="block text-xs font-montserrat font-semibold text-carbon mb-1.5">{label}</label>
-      <input
-        type="text"
-        inputMode="numeric"
-        placeholder="DD/MM/YYYY"
-        maxLength={10}
-        value={raw}
-        onChange={handleChange}
-        className="w-full px-3 py-3 border-2 border-bdred rounded-lg font-montserrat text-sm text-carbon focus:outline-none"
-      />
+      <div className="relative">
+        <input
+          type="text"
+          inputMode="numeric"
+          placeholder="DD/MM/YYYY"
+          maxLength={10}
+          value={raw}
+          onChange={handleInputChange}
+          onClick={() => setOpen(true)}
+          className="w-full px-3 py-3 border-2 border-bdred rounded-lg font-montserrat text-sm text-carbon focus:outline-none cursor-pointer"
+        />
+      </div>
+      {open && (
+        <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 p-4 w-72">
+          {/* Month navigation */}
+          <div className="flex items-center justify-between mb-4">
+            <button
+              type="button"
+              onClick={() => setDisplayMonth(addMonths(displayMonth, -1))}
+              className="p-1.5 hover:bg-grey100 rounded-lg"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="font-montserrat font-bold text-sm text-carbon">{monthLabel}</span>
+            <button
+              type="button"
+              onClick={() => setDisplayMonth(addMonths(displayMonth, 1))}
+              className="p-1.5 hover:bg-grey100 rounded-lg"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+          {/* Day headers */}
+          <div className="grid grid-cols-7 gap-1 mb-2">
+            {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
+              <div key={d} className="text-center text-[10px] font-montserrat font-bold text-muted-foreground">{d}</div>
+            ))}
+          </div>
+          {/* Days */}
+          <div className="grid grid-cols-7 gap-1">
+            {days.map((day, idx) => {
+              if (day === null) return <div key={`empty-${idx}`} />;
+              const dateObj = new Date(displayMonth.getFullYear(), displayMonth.getMonth(), day);
+              dateObj.setHours(0, 0, 0, 0);
+              const disabled = isDateDisabled(dateObj);
+              const isSelected = value && format(dateObj, 'yyyy-MM-dd') === format(value, 'yyyy-MM-dd');
+              return (
+                <button
+                  key={day}
+                  type="button"
+                  onClick={() => !disabled && (onSelect(dateObj), setOpen(false))}
+                  disabled={disabled}
+                  className={`w-8 h-8 rounded text-xs font-montserrat font-semibold transition-all ${
+                    isSelected
+                      ? 'bg-bdred text-white'
+                      : disabled
+                      ? 'text-gray-300 cursor-not-allowed'
+                      : 'text-carbon hover:bg-grey100'
+                  }`}
+                >
+                  {day}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -67,7 +160,7 @@ export default function StepStartDate({ formData, onChange, onNext, onBack }) {
         When would you like your cover?
       </h1>
 
-      <DateInput
+      <CalendarPopup
         label="Cover Start Date"
         value={startDate}
         onSelect={handleStartSelect}
@@ -75,7 +168,7 @@ export default function StepStartDate({ formData, onChange, onNext, onBack }) {
         maxDate={startMax}
       />
 
-      <DateInput
+      <CalendarPopup
         label="Cover End Date"
         value={endDate}
         onSelect={(day) => onChange('coverEndDate', day.toISOString())}
