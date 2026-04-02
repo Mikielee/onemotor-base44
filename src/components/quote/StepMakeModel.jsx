@@ -6,7 +6,7 @@ import ValidatedInput from './ValidatedInput';
 import { CAR_MAKES, CAR_MODELS, SUB_MODELS, COVER_TYPES } from '../../lib/quoteData';
 import PillButton from './PillButton';
 
-function SearchDropdown({ label, value, options, onChange, placeholder }) {
+function SearchDropdown({ label, value, options, onChange, placeholder, validated }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [openAbove, setOpenAbove] = useState(false);
@@ -50,14 +50,21 @@ function SearchDropdown({ label, value, options, onChange, placeholder }) {
   return (
     <div ref={containerRef} className="relative">
       <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-1.5">{label}</label>
-      <button
-        type="button"
-        onClick={() => { setOpen(!open); setSearch(''); }}
-        className="w-full flex items-center justify-between px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-left hover:border-carbon/40 transition-colors"
-      >
-        <span className={value ? 'text-carbon font-medium' : 'text-muted-foreground'}>{value || placeholder}</span>
-        <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`} />
-      </button>
+      <div className={`relative transition-all duration-200 rounded-lg ${validated && value ? 'ring-2 ring-green-400' : ''}`}>
+        <button
+          type="button"
+          onClick={() => { setOpen(!open); setSearch(''); }}
+          className="w-full flex items-center justify-between px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-left hover:border-carbon/40 transition-colors"
+        >
+          <span className={value ? 'text-carbon font-medium' : 'text-muted-foreground'}>{value || placeholder}</span>
+          <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`} />
+        </button>
+        {validated && value && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+            <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.707 7.293a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 1 1 1.414-1.414L11 13.586l4.293-4.293a1 1 0 0 1 1.414 0z" clipRule="evenodd"/></svg>
+          </span>
+        )}
+      </div>
 
       {open && (
         <div
@@ -194,27 +201,25 @@ export default function StepMakeModel({ formData, onChange, onNext, onBack, goTo
 
         {/* Car Make — only after year selected */}
         {formData.yearOfReg && !coverConflict && (
-          <ValidatedInput value={formData.carMake}>
-            <SearchDropdown
-              label="Car Make"
-              value={formData.carMake}
-              options={CAR_MAKES}
-              onChange={(v) => { onChange('carMake', v); onChange('carModel', ''); onChange('subModel', ''); }}
-              placeholder="Select make"
-            />
-          </ValidatedInput>
+          <SearchDropdown
+            label="Car Make"
+            value={formData.carMake}
+            options={CAR_MAKES}
+            onChange={(v) => { onChange('carMake', v); onChange('carModel', ''); onChange('subModel', ''); }}
+            placeholder="Select make"
+            validated
+          />
         )}
 
         {formData.carMake && (
-          <ValidatedInput value={formData.carModel}>
-            <SearchDropdown
-              label="Car Model"
-              value={formData.carModel}
-              options={models}
-              onChange={(v) => { onChange('carModel', v); onChange('subModel', ''); }}
-              placeholder="Select model"
-            />
-          </ValidatedInput>
+          <SearchDropdown
+            label="Car Model"
+            value={formData.carModel}
+            options={models}
+            onChange={(v) => { onChange('carModel', v); onChange('subModel', ''); }}
+            placeholder="Select model"
+            validated
+          />
         )}
 
         {formData.carModel && (
