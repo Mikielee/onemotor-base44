@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import ValidatedInput from './ValidatedInput';
 import YesNoButtons from './YesNoButtons';
 import StepFooter from './StepFooter';
 import ChoiceButton from './ChoiceButton';
@@ -65,17 +66,19 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
         <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
           Years holding licence
         </label>
-        <div className="relative">
-          <select
-            value={formData.licenceYears || ''}
-            onChange={(e) => onChange('licenceYears', e.target.value)}
-            className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
-          >
-            <option value="" disabled>Select</option>
-            {LICENCE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
-          </select>
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-        </div>
+        <ValidatedInput value={formData.licenceYears}>
+          <div className="relative">
+            <select
+              value={formData.licenceYears || ''}
+              onChange={(e) => onChange('licenceYears', e.target.value)}
+              className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+            >
+              <option value="" disabled>Select</option>
+              {LICENCE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+          </div>
+        </ValidatedInput>
       </div>
 
       {/* Claims count */}
@@ -84,34 +87,38 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
             How many accidents and/or claims in the past 3 years?
           </label>
-          <div className="relative">
-            <select
-              value={formData.claimsInPast3Years || ''}
-              onChange={(e) => { onChange('claimsInPast3Years', e.target.value); onChange('atFaultTimes', ''); }}
-              className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
-            >
-              <option value="" disabled>Select</option>
-              {CLAIMS_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-          </div>
+          <ValidatedInput value={formData.claimsInPast3Years}>
+            <div className="relative">
+              <select
+                value={formData.claimsInPast3Years || ''}
+                onChange={(e) => { onChange('claimsInPast3Years', e.target.value); onChange('atFaultTimes', ''); }}
+                className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+              >
+                <option value="" disabled>Select</option>
+                {CLAIMS_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            </div>
+          </ValidatedInput>
 
           <FadeIn show={!!formData.claimsInPast3Years && formData.claimsInPast3Years !== '0'}>
             <div className="mt-4 pt-4 border-t border-gray-100">
               <p className="font-montserrat font-medium text-xs text-carbon mb-2">
                 How many of those accidents or claims were you or any driver at-fault?
               </p>
-              <div className="relative">
-                <select
-                  value={formData.atFaultTimes || ''}
-                  onChange={(e) => onChange('atFaultTimes', e.target.value)}
-                  className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
-                >
-                  <option value="" disabled>Select</option>
-                  {getAtFaultOptions(formData.claimsInPast3Years).map(v => <option key={v} value={v}>{v}</option>)}
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-              </div>
+              <ValidatedInput value={formData.atFaultTimes}>
+                <div className="relative">
+                  <select
+                    value={formData.atFaultTimes || ''}
+                    onChange={(e) => onChange('atFaultTimes', e.target.value)}
+                    className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+                  >
+                    <option value="" disabled>Select</option>
+                    {getAtFaultOptions(formData.claimsInPast3Years).map(v => <option key={v} value={v}>{v}</option>)}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                </div>
+              </ValidatedInput>
             </div>
           </FadeIn>
         </div>
@@ -207,18 +214,20 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
             NCD transferred from
           </label>
-          <div className="relative">
-            <select
-              value={formData.ncdTransferFrom || ''}
-              onChange={(e) => onChange('ncdTransferFrom', e.target.value)}
-              className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
-            >
-              <option value="" disabled>Select</option>
-              <option value="current">Current insurer</option>
-              <option value="previous">Previous insurer</option>
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-          </div>
+          <ValidatedInput value={formData.ncdTransferFrom}>
+            <div className="relative">
+              <select
+                value={formData.ncdTransferFrom || ''}
+                onChange={(e) => onChange('ncdTransferFrom', e.target.value)}
+                className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+              >
+                <option value="" disabled>Select</option>
+                <option value="current">Current insurer</option>
+                <option value="previous">Previous insurer</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            </div>
+          </ValidatedInput>
         </div>
       </FadeIn>
 
