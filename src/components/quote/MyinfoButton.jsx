@@ -60,7 +60,7 @@ export default function MyinfoButton({ onDataRetrieved }) {
           onClick={() => setStage('choose')}
           className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 rounded-xl py-3.5 px-4 hover:border-[#DA291C] hover:shadow-sm transition-all mt-[5px]"
         >
-          <span className="text-sm font-montserrat font-semibold text-carbon whitespace-nowrap">
+          <span className="text-sm font-montserrat font-semibold text-carbon whitespace-nowrap ml-[10px]">
             Retrieve your information with
           </span>
           <img
