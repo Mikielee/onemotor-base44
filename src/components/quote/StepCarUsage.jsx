@@ -7,11 +7,12 @@ import HelpIcon from './HelpIcon';
 import HelpDrawer from './HelpDrawer';
 import { HELP_TEXTS } from '../../lib/quoteData';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Briefcase } from 'lucide-react';
+import { Heart, Briefcase, Info } from 'lucide-react';
 
 export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlock }) {
   const [showBlocker, setShowBlocker] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [usageHelp, setUsageHelp] = useState(null); // 'private' | 'business'
   const isDeliveryDriver = formData.carUsage === 'business' && formData.isDeliveryDriver === 'yes';
   const canProceed = formData.carUsage && (formData.carUsage === 'business' || (formData.commuteToWork && formData.isOffPeakCar));
 
@@ -57,6 +58,13 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
             }`}>Private and Leisure only</p>
             <p className="font-montserrat text-xs text-muted-foreground mt-1">Social, domestic and pleasure purposes only</p>
           </div>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setUsageHelp('private'); }}
+            className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-colors"
+          >
+            <Info className="w-4 h-4 text-muted-foreground" />
+          </button>
         </button>
 
         <button
@@ -81,6 +89,13 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
             }`}>Private and Business Use</p>
             <p className="font-montserrat text-xs text-muted-foreground mt-1">Commuting plus business use by Main Driver or Named Driver</p>
           </div>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setUsageHelp('business'); }}
+            className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-colors"
+          >
+            <Info className="w-4 h-4 text-muted-foreground" />
+          </button>
         </button>
       </div>
 
@@ -148,6 +163,15 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
       </AnimatePresence>
 
       {!showBlocker && <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />}
+
+      <HelpDrawer open={usageHelp === 'private'} onClose={() => setUsageHelp(null)} title="Private and Leisure Only">
+        <p>Means that the car is used solely for personal activities, including driving to and from work.</p>
+      </HelpDrawer>
+
+      <HelpDrawer open={usageHelp === 'business'} onClose={() => setUsageHelp(null)} title="Private and Business Use">
+        <p>Means that the car is used for personal activities as well as activities related to a business.</p>
+        <p className="mt-3">For example, a tradesperson or a salesperson on the road would use their car for both business and private purposes.</p>
+      </HelpDrawer>
 
       <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} title="Off-Peak Car">
         {HELP_TEXTS.offPeak}
