@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import StepFooter from './StepFooter';
 import MyinfoButton from './MyinfoButton';
+import ValidatedInput from './ValidatedInput';
+import { Check } from 'lucide-react';
 
 export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
   const [dobRaw, setDobRaw] = useState(
@@ -51,16 +53,18 @@ export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
             Date of birth
           </label>
-          <input
-            type="text"
-            inputMode="numeric"
-            placeholder="DD/MM/YYYY"
-            maxLength={10}
-            value={dobRaw}
-            onChange={handleDobChange}
-            autoComplete="bday"
-            className="w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
-          />
+          <ValidatedInput value={formData.dobYear}>
+            <input
+              type="text"
+              inputMode="numeric"
+              placeholder="DD/MM/YYYY"
+              maxLength={10}
+              value={dobRaw}
+              onChange={handleDobChange}
+              autoComplete="bday"
+              className="w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+            />
+          </ValidatedInput>
         </div>
 
         <div>
@@ -73,12 +77,13 @@ export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
                 key={g}
                 type="button"
                 onClick={() => onChange('gender', g.toLowerCase())}
-                className={`flex-1 py-3 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
+                className={`flex-1 py-3 rounded-pill font-montserrat font-bold text-sm border-2 transition-all flex items-center justify-center gap-1.5 ${
                   formData.gender === g.toLowerCase()
                     ? 'bg-bdred text-white border-bdred'
                     : 'bg-white text-carbon border-carbon/30 hover:border-carbon/60'
                 }`}
               >
+                {formData.gender === g.toLowerCase() && <Check className="w-3.5 h-3.5" />}
                 {g}
               </button>
             ))}

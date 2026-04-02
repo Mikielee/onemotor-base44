@@ -1,3 +1,5 @@
+import { CheckCircle } from 'lucide-react';
+
 export default function ChoiceButton({ selected, onClick, children, disabled, subtitle }) {
   const base = 'w-full text-left px-4 py-3.5 rounded-lg font-montserrat transition-all duration-200 border-2 mb-2';
   const selectedClass = 'bg-bdred text-white border-bdred';
@@ -8,14 +10,17 @@ export default function ChoiceButton({ selected, onClick, children, disabled, su
     <button
       type="button"
       onClick={disabled ? undefined : onClick}
-      className={`${base} ${disabled ? disabledClass : selected ? selectedClass : unselectedClass}`}
+      className={`${base} ${disabled ? disabledClass : selected ? selectedClass : unselectedClass} flex items-center gap-3`}
     >
-      <span className="font-bold text-sm block">{children}</span>
-      {subtitle && (
-        <span className={`text-xs mt-1 block ${selected ? 'text-white/80' : disabled ? 'text-gray-400' : 'text-muted-foreground'}`}>
-          {subtitle}
-        </span>
-      )}
+      <div className="flex-1 min-w-0">
+        <span className="font-bold text-sm block">{children}</span>
+        {subtitle && (
+          <span className={`text-xs mt-1 block ${selected ? 'text-white/80' : disabled ? 'text-gray-400' : 'text-muted-foreground'}`}>
+            {subtitle}
+          </span>
+        )}
+      </div>
+      {selected && <CheckCircle className="w-5 h-5 text-white flex-shrink-0" />}
     </button>
   );
 }
