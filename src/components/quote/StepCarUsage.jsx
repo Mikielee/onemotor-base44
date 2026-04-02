@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import ChoiceButton from './ChoiceButton';
 import YesNoButtons from './YesNoButtons';
 import StepFooter from './StepFooter';
 import ErrorBlockerModal from './ErrorBlockerModal';
@@ -7,20 +6,26 @@ import HelpIcon from './HelpIcon';
 import HelpDrawer from './HelpDrawer';
 import { HELP_TEXTS } from '../../lib/quoteData';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Briefcase, Info } from 'lucide-react';
+import { Heart, Briefcase } from 'lucide-react';
 
-export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlock }) {
+const USAGE_OPTIONS = [
+  { id: 'private', label: 'Private only', desc: 'Social, domestic and pleasure purposes only', icon: Heart },
+  { id: 'business', label: 'Private and Business', desc: 'Personal use plus business activities', icon: Briefcase },
+];
+
+export default function StepCarUsage({ formData, onChange, onNext, onBack }) {
   const [showBlocker, setShowBlocker] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
-  const [usageHelp, setUsageHelp] = useState(null); // 'private' | 'business'
-  const isDeliveryDriver = formData.carUsage === 'business' && formData.isDeliveryDriver === 'yes';
-  const canProceed = formData.carUsage && (formData.carUsage === 'business' || (formData.commuteToWork && formData.isOffPeakCar));
+
+  const handleUsageSelect = (id) => {
+    onChange('carUsage', id);
+    onChange('isDeliveryDriver', '');
+    onChange('isOffPeakCar', '');
+  };
 
   const handleDeliverySelection = (value) => {
     onChange('isDeliveryDriver', value);
-    if (value === 'yes') {
-      setShowBlocker(true);
-    }
+    if (value === 'yes') setShowBlocker(true);
   };
 
   const handleGoBack = () => {
@@ -29,6 +34,11 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
     onChange('isDeliveryDriver', '');
   };
 
+  const showFollowUp = !!formData.carUsage;
+  const showOPC = formData.carUsage === 'business';
+  const opcAnswered = formData.carUsage !== 'business' || !!formData.isOffPeakCar;
+  const canProceed = !!formData.carUsage && !!formData.isDeliveryDriver && opcAnswered;
+
   return (
     <div className="space-y-1.5">
       <h1 className="font-montserrat font-bold text-xl text-carbon">
@@ -36,97 +46,48 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
       </h1>
 
       <div className="space-y-3">
-        <button
-          type="button"
-          onClick={() => { onChange('carUsage', 'private'); onChange('commuteToWork', ''); }}
-          className={`w-full text-left p-4 rounded-lg border-2 min-h-20 flex items-center gap-3 transition-all duration-200 ${
-            formData.carUsage === 'private'
-              ? 'bg-red-50 border-bdred'
-              : 'bg-white border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
-            formData.carUsage === 'private' ? 'bg-bdred' : 'bg-grey100'
-          }`}>
-            <Heart className={`w-6 h-6 ${
-              formData.carUsage === 'private' ? 'text-white' : 'text-muted-foreground'
-            }`} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className={`font-montserrat font-bold text-sm ${
-              formData.carUsage === 'private' ? 'text-bdred' : 'text-carbon'
-            }`}>Private and Leisure only</p>
-            <p className="font-montserrat text-xs text-muted-foreground mt-1">Social, domestic and pleasure purposes only</p>
-          </div>
+        {USAGE_OPTIONS.map(({ id, label, desc, icon: Icon }) => (
           <button
+            key={id}
             type="button"
-            onClick={(e) => { e.stopPropagation(); setUsageHelp('private'); }}
-            className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-colors"
+            onClick={() => handleUsageSelect(id)}
+            className={`w-full text-left p-4 rounded-lg border-2 min-h-20 flex items-center gap-3 transition-all duration-200 ${
+              formData.carUsage === id ? 'bg-red-50 border-bdred' : 'bg-white border-gray-200 hover:border-gray-300'
+            }`}
           >
-            <Info className="w-4 h-4 text-muted-foreground" />
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
+              formData.carUsage === id ? 'bg-bdred' : 'bg-grey100'
+            }`}>
+              <Icon className={`w-6 h-6 ${formData.carUsage === id ? 'text-white' : 'text-muted-foreground'}`} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className={`font-montserrat font-bold text-sm ${formData.carUsage === id ? 'text-bdred' : 'text-carbon'}`}>{label}</p>
+              <p className="font-montserrat text-xs text-muted-foreground mt-1">{desc}</p>
+            </div>
           </button>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => { onChange('carUsage', 'business'); onChange('commuteToWork', ''); onChange('isDeliveryDriver', ''); onChange('isOffPeakCar', ''); }}
-          className={`w-full text-left p-4 rounded-lg border-2 min-h-20 flex items-center gap-3 transition-all duration-200 ${
-            formData.carUsage === 'business'
-              ? 'bg-red-50 border-bdred'
-              : 'bg-white border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
-            formData.carUsage === 'business' ? 'bg-bdred' : 'bg-grey100'
-          }`}>
-            <Briefcase className={`w-6 h-6 ${
-              formData.carUsage === 'business' ? 'text-white' : 'text-muted-foreground'
-            }`} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className={`font-montserrat font-bold text-sm ${
-              formData.carUsage === 'business' ? 'text-bdred' : 'text-carbon'
-            }`}>Private and Business Use</p>
-            <p className="font-montserrat text-xs text-muted-foreground mt-1">Commuting plus business use by Main Driver or Named Driver</p>
-          </div>
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); setUsageHelp('business'); }}
-            className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-colors"
-          >
-            <Info className="w-4 h-4 text-muted-foreground" />
-          </button>
-        </button>
+        ))}
       </div>
 
       <AnimatePresence>
-        {formData.carUsage === 'private' && (
+        {showFollowUp && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden space-y-0.5"
+            className="overflow-hidden space-y-2"
           >
-            <div className="bg-grey100 rounded-lg p-4 mt-2">
-              <p className="font-montserrat font-bold text-sm text-carbon mb-3">
-                Do you use the car to commute to work?
-              </p>
-              <YesNoButtons
-                value={formData.commuteToWork}
-                onChange={(v) => { onChange('commuteToWork', v); onChange('isOffPeakCar', ''); }}
-              />
-            </div>
-
-            {formData.commuteToWork && (
+            {/* OPC question — only for business */}
+            {showOPC && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
               >
                 <div className="bg-grey100 rounded-lg p-4">
                   <div className="flex items-center gap-2 mb-3">
                     <p className="font-montserrat font-bold text-sm text-carbon">
-                      Is this an off-peak car?
+                      Is this an off-peak car (OPC)?
                     </p>
                     <HelpIcon onClick={() => setHelpOpen(true)} />
                   </div>
@@ -137,21 +98,11 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
                 </div>
               </motion.div>
             )}
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      <AnimatePresence>
-        {formData.carUsage === 'business' && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden"
-          >
-            <div className="bg-grey100 rounded-lg p-4 mt-2">
+            {/* Delivery question — for both */}
+            <div className="bg-grey100 rounded-lg p-4">
               <p className="font-montserrat font-bold text-sm text-carbon mb-3">
-                Do you use this car for delivery services (Grab, Gojek, etc.)?
+                Do you use this car for delivery services (e.g. Grab, Gojek)?
               </p>
               <YesNoButtons
                 value={formData.isDeliveryDriver}
@@ -164,16 +115,7 @@ export default function StepCarUsage({ formData, onChange, onNext, onBack, onBlo
 
       {!showBlocker && <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />}
 
-      <HelpDrawer open={usageHelp === 'private'} onClose={() => setUsageHelp(null)} title="Private and Leisure Only">
-        <p>Means that the car is used solely for personal activities, including driving to and from work.</p>
-      </HelpDrawer>
-
-      <HelpDrawer open={usageHelp === 'business'} onClose={() => setUsageHelp(null)} title="Private and Business Use">
-        <p>Means that the car is used for personal activities as well as activities related to a business.</p>
-        <p className="mt-3">For example, a tradesperson or a salesperson on the road would use their car for both business and private purposes.</p>
-      </HelpDrawer>
-
-      <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} title="Off-Peak Car">
+      <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} title="Off-Peak Car (OPC)">
         {HELP_TEXTS.offPeak}
       </HelpDrawer>
 

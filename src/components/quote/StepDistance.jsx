@@ -13,6 +13,10 @@ const DISTANCE_OPTIONS = [
 ];
 
 export default function StepDistance({ formData, onChange, onNext, onBack }) {
+  const handleDistanceChange = (id) => {
+    onChange('annualDistance', id);
+    onChange('driveLessOptIn', id === 'lt8000');
+  };
   const [helpOpen, setHelpOpen] = useState(false);
   const canProceed = !!formData.annualDistance;
 
@@ -30,7 +34,7 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
           <ChoiceButton
             key={opt.id}
             selected={formData.annualDistance === opt.id}
-            onClick={() => onChange('annualDistance', opt.id)}
+            onClick={() => handleDistanceChange(opt.id)}
           >
             {opt.label}
           </ChoiceButton>
@@ -41,9 +45,9 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex gap-3">
           <Gauge className="w-6 h-6 text-cyan flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-montserrat font-bold text-sm text-carbon mb-1">You've unlocked Drive Less Pay Less Cover</p>
+            <p className="font-montserrat font-bold text-sm text-carbon mb-1">You're eligible for Drive Less Pay Less Plan!</p>
             <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
-              If you drive 8,000km or less a year, you've got the option to choose Drive Less Pay Less Cover. Select the KM's you need and save up to S$150 compared to our regular Comprehensive Cover.
+              A S$150 discount has been automatically applied to your premium.
             </p>
           </div>
         </div>
