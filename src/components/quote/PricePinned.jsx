@@ -115,7 +115,7 @@ export default function PricePinned({ formData, price, onNext, onBack, period, s
                 <div className="flex justify-between items-center gap-2">
                   <span className="text-xs font-montserrat text-muted-foreground">Base Indicative Premium ({COVER_LABELS[coverType]})</span>
                   <div className="text-right whitespace-nowrap">
-                    <span className="text-xs font-montserrat font-semibold text-carbon">S${basePrice.toLocaleString()}</span>
+                    <span className="text-xs font-montserrat font-semibold text-carbon">S${displayPrice.toLocaleString()}</span>
                     <span className="text-[9px] font-montserrat text-muted-foreground ml-1">/ {periodLabel} (incl. GST)</span>
                   </div>
                 </div>
