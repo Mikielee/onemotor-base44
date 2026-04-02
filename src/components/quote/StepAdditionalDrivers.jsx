@@ -137,7 +137,7 @@ export default function StepAdditionalDrivers({ formData, onChange, onNext, onBa
               {plan === 'authorised' && unlimitedCover === 'no' && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
                   <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-                    <p className="font-montserrat font-bold text-sm text-carbon">Please list all your household members information below.</p>
+                    <p className="font-montserrat font-bold text-sm text-carbon">Please list all household members and anyone you authorized to drive your car.</p>
                     <NamedDriverForm
                       drivers={formData.namedDrivers || []}
                       onChange={(updated) => onChange('namedDrivers', updated)}
