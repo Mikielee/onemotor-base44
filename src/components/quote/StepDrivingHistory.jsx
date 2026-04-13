@@ -13,9 +13,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 const LICENCE_OPTIONS = ['Less than 1 yr', '1–2 yrs', '3–5 yrs', '6–10 yrs', 'More than 10 yrs'];
 const CLAIMS_OPTIONS = ['0', '1', '2', '3', '4', '5', 'More than 5+'];
 const AT_FAULT_VALUES = ['0', '1', '2', '3', '4', '5', 'More than 5+'];
-const NCD_OPTIONS = ['0', '10', '20', '30', '40', '50'];
+const NCD_OPTIONS = [
+  { value: '0',  label: '0%',  years: '0 claim-free years' },
+  { value: '10', label: '10%', years: '1 claim-free year' },
+  { value: '20', label: '20%', years: '2 claim-free years' },
+  { value: '30', label: '30%', years: '3 claim-free years' },
+  { value: '40', label: '40%', years: '4 claim-free years' },
+  { value: '50', label: '50%', years: '5+ claim-free years' },
+];
 const ZERO_NCD_REASONS = ['New driver', 'No previous insurance', 'Claims in past year', 'I have NCD on another car'];
-const OTHER_NCD_OPTIONS = ['0', '10', '20', '30', '40', '50'];
+const OTHER_NCD_OPTIONS = [
+  { value: '0',  label: '0%',  years: '0 claim-free years' },
+  { value: '10', label: '10%', years: '1 claim-free year' },
+  { value: '20', label: '20%', years: '2 claim-free years' },
+  { value: '30', label: '30%', years: '3 claim-free years' },
+  { value: '40', label: '40%', years: '4 claim-free years' },
+  { value: '50', label: '50%', years: '5+ claim-free years' },
+];
 const FIFTY_NCD_YEARS = ['1 year', '2 years', '3 years or more'];
 
 function getAtFaultOptions(claimsValue) {
@@ -142,19 +156,20 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
            <p className="text-xs font-montserrat font-medium text-muted-foreground">What is your NCD entitlement?</p>
             <HelpIcon onClick={() => setHelpOpen('ncd')} />
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {NCD_OPTIONS.map(n => (
               <button
-                key={n}
+                key={n.value}
                 type="button"
-                onClick={() => { onChange('ncdEntitlement', n); onChange('zeroNcdReason', ''); onChange('otherCarNcd', ''); onChange('fiftyNcdYears', ''); }}
-                className={`py-2.5 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
-                  formData.ncdEntitlement === n
+                onClick={() => { onChange('ncdEntitlement', n.value); onChange('zeroNcdReason', ''); onChange('otherCarNcd', ''); onChange('fiftyNcdYears', ''); }}
+                className={`py-3 px-3 rounded-lg font-montserrat border-2 transition-all text-left ${
+                  formData.ncdEntitlement === n.value
                     ? 'bg-bdred text-white border-bdred'
                     : 'bg-white text-carbon border-gray-200 hover:border-carbon/40'
                 }`}
               >
-                {n}%
+                <p className="font-bold text-sm">{n.label}</p>
+                <p className={`text-[11px] mt-0.5 ${formData.ncdEntitlement === n.value ? 'text-white/80' : 'text-muted-foreground'}`}>{n.years}</p>
               </button>
             ))}
           </div>
@@ -173,27 +188,29 @@ export default function StepDrivingHistory({ formData, onChange, onNext, onBack,
               {formData.zeroNcdReason === 'I have NCD on another car' && (
                 <div className="border-t border-gray-300 pt-3 mt-3">
                   <p className="text-xs font-montserrat font-medium text-muted-foreground mb-2">NCD% on your other car?</p>
-                  <div className="grid grid-cols-3 gap-2">
+                  <p className="text-[11px] text-muted-foreground font-montserrat mb-3">The NCD from your other car may be transferable to this policy.</p>
+                  <div className="grid grid-cols-2 gap-2">
                     {OTHER_NCD_OPTIONS.map(n => (
                       <button
-                        key={n}
+                        key={n.value}
                         type="button"
-                        onClick={() => onChange('otherCarNcd', n)}
-                        className={`py-2.5 rounded-pill font-montserrat font-bold text-sm border-2 transition-all ${
-                          formData.otherCarNcd === n
+                        onClick={() => onChange('otherCarNcd', n.value)}
+                        className={`py-3 px-3 rounded-lg font-montserrat border-2 transition-all text-left ${
+                          formData.otherCarNcd === n.value
                             ? 'bg-bdred text-white border-bdred'
                             : 'bg-white text-carbon border-gray-200 hover:border-carbon/40'
                         }`}
                       >
-                        {n}%
+                        <p className="font-bold text-sm">{n.label}</p>
+                        <p className={`text-[11px] mt-0.5 ${formData.otherCarNcd === n.value ? 'text-white/80' : 'text-muted-foreground'}`}>{n.years}</p>
                       </button>
                     ))}
                   </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+                  </div>
+                  )}
+                  </div>
+                  )}
+                  </div>
       </FadeIn>
 
       {/* 50% NCD years */}
