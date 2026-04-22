@@ -44,7 +44,7 @@ function DisclaimerSection() {
               <div className="flex gap-2">
                 <span className="font-montserrat font-bold text-amber-700 text-xs flex-shrink-0">2.</span>
                 <p className="font-montserrat text-xs text-amber-800 leading-relaxed">
-                  If your odometer shows you have <strong>exceeded 8,000 km at the point of a claim</strong>, your premium will be <strong>bumped up</strong> to the standard unlimited rate (approximately 18% difference), plus an <strong>additional excess top-up of S$300</strong> will apply before your claim is processed.
+                  If your odometer shows you have <strong>exceeded 8,000 km at the point of a claim</strong>, your premium will be <strong>bumped up</strong> to the standard unlimited rate, plus an <strong>additional excess top-up of S$300</strong> will apply before your claim is processed.
                 </p>
               </div>
               <div className="flex gap-2">
