@@ -122,7 +122,7 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
                 <div>
                   <p className="font-montserrat font-bold text-sm text-carbon mb-1">You're eligible for Drive Less, Pay Less!</p>
                   <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
-                    Opt in to lock your cover to 8,000 km/year and save S$150 on your premium.
+                    Opt in to lock your cover to 8,000 km/year and save on your premium.
                   </p>
                 </div>
               </div>
