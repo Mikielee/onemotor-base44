@@ -74,14 +74,14 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
 
   const handleOptIn = (value) => {
     onChange('driveLessOptIn', value);
-    if (!value) onChange('unlimitedKmUpgrade', undefined);
+    if (value === false) onChange('unlimitedKmUpgrade', true); // "No thanks" = unlimited plan
+    if (value === true) onChange('unlimitedKmUpgrade', false);
   };
 
   const canProceed = (() => {
     if (!formData.annualDistance) return false;
     if (formData.annualDistance === 'lt8000') {
       if (formData.driveLessOptIn === undefined || formData.driveLessOptIn === null) return false;
-      if (formData.driveLessOptIn === true && formData.unlimitedKmUpgrade === undefined) return false;
     }
     return true;
   })();
@@ -136,7 +136,7 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
                       : 'bg-white border-gray-300 text-carbon hover:border-carbon/40'
                   }`}
                 >
-                  Yes, opt me in — save S$150
+                  Yes, opt me in
                 </button>
                 <button
                   type="button"
@@ -166,48 +166,7 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
               </AnimatePresence>
             </div>
 
-            {/* Follow-up: unlimited km upgrade — only if opted in */}
-            <AnimatePresence>
-              {formData.driveLessOptIn === true && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="overflow-hidden"
-                >
-                  <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
-                    <p className="font-montserrat font-bold text-sm text-carbon">Would you also like to add Unlimited km cover?</p>
-                    <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
-                      For an additional premium, you can remove the 8,000 km cap entirely — so no excess applies even if you exceed your limit at the point of a claim.
-                    </p>
-                    <div className="flex gap-3">
-                      <button
-                        type="button"
-                        onClick={() => onChange('unlimitedKmUpgrade', true)}
-                        className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${
-                          formData.unlimitedKmUpgrade === true
-                            ? 'bg-bdred border-bdred text-white'
-                            : 'bg-white border-gray-300 text-carbon hover:border-carbon/40'
-                        }`}
-                      >
-                        Yes, add unlimited km
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => onChange('unlimitedKmUpgrade', false)}
-                        className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${
-                          formData.unlimitedKmUpgrade === false
-                            ? 'bg-carbon border-carbon text-white'
-                            : 'bg-white border-gray-300 text-carbon hover:border-carbon/40'
-                        }`}
-                      >
-                        No thanks
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+
           </motion.div>
         )}
       </AnimatePresence>
