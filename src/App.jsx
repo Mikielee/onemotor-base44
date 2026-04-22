@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 // Add page imports here
 import QuoteJourney from './pages/QuoteJourney.jsx';
+import OM019VersionExplorer from './pages/OM019VersionExplorer.jsx';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -31,6 +32,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/" element={<QuoteJourney />} />
+      <Route path="/om019" element={<OM019VersionExplorer />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
