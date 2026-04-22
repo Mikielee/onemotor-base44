@@ -44,7 +44,13 @@ function DisclaimerSection() {
               <div className="flex gap-2">
                 <span className="font-montserrat font-bold text-amber-700 text-xs flex-shrink-0">2.</span>
                 <p className="font-montserrat text-xs text-amber-800 leading-relaxed">
-                  If your odometer shows you have <strong>exceeded 8,000 km at the point of a claim</strong>, you will be required to pay the premium difference (approximately 18% of the standard premium) before your claim is processed. If you expect to exceed 8,000 km, please <strong>call us in advance</strong> to upgrade your plan — don't wait until a claim occurs.
+                  If your odometer shows you have <strong>exceeded 8,000 km at the point of a claim</strong>, an <strong>additional excess top-up of S$500</strong> will apply, plus the premium difference (approximately 18% of the standard premium) before your claim is processed.
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-montserrat font-bold text-amber-700 text-xs flex-shrink-0">3.</span>
+                <p className="font-montserrat text-xs text-amber-800 leading-relaxed">
+                  If you expect to exceed 8,000 km, <strong>please call us before you hit the limit</strong> to adjust your plan and avoid any additional excess at the point of claim.
                 </p>
               </div>
             </div>
