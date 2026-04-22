@@ -38,19 +38,19 @@ function DisclaimerSection() {
               <div className="flex gap-2">
                 <span className="font-montserrat font-bold text-amber-700 text-xs flex-shrink-0">1.</span>
                 <p className="font-montserrat text-xs text-amber-800 leading-relaxed">
-                  This plan is for drivers who travel <strong>less than 154 km per week on average</strong> (8,000 km/year). After purchase, we will SMS you to submit your current odometer reading within 14 days to activate the discount.
+                  This plan is for drivers who travel <strong>less than 150 km per week on average</strong> (8,000 km/year). No odometer reading is required at purchase.
                 </p>
               </div>
               <div className="flex gap-2">
                 <span className="font-montserrat font-bold text-amber-700 text-xs flex-shrink-0">2.</span>
                 <p className="font-montserrat text-xs text-amber-800 leading-relaxed">
-                  If your odometer shows you have <strong>exceeded 8,000 km at the point of a claim</strong>, your premium will be <strong>bumped up</strong> to the standard unlimited rate, plus an <strong>additional excess top-up of S$300</strong> will apply before your claim is processed.
+                  If you make a claim and your mileage has exceeded 8,000 km, your premium will be <strong>bumped up</strong> to the standard unlimited rate, plus an <strong>additional excess top-up of S$300</strong> will apply. Your claim will not be rejected due to mileage.
                 </p>
               </div>
               <div className="flex gap-2">
                 <span className="font-montserrat font-bold text-amber-700 text-xs flex-shrink-0">3.</span>
                 <p className="font-montserrat text-xs text-amber-800 leading-relaxed">
-                  If you expect to exceed 8,000 km, <strong>please call us before you hit the limit</strong> to adjust your plan and avoid any additional excess at the point of claim.
+                  If your driving increases and you expect to exceed 8,000 km, <strong>please call us in advance</strong> to top up your premium — this avoids the additional excess at the point of a claim.
                 </p>
               </div>
             </div>
