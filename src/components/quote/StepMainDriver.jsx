@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import StepFooter from './StepFooter';
 import ValidatedInput from './ValidatedInput';
-import { Check } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
+
+const MARITAL_OPTIONS = ['Single', 'Married', 'Divorced', 'Widowed'];
+const OCCUPATION_OPTIONS = [
+  'Employed (Full-time)', 'Employed (Part-time)', 'Self-employed',
+  'Student', 'Homemaker', 'Retired', 'Unemployed', 'Others'
+];
 
 export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
   const [dobRaw, setDobRaw] = useState(
@@ -22,19 +28,7 @@ export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
     onChange('dobYear', parts[2] || '');
   };
 
-  const handleDobNative = (e) => {
-    const val = e.target.value; // yyyy-mm-dd from date input
-    if (!val) return;
-    const [y, m, d] = val.split('-');
-    setDobRaw(`${d}/${m}/${y}`);
-    onChange('dobDay', d);
-    onChange('dobMonth', m);
-    onChange('dobYear', y);
-  };
-
-  const canProceed = formData.dobDay && formData.dobMonth && formData.dobYear && formData.gender;
-
-
+  const canProceed = formData.fullName && formData.nric && formData.dobDay && formData.dobMonth && formData.dobYear && formData.gender && formData.maritalStatus && formData.occupation;
 
   return (
     <div className="space-y-1.5">
@@ -43,6 +37,41 @@ export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
       </h1>
 
       <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
+
+        {/* Full name */}
+        <div>
+          <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
+            Full name
+          </label>
+          <ValidatedInput value={formData.fullName}>
+            <input
+              type="text"
+              placeholder="As per NRIC/passport"
+              value={formData.fullName || ''}
+              onChange={(e) => onChange('fullName', e.target.value)}
+              className="w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+            />
+          </ValidatedInput>
+        </div>
+
+        {/* NRIC/FIN */}
+        <div>
+          <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
+            NRIC/FIN
+          </label>
+          <ValidatedInput value={formData.nric}>
+            <input
+              type="text"
+              placeholder="e.g. S1234567A"
+              value={formData.nric || ''}
+              onChange={(e) => onChange('nric', e.target.value.toUpperCase())}
+              maxLength={9}
+              className="w-full px-3 py-3 border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+            />
+          </ValidatedInput>
+        </div>
+
+        {/* Date of birth */}
         <div>
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
             Date of birth
@@ -61,6 +90,7 @@ export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
           </ValidatedInput>
         </div>
 
+        {/* Gender */}
         <div>
           <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
             Gender
@@ -83,6 +113,47 @@ export default function StepMainDriver({ formData, onChange, onNext, onBack }) {
             ))}
           </div>
         </div>
+
+        {/* Marital status */}
+        <div>
+          <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
+            Marital status
+          </label>
+          <ValidatedInput value={formData.maritalStatus}>
+            <div className="relative">
+              <select
+                value={formData.maritalStatus || ''}
+                onChange={(e) => onChange('maritalStatus', e.target.value)}
+                className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+              >
+                <option value="" disabled>Select</option>
+                {MARITAL_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            </div>
+          </ValidatedInput>
+        </div>
+
+        {/* Occupation */}
+        <div>
+          <label className="block text-xs font-montserrat font-medium text-muted-foreground mb-2">
+            Occupation
+          </label>
+          <ValidatedInput value={formData.occupation}>
+            <div className="relative">
+              <select
+                value={formData.occupation || ''}
+                onChange={(e) => onChange('occupation', e.target.value)}
+                className="w-full appearance-none px-3 py-3 bg-white border-2 border-gray-200 rounded-lg text-sm font-montserrat text-carbon focus:border-bdred focus:outline-none"
+              >
+                <option value="" disabled>Select</option>
+                {OCCUPATION_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            </div>
+          </ValidatedInput>
+        </div>
+
       </div>
 
       <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />
