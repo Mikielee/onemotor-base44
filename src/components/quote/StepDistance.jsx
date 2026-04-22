@@ -3,7 +3,8 @@ import ChoiceButton from './ChoiceButton';
 import StepFooter from './StepFooter';
 import HelpIcon from './HelpIcon';
 import HelpDrawer from './HelpDrawer';
-import { Gauge } from 'lucide-react';
+import { Gauge, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const DISTANCE_OPTIONS = [
   { id: 'lt8000', label: 'Less than 8,000 km' },
@@ -12,13 +13,72 @@ const DISTANCE_OPTIONS = [
   { id: 'gt18000', label: 'Over 18,000 km' },
 ];
 
+function DisclaimerSection() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-lg border border-amber-200 bg-amber-50 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center gap-2 px-3 py-2.5 text-left"
+      >
+        <AlertCircle className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
+        <p className="font-montserrat font-semibold text-xs text-amber-800 flex-1">Important conditions — tap to read</p>
+        {open ? <ChevronUp className="w-3.5 h-3.5 text-amber-600" /> : <ChevronDown className="w-3.5 h-3.5 text-amber-600" />}
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: 'auto' }}
+            exit={{ height: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="px-3 pb-3 space-y-2.5 border-t border-amber-200 pt-2.5">
+              <div className="flex gap-2">
+                <span className="font-montserrat font-bold text-amber-700 text-xs flex-shrink-0">1.</span>
+                <p className="font-montserrat text-xs text-amber-800 leading-relaxed">
+                  This plan is for drivers who travel <strong>less than 154 km per week on average</strong> (8,000 km/year). After purchase, we will SMS you to submit your current odometer reading within 14 days to activate the discount.
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-montserrat font-bold text-amber-700 text-xs flex-shrink-0">2.</span>
+                <p className="font-montserrat text-xs text-amber-800 leading-relaxed">
+                  If your odometer shows you have <strong>exceeded 8,000 km at the point of a claim</strong>, you will be required to pay the premium difference (approximately 18% of the standard premium) before your claim is processed. If you expect to exceed 8,000 km, please <strong>call us in advance</strong> to upgrade your plan — don't wait until a claim occurs.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function StepDistance({ formData, onChange, onNext, onBack }) {
+  const [helpOpen, setHelpOpen] = useState(false);
+
   const handleDistanceChange = (id) => {
     onChange('annualDistance', id);
-    if (id !== 'lt8000') onChange('driveLessOptIn', false);
+    if (id !== 'lt8000') {
+      onChange('driveLessOptIn', undefined);
+      onChange('unlimitedKmUpgrade', undefined);
+    }
   };
-  const [helpOpen, setHelpOpen] = useState(false);
-  const canProceed = !!formData.annualDistance;
+
+  const handleOptIn = (value) => {
+    onChange('driveLessOptIn', value);
+    if (!value) onChange('unlimitedKmUpgrade', undefined);
+  };
+
+  const canProceed = (() => {
+    if (!formData.annualDistance) return false;
+    if (formData.annualDistance === 'lt8000') {
+      if (formData.driveLessOptIn === undefined || formData.driveLessOptIn === null) return false;
+      if (formData.driveLessOptIn === true && formData.unlimitedKmUpgrade === undefined) return false;
+    }
+    return true;
+  })();
 
   return (
     <div className="space-y-1.5">
@@ -41,43 +101,110 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
         ))}
       </div>
 
-      {formData.annualDistance === 'lt8000' && (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
-          <div className="flex gap-3">
-            <Gauge className="w-6 h-6 text-cyan flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="font-montserrat font-bold text-sm text-carbon mb-1">You're eligible for Drive Less, Pay Less!</p>
-              <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
-                Opt in to lock your cover to 8,000 km/year and save S$150 on your premium.
-              </p>
+      <AnimatePresence>
+        {formData.annualDistance === 'lt8000' && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden space-y-3"
+          >
+            {/* Opt-in card */}
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
+              <div className="flex gap-3">
+                <Gauge className="w-6 h-6 text-cyan flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-montserrat font-bold text-sm text-carbon mb-1">You're eligible for Drive Less, Pay Less!</p>
+                  <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
+                    Opt in to lock your cover to 8,000 km/year and save S$150 on your premium.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleOptIn(true)}
+                  className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${
+                    formData.driveLessOptIn === true
+                      ? 'bg-bdred border-bdred text-white'
+                      : 'bg-white border-gray-300 text-carbon hover:border-carbon/40'
+                  }`}
+                >
+                  Yes, opt me in — save S$150
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleOptIn(false)}
+                  className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${
+                    formData.driveLessOptIn === false
+                      ? 'bg-carbon border-carbon text-white'
+                      : 'bg-white border-gray-300 text-carbon hover:border-carbon/40'
+                  }`}
+                >
+                  No thanks
+                </button>
+              </div>
+
+              {/* Disclaimer — shown once opted in */}
+              <AnimatePresence>
+                {formData.driveLessOptIn === true && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <DisclaimerSection />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </div>
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() => onChange('driveLessOptIn', true)}
-              className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${
-                formData.driveLessOptIn === true
-                  ? 'bg-bdred border-bdred text-white'
-                  : 'bg-white border-gray-300 text-carbon hover:border-carbon/40'
-              }`}
-            >
-              Yes, opt me in — save S$150
-            </button>
-            <button
-              type="button"
-              onClick={() => onChange('driveLessOptIn', false)}
-              className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${
-                formData.driveLessOptIn === false
-                  ? 'bg-carbon border-carbon text-white'
-                  : 'bg-white border-gray-300 text-carbon hover:border-carbon/40'
-              }`}
-            >
-              No thanks
-            </button>
-          </div>
-        </div>
-      )}
+
+            {/* Follow-up: unlimited km upgrade — only if opted in */}
+            <AnimatePresence>
+              {formData.driveLessOptIn === true && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
+                    <p className="font-montserrat font-bold text-sm text-carbon">Would you also like to add Unlimited km cover?</p>
+                    <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
+                      For an additional premium, you can remove the 8,000 km cap entirely — so no excess applies even if you exceed your limit at the point of a claim.
+                    </p>
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => onChange('unlimitedKmUpgrade', true)}
+                        className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${
+                          formData.unlimitedKmUpgrade === true
+                            ? 'bg-bdred border-bdred text-white'
+                            : 'bg-white border-gray-300 text-carbon hover:border-carbon/40'
+                        }`}
+                      >
+                        Yes, add unlimited km
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onChange('unlimitedKmUpgrade', false)}
+                        className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${
+                          formData.unlimitedKmUpgrade === false
+                            ? 'bg-carbon border-carbon text-white'
+                            : 'bg-white border-gray-300 text-carbon hover:border-carbon/40'
+                        }`}
+                      >
+                        No thanks
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <StepFooter onBack={onBack} onNext={onNext} disabled={!canProceed} />
 
