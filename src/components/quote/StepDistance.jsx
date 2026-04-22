@@ -15,7 +15,7 @@ const DISTANCE_OPTIONS = [
 export default function StepDistance({ formData, onChange, onNext, onBack }) {
   const handleDistanceChange = (id) => {
     onChange('annualDistance', id);
-    onChange('driveLessOptIn', id === 'lt8000');
+    if (id !== 'lt8000') onChange('driveLessOptIn', false);
   };
   const [helpOpen, setHelpOpen] = useState(false);
   const canProceed = !!formData.annualDistance;
@@ -42,13 +42,39 @@ export default function StepDistance({ formData, onChange, onNext, onBack }) {
       </div>
 
       {formData.annualDistance === 'lt8000' && (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex gap-3">
-          <Gauge className="w-6 h-6 text-cyan flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="font-montserrat font-bold text-sm text-carbon mb-1">You're eligible for Drive Less Pay Less Plan!</p>
-            <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
-              A S$150 discount has been automatically applied to your premium.
-            </p>
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
+          <div className="flex gap-3">
+            <Gauge className="w-6 h-6 text-cyan flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-montserrat font-bold text-sm text-carbon mb-1">You're eligible for Drive Less, Pay Less!</p>
+              <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
+                Opt in to lock your cover to 8,000 km/year and save S$150 on your premium.
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => onChange('driveLessOptIn', true)}
+              className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${
+                formData.driveLessOptIn === true
+                  ? 'bg-bdred border-bdred text-white'
+                  : 'bg-white border-gray-300 text-carbon hover:border-carbon/40'
+              }`}
+            >
+              Yes, opt me in — save S$150
+            </button>
+            <button
+              type="button"
+              onClick={() => onChange('driveLessOptIn', false)}
+              className={`flex-1 py-2.5 rounded-pill font-montserrat font-bold text-xs border-2 transition-all ${
+                formData.driveLessOptIn === false
+                  ? 'bg-carbon border-carbon text-white'
+                  : 'bg-white border-gray-300 text-carbon hover:border-carbon/40'
+              }`}
+            >
+              No thanks
+            </button>
           </div>
         </div>
       )}
